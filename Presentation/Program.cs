@@ -1,8 +1,10 @@
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using Presentation;
+using Presentation.Authentication;
 using Presentation.Interfaces;
 using Presentation.Services.BaseService;
 using Presentation.Services.TokenProviderServices;
@@ -12,14 +14,19 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAPI:Url")) });
 
 builder.Services.AddMudServices();
 builder.Services.AddBlazoredLocalStorage();
+
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
+builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 
+
+builder.Services.AddAuthorizationCore();
 
 await builder.Build().RunAsync();

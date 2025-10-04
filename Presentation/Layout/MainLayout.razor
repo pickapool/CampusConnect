@@ -1,4 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using ChatApp_MAUI.Shared.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using Presentation.Shared
+
+@inherits LayoutComponentBase
 
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -9,30 +13,44 @@
 @* Needed for snackbars *@
 <MudSnackbarProvider />
 
-<MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
-        <MudSpacer />
-        <MudBadge Content="100" Color="Color.Inherit" Overlap="true" Class="mx-6 my-4">
-            <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"></MudIcon>
-        </MudBadge>
-    </MudAppBar>
-    <MudDrawer @bind-Open="@_open" ClipMode="DrawerClipMode.Never" Elevation="1" Variant="@DrawerVariant.Responsive">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Campu Connect</MudText>
-        </MudDrawerHeader>
-        <MudNavMenu>
-            <MudNavLink Match="NavLinkMatch.All">Profile</MudNavLink>
-            <MudNavLink Match="NavLinkMatch.All">Change Password</MudNavLink>
-            <MudNavLink Match="NavLinkMatch.All">Logout</MudNavLink>
-        </MudNavMenu>
-    </MudDrawer>
-    <MudMainContent Class="pt-16 px-16">
-        <MudContainer Class="mt-6">
-            @Body
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
+<AuthorizeView>
+    <Authorizing>
+        <LoaderComponent></LoaderComponent>
+    </Authorizing>
+    <Authorized>
+        <MudLayout>
+            <MudAppBar Elevation="1">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+                <MudSpacer />
+                <MudBadge Content="100" Color="Color.Inherit" Overlap="true" Class="mx-6 my-4">
+                    <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"></MudIcon>
+                </MudBadge>
+            </MudAppBar>
+            <MudDrawer @bind-Open="@_open" ClipMode="DrawerClipMode.Never" Elevation="1" Variant="@DrawerVariant.Responsive">
+                <MudDrawerHeader>
+                    <MudText Typo="Typo.h6">Campu Connect</MudText>
+                </MudDrawerHeader>
+                <MudNavMenu>
+                    <MudNavLink Match="NavLinkMatch.All">Profile</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All">Change Password</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All">Logout</MudNavLink>
+                </MudNavMenu>
+            </MudDrawer>
+            <MudMainContent Class="pt-16 px-16">
+                <MudContainer Class="mt-6">
+                    @Body
+                </MudContainer>
+            </MudMainContent>
+        </MudLayout>    
+    </Authorized>
+    <NotAuthorized>
+        <PreLoaderComponent>
+            <ChildComponent>
+                <LoginComponent></LoginComponent>
+            </ChildComponent>
+        </PreLoaderComponent>
+    </NotAuthorized>
+</AuthorizeView>
 @code {
     private bool _open = false;
 

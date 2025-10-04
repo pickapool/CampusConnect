@@ -1,0 +1,57 @@
+﻿@using ChatApp_MAUI.Shared.Components
+
+<PageTitle>Login</PageTitle>
+
+@inherits LoginComponentBase
+
+<div class="d-flex justify-content-center align-items-center ma-10" style="height: calc(100vh - 100px)">
+    <MudItem xs="12" sm="8" md="6" lg="4" xl="3" xxl="3">
+        <MudPaper Class="d-flex flex-column pa-4 paper-opacity gap-1 mt-2 px-10" Elevation="3" Width="100%" Height="auto">
+            <div class="d-flex flex-row align-items-center gap-2 mt-6">
+                <div class="d-flex flex-column">
+                    <MudText Typo="Typo.h4">WELCOME</MudText>
+                    <MudText Typo="Typo.h4">Please sign in to continue.</MudText>
+                </div>
+            </div>
+            <hr/>
+            <MudText Typo="Typo.button">Email</MudText>
+            <MudTextField 
+                @onkeydown="HandleKeyDown" 
+                @bind-Value="username"  
+                Variant="Variant.Outlined" 
+                Adornment="Adornment.End" 
+                Margin="Margin.Dense"
+                AdornmentIcon="@Icons.Material.Filled.Lock" />
+                <MudText Typo="Typo.button">Password</MudText>
+                <MudTextField 
+                @onkeydown="HandleKeyDown" 
+                @bind-Value="password" 
+                Variant="Variant.Outlined"
+                InputType="@PasswordInput" 
+                Adornment="Adornment.End" 
+                AdornmentIcon="@PasswordInputIcon" 
+                Margin="Margin.Dense"
+                OnAdornmentClick="ShowPassword" 
+                AdornmentAriaLabel="Show Password" />
+
+            <MudButton 
+            Class="mb-5 color-main"
+            
+            Variant="Variant.Filled" 
+            Size="Size.Large" 
+            Color="Color.Primary">
+                <div class="d-flex flex-row gap-2">
+                    @if (isLoading)
+                    {
+                        <MudProgressCircular Class="align-self-start" Size="Size.Small" style="color: white;" Indeterminate></MudProgressCircular>
+                        <span>Signing in...</span>
+                    }
+                    else
+                    {
+                        <span>Sign in</span>
+                    }
+                </div>
+            </MudButton>
+        </MudPaper>
+    </MudItem>
+</div>

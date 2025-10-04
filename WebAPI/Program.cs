@@ -44,6 +44,17 @@ builder.Services.AddMediatR(config =>
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowCors", policy =>
+    {
+        policy.AllowAnyOrigin() // Blazor WASM dev URL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -59,6 +70,8 @@ if (app.Environment.IsDevelopment())
         option.SwaggerEndpoint("/openapi/v1.json", "WebAPI v1");
     });
 }
+
+app.UseCors("AllowCors");
 
 app.UseHttpsRedirection();
 

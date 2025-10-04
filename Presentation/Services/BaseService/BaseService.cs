@@ -15,9 +15,9 @@ namespace Presentation.Services.BaseService
             _httpClientFactory = httpClientFactory;
         }
         public async Task<T> SendAsync<T>(RequestModel request)
-
         {
             HttpClient httpClient = _httpClientFactory.CreateClient("WebAPI");
+
             HttpRequestMessage message = new();
             message.Headers.Add("Accept", "application/json");
 
