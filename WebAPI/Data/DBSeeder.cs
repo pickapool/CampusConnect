@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using MVC.Domain.Models;
-using MVC.WebAPI.Constants;
+﻿using CamCon.Domain.Models;
+using Microsoft.AspNetCore.Identity;
+using WebAPI.Constants;
 
 namespace MVC.WebAPI.Data
 {
