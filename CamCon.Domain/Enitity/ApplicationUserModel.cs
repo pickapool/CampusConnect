@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CamCon.Domain.Models
+namespace CamCon.Domain.Enitity
 {   
     public class ApplicationUserModel : IdentityUser
     {

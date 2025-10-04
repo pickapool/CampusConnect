@@ -1,5 +1,5 @@
-﻿using CamCon.Domain;
-using CamCon.Domain.Models;
+﻿using Domain;
+using Domain.Models;
 using Infrastructure.Extensions;
 using Presentation.Interfaces;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CamCon.Domain.Models
+namespace CamCon.Domain.Enitity
 {
     [Table("ProfileInformation")]
     [PrimaryKey("ProfileInformationId")]

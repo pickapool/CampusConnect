@@ -1,4 +1,4 @@
-﻿using CamCon.Domain.Models;
+﻿using Domain.Models;
 
 namespace Presentation.Interfaces
 {

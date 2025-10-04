@@ -1,4 +1,4 @@
-using CamCon.Domain.Models;
+using CamCon.Domain.Enitity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
