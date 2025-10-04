@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CamCon.Domain
 {
-    public class Enum
+    public class Enums
     {
         public enum RequestType
         {

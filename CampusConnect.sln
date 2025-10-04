@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamCon.Shared", "CamCon.Sha
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{9A97C632-36CB-41C9-B63A-F08048ECF3CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,9 +31,16 @@ Global
 		{3136B679-4EF3-47EB-85C8-E392D60D119A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3136B679-4EF3-47EB-85C8-E392D60D119A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3136B679-4EF3-47EB-85C8-E392D60D119A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A97C632-36CB-41C9-B63A-F08048ECF3CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A97C632-36CB-41C9-B63A-F08048ECF3CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A97C632-36CB-41C9-B63A-F08048ECF3CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A97C632-36CB-41C9-B63A-F08048ECF3CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9A97C632-36CB-41C9-B63A-F08048ECF3CA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B4D2E85-CF41-4F0B-BF5F-DE04A84A08E2}

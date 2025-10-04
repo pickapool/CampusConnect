@@ -8,7 +8,7 @@ namespace CamCon.Domain
 {
     public class RequestModel
     {
-        public Enum.RequestType RequestType { get; set; } = Enum.RequestType.GET;
+        public Enums.RequestType RequestType { get; set; } = Enums.RequestType.GET;
         public string? RequestUrl { get; set; }
         public string? AccessToken { get; set; }
         public object? Data { get; set; }
