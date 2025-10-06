@@ -21,7 +21,7 @@ namespace Presentation.Authentication
         {
             if (_jsRuntime is IJSInProcessRuntime)
             {
-                // Safe to do JS interop sync calls
+                //do nothing
             }
             else if (_jsRuntime is null)
             {
@@ -39,7 +39,6 @@ namespace Presentation.Authentication
                         var expirationTime = DateTimeOffset.FromUnixTimeSeconds(exp);
                         if (expirationTime < DateTimeOffset.UtcNow)
                         {
-                            // ❌ Token expired
                             await _localStorage.RemoveItemAsync("token");
                             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
                         }
@@ -50,7 +49,7 @@ namespace Presentation.Authentication
             }
             catch
             {
-                // swallow or log
+               
             }
 
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));

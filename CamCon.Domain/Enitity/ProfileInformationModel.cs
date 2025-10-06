@@ -9,5 +9,7 @@ namespace CamCon.Domain.Enitity
     {
         public Guid ProfileInformationId { get; set; }
 
+        public bool isAdmin { get; set; }
+
     }
 }

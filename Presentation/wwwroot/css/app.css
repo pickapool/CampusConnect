@@ -112,3 +112,16 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+.mud-divider {
+    border-color: grey !important;
+}
+.action-description {
+    min-height: 100px;
+    max-height: 100px;
+    height: 100px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+}

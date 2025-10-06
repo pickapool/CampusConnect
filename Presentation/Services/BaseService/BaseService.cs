@@ -21,6 +21,9 @@ namespace Presentation.Services.BaseService
             HttpRequestMessage message = new();
             message.Headers.Add("Accept", "application/json");
 
+            if(!string.IsNullOrEmpty(request.AccessToken))
+                message.Headers.Add("Authorization", $"Bearer {request.AccessToken}");
+
             message.RequestUri = new Uri(request.RequestUrl);
 
             if (request.Data != null)

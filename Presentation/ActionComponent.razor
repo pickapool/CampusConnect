@@ -1,0 +1,22 @@
+﻿<MudPaper Class="d-flex flex-column gap-1 pa-2" Elevation="1">
+    <MudText Class="pa-2" Typo="Typo.h6">@Title</MudText>
+    <MudDivider/>
+    <MudText Class="ma-1 action-description" Typo="Typo.caption">@Description</MudText>
+   <MudDivider/>
+   <MudStack AlignItems="AlignItems.End">
+        <MudButton OnClick="Procceed" Variant="Variant.Filled" Color="Color.Primary">Procceed</MudButton>
+   </MudStack>
+</MudPaper>
+
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string Description { get; set; } = string.Empty;
+    [Parameter] public string Redirect { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> OnClick { get; set; }
+
+    private void Procceed()
+    {
+        OnClick.InvokeAsync(Redirect);
+    }
+}
