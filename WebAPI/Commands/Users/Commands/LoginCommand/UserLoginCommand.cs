@@ -2,7 +2,7 @@
 using CamCon.Shared;
 using MediatR;
 
-namespace MVC.WebAPI.Commands.UserCommands.LoginCommand
+namespace WebAPI.Commands.Users.Commands.LoginCommand
 {
     public record class UserLoginCommand(LoginModel? request) : IRequest<Result<TokenModel>>;
 }

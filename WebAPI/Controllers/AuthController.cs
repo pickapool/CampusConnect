@@ -4,9 +4,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MVC.WebAPI.Commands.UserCommands.LoginCommand;
 using WebAPI.ApplicationDBContextService;
-using WebAPI.Commands.UserCommands.CreateCommand;
+using WebAPI.Commands.Users.Commands.CreateCommand;
+using WebAPI.Commands.Users.Commands.LoginCommand;
+using WebAPI.Commands.Users.Queries;
 using WebAPI.Services.TokenServices;
 
 namespace MVC.WebAPI.Controllers
@@ -20,13 +21,13 @@ namespace MVC.WebAPI.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly ITokenService _tokenService;
         private readonly AppDbContext _context;
-        private readonly ISender _sender;
+        private readonly IMediator _sender;
         public AuthController(UserManager<ApplicationUserModel> userManager,
                               RoleManager<IdentityRole> roleManager, 
                               ILogger<AuthController> logger,
                               ITokenService tokenService,
                               AppDbContext appDbContext,
-                              ISender sender)
+                              IMediator sender)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -116,6 +117,14 @@ namespace MVC.WebAPI.Controllers
                 _logger.LogError(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
+        }
+        [Authorize]
+        [HttpPost("getall")]
+        public async Task<IActionResult> GetAll([FromBody] GetAllUsersCommand command)
+        {
+            var result = await _sender.Send(command);
+
+            return Ok(result.Value);
         }
     }
 }

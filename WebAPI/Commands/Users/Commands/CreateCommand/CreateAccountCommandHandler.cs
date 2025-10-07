@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using MVC.WebAPI.Controllers;
 using WebAPI.Constants;
 
-namespace WebAPI.Commands.UserCommands.CreateCommand
+namespace WebAPI.Commands.Users.Commands.CreateCommand
 {
     public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, Result>
     {

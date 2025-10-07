@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using MVC.WebAPI.Data;
 using System.Text;
 using WebAPI.ApplicationDBContextService;
+using WebAPI.Commands.Users.Queries;
 using WebAPI.Services.TokenServices;
 
 var builder = WebApplication.CreateBuilder(args);

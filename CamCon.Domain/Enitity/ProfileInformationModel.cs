@@ -9,7 +9,14 @@ namespace CamCon.Domain.Enitity
     {
         public Guid ProfileInformationId { get; set; }
 
-        public bool isAdmin { get; set; }
+        public bool IsAdmin { get; set; }
+
+        public byte[] ProfilePicture { get; set; } = [];
+
+        //Department
+        public Guid? DepartmentId { get; set; }
+        [ForeignKey("DepartmentId")]
+        public DepartmentModel? Department { get; set; }
 
     }
 }

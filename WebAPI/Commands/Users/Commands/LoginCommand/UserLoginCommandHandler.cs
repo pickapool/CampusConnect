@@ -9,7 +9,7 @@ using WebAPI.Constants;
 using WebAPI.Interfaces;
 using WebAPI.Services.TokenServices;
 
-namespace MVC.WebAPI.Commands.UserCommands.LoginCommand
+namespace WebAPI.Commands.Users.Commands.LoginCommand
 {
     public class UserLoginCommandHandler : AppDatabaseBase, IRequestHandler<UserLoginCommand, Result<TokenModel>>
     {

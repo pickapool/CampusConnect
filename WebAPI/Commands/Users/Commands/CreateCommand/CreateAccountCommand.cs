@@ -2,7 +2,7 @@
 using CamCon.Shared;
 using MediatR;
 
-namespace WebAPI.Commands.UserCommands.CreateCommand
+namespace WebAPI.Commands.Users.Commands.CreateCommand
 {
     public record class CreateAccountCommand(SignupModel? Request) : IRequest<Result>;
 }
