@@ -11,7 +11,7 @@ namespace CamCon.Domain.Enitity
 
         public bool IsAdmin { get; set; }
 
-        public byte[] ProfilePicture { get; set; } = [];
+        public byte[]? ProfilePicture { get; set; }
 
         //Department
         public Guid? DepartmentId { get; set; }

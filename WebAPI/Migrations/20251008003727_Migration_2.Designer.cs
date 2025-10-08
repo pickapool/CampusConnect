@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.ApplicationDBContextService;
 
@@ -11,9 +12,11 @@ using WebAPI.ApplicationDBContextService;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251008003727_Migration_2")]
+    partial class Migration_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,9 +71,6 @@ namespace WebAPI.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("ProfileInformationId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -90,8 +90,6 @@ namespace WebAPI.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("ProfileInformationId");
 
                     b.ToTable("Users", (string)null);
                 });
@@ -314,15 +312,6 @@ namespace WebAPI.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("CamCon.Domain.Enitity.ApplicationUserModel", b =>
-                {
-                    b.HasOne("CamCon.Domain.Enitity.ProfileInfo", "ProfileInformation")
-                        .WithMany()
-                        .HasForeignKey("ProfileInformationId");
-
-                    b.Navigation("ProfileInformation");
                 });
 
             modelBuilder.Entity("CamCon.Domain.Enitity.MyOrganizationModel", b =>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace WebAPI.ApplicationDBContextService;
 public class AppDbContext : IdentityDbContext<ApplicationUserModel>
@@ -20,6 +21,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.ApplyConfigurationsFromAssembly(typeof(ProfileInfo).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(MyOrganizationModel).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(DepartmentModel).Assembly);
 
         // Rename Identity tables
         builder.Entity<IdentityRole>().ToTable("Roles");

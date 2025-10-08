@@ -16,11 +16,9 @@ namespace WebAPI.Commands.Organizations.Commands
         {
             GetDBContext().MyOrganizations.Add(request.Organization);
 
-            if (request.Organization.ProfileInfo is not null)
+            if (request.Organization.User is not null)
             {
-                GetDBContext().Entry(request.Organization.ProfileInfo).State = EntityState.Detached;
-                if(request.Organization.ProfileInfo.Department is not null)
-                    GetDBContext().Entry(request.Organization.ProfileInfo.Department).State = EntityState.Detached;
+                GetDBContext().Entry(request.Organization.User).State = EntityState.Unchanged;
             }
 
 

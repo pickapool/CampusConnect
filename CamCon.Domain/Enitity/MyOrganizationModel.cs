@@ -17,8 +17,8 @@ namespace CamCon.Domain.Enitity
         public string Description { get; set; } = string.Empty;
 
         //Profile
-        public Guid? ProfileInformationId { get; set; }
-        [ForeignKey("ProfileInformationId")]
-        public ProfileInfo? ProfileInfo { get; set; }
+        public string? Id { get; set; }
+        [ForeignKey("Id")]
+        public ApplicationUserModel? User { get; set; }
     }
 }
