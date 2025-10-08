@@ -35,8 +35,6 @@ namespace Presentation.Services.BaseService
 
             if (request.Data != null)
                 message.Content = new StringContent(JsonSerializer.Serialize(request.Data), Encoding.UTF8, "application/json");
-            else
-                message.Content = new StringContent("{}", Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = null;
 

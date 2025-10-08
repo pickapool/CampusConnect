@@ -21,7 +21,7 @@ namespace Presentation.Services.OrganizationServices
         {
             _configuration = configuration;
             _baseService = baseService;
-            defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/org";
+            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/auth";
         }
         public async Task<Result> CreateOrganizationAsync(MyOrganizationModel model)
         {

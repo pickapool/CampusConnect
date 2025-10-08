@@ -9,10 +9,11 @@ using WebAPI.Commands.Users.Commands.CreateCommand;
 using WebAPI.Commands.Users.Commands.LoginCommand;
 using WebAPI.Commands.Users.Queries;
 using WebAPI.Services.TokenServices;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MVC.WebAPI.Controllers
 {
-    [Route("api/auth/")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -38,14 +39,14 @@ namespace MVC.WebAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("signup")]
+        [HttpPost("/signup")]
         public async Task<IActionResult> Signup([FromBody] CreateAccountCommand createAccountCommand)
         {
             var result = await _sender.Send(createAccountCommand);
             return Ok(result);
         }
         [AllowAnonymous]
-        [HttpPost("login")]
+        [HttpPost("/login")]
         public async Task<IActionResult> Login([FromBody] UserLoginCommand loginCommand)
         {
             Result<TokenModel> result = await _sender.Send(loginCommand);
@@ -59,7 +60,7 @@ namespace MVC.WebAPI.Controllers
 
         }
         [Authorize]
-        [HttpPost("token/refresh")]
+        [HttpPost("/token/refresh")]
         public async Task<IActionResult> Refresh(TokenModel tokenModel)
         {
             try
@@ -93,7 +94,7 @@ namespace MVC.WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpPost("token/revoke")]
+        [HttpPost("/token/revoke")]
         [Authorize]
         public async Task<IActionResult> Revoke()
         {
@@ -119,10 +120,10 @@ namespace MVC.WebAPI.Controllers
             }
         }
         [Authorize]
-        [HttpPost("getall")]
-        public async Task<IActionResult> GetAll([FromBody] GetAllUsersCommand command)
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _sender.Send(command);
+            var result = await _sender.Send(new GetAllUsersCommand());
 
             return Ok(result.Value);
         }

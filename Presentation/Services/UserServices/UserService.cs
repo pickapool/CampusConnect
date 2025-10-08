@@ -20,7 +20,7 @@ namespace Presentation.Services.UserServices
         {
             _configuration = configuration;
             _baseService = baseService;
-            defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/auth";
+            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/auth"; ;
         }
 
         public async Task<TokenModel> Authenticate(LoginModel model)
@@ -36,8 +36,7 @@ namespace Presentation.Services.UserServices
 
         public async Task<List<ApplicationUserModel>> GetAllUsers()
         {
-            request.RequestUrl = $"{defaultRequestUrl}/getall";
-            request.RequestType = Enums.RequestType.POST;
+            request.RequestType = Enums.RequestType.GET;
             request.Data = null;
 
             var response = await _baseService.SendAsync<List<ApplicationUserModel>>(request);
