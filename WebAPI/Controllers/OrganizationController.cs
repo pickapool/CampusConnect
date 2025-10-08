@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
         {
             var result = await _mediator.Send(new GetOrganizationsQuery());
 
-            return Ok(result);
+            return Ok(result.Value);
         }
     }
 }
