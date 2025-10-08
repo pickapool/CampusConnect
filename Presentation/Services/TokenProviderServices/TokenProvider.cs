@@ -17,9 +17,9 @@ namespace Presentation.Services.TokenProviderServices
             _localStorageService.RemoveItemAsync("token");
         }
 
-        public TokenModel? GetToken()
+        public async Task<TokenModel?> GetToken()
         {
-            return _localStorageService.GetItemAsync<TokenModel>("token").Result ?? null;
+            return await _localStorageService.GetItemAsync<TokenModel>("token");
         }
 
         public void SetToken(TokenModel token)

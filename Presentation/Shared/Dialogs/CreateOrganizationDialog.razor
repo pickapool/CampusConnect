@@ -3,11 +3,22 @@
         Create Organization
     </TitleContent>
     <DialogContent>
-        
+        <MudStack Class="gap-2">
+            <MudTextField @bind-Value="MyOrganziation.OrganizationName" Label="Name" Variant="Variant.Outlined" ShrinkLabel></MudTextField>
+            <MudTextField @bind-Value="MyOrganziation.Description" Label="Description" Variant="Variant.Outlined" ShrinkLabel></MudTextField>
+            <MudAutocomplete T="ApplicationUserModel" 
+                @bind-Value="MyOrganziation.User" 
+                Label="Assign" 
+                Variant="Variant.Outlined" 
+                ShrinkLabel 
+                SearchFunc="SearchUser"
+                ToStringFunc="@((s) => s.Name)">
+            </MudAutocomplete>
+        </MudStack>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">OK</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Variant="Variant.Filled">Save</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -17,7 +28,33 @@
 
     [Parameter] public MyOrganizationModel MyOrganziation { get; set; } = new();
 
-    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    private List<ApplicationUserModel> Users = new();
 
     private void Cancel() => MudDialog.Cancel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Users = await _userService.GetAllUsers();
+    }
+
+    private Task<IEnumerable<ApplicationUserModel>> SearchUser(string value, CancellationToken cancellationToken)
+    {
+        IEnumerable<ApplicationUserModel> result;
+
+        if (string.IsNullOrWhiteSpace(value))
+            result = Users;
+        else
+            result = Users.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+
+        return Task.FromResult(result);
+    }
+
+    private async Task Submit()
+    {
+        MyOrganziation.Id = MyOrganziation.User!.Id;
+
+        await _organizationService.CreateOrganizationAsync(MyOrganziation);
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
 }

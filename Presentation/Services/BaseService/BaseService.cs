@@ -10,9 +10,13 @@ namespace Presentation.Services.BaseService
     public class BaseService : IBaseService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        public BaseService(IHttpClientFactory httpClientFactory)
+
+        private readonly ITokenProvider _tokenProvider;
+
+        public BaseService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider)
         {
             _httpClientFactory = httpClientFactory;
+            _tokenProvider = tokenProvider;
         }
         public async Task<T> SendAsync<T>(RequestModel request)
         {
@@ -21,15 +25,18 @@ namespace Presentation.Services.BaseService
             HttpRequestMessage message = new();
             message.Headers.Add("Accept", "application/json");
 
-            if(!string.IsNullOrEmpty(request.AccessToken))
-                message.Headers.Add("Authorization", $"Bearer {request.AccessToken}");
+            var token = await _tokenProvider.GetToken();
+
+            if(token is not null)
+                if (!string.IsNullOrEmpty(token.AccessToken))
+                    message.Headers.Add("Authorization", $"Bearer {token.AccessToken}");
 
             message.RequestUri = new Uri(request.RequestUrl);
 
             if (request.Data != null)
-            {
                 message.Content = new StringContent(JsonSerializer.Serialize(request.Data), Encoding.UTF8, "application/json");
-            }
+            else
+                message.Content = new StringContent("{}", Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = null;
 

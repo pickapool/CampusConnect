@@ -1,25 +1,27 @@
-﻿ @page "/"
+﻿@page "/"
+
+@using Presentation.Shared.Dialogs
 
 <PageTitle>CamCon | Dashboard</PageTitle>
 
 <MudGrid Class="px-16">
-    <MudItem xs="4">
-        <ActionComponent Title="Create Organization Page" Description="Create Organization Page" Redirect="(s)=> Navigate(s, true)" IsCreate></ActionComponent>
+    <MudItem xs="4">    
+        <ActionComponent Title="Create Organization Page" Description="Create Organization Page" OnClick="OpenOrg" IsCreate></ActionComponent>
     </MudItem>
     <MudItem xs="4">
-        <ActionComponent Title="View Newsfeed" Description="World" Redirect="(s)=> Navigate(s, true)"></ActionComponent>
+        <ActionComponent Title="View Newsfeed" Description="World" OnClick="(s) => Navigate(s, true)"></ActionComponent>
     </MudItem>
     <MudItem xs="4">
-        <ActionComponent Title="Monitor and Manage" Description="World" Redirect="(s)=> Navigate(s, true)"></ActionComponent>
+        <ActionComponent Title="Monitor and Manage" Description="World" OnClick="(s) => Navigate(s, true)"></ActionComponent>
     </MudItem>
     <MudItem xs="4">
-        <ActionComponent Title="Department/ Organization" Description="World" Redirect="(s)=> Navigate(s, true)"></ActionComponent>
+        <ActionComponent Title="Department/ Organization" Description="World" OnClick="(s) => Navigate(s, true)"></ActionComponent>
     </MudItem>
     <MudItem xs="4">
-        <ActionComponent Title="Page Request Admin" Description="World" Redirect="(s)=> Navigate(s, true)"></ActionComponent>
+        <ActionComponent Title="Page Request Admin" Description="World" OnClick="(s) => Navigate(s, true)"></ActionComponent>
     </MudItem>
     <MudItem xs="4">
-        <ActionComponent Title="Users" Description="World" Redirect="(s)=> Navigate(s, true)"></ActionComponent>
+        <ActionComponent Title="Users" Description="World" OnClick="(s) => Navigate(s, true)"></ActionComponent>
     </MudItem>
 </MudGrid>
 
@@ -28,5 +30,10 @@
     private async Task Navigate(string redirect, bool isPage)
     {
         
+    }
+    private async Task OpenOrg()
+    {
+        var dialog = await _dialogService.ShowAsync<CreateOrganizationDialog>("Create Organization");
+        var result = await dialog.Result;
     }
 }

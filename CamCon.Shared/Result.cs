@@ -1,8 +1,10 @@
-﻿namespace CamCon.Shared
+﻿using System.Text.Json.Serialization;
+
+namespace CamCon.Shared
 {
     public class Result
     {
-        protected internal Result(bool isSuccess, Error error)
+        public Result(bool isSuccess, Error error)
         {
             if (isSuccess && error != Error.None ||
                 !isSuccess && error == Error.None)
@@ -33,7 +35,8 @@
     {
         private readonly TValue? _value;
 
-        protected internal Result(TValue? value, bool isSuccess, Error error) : base(isSuccess, error)
+        [JsonConstructor]
+        public Result(TValue? value, bool isSuccess, Error error) : base(isSuccess, error)
         {
             _value = value;
         }

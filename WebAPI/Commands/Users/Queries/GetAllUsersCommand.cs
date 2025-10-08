@@ -17,7 +17,9 @@ namespace WebAPI.Commands.Users.Queries
         public GetAllUsersCommandHandler(AppDbContext context) : base(context) { }
         public async Task<Result<List<ApplicationUserModel>>> Handle(GetAllUsersCommand request, CancellationToken cancellationToken)
         {
-            var users = await GetDBContext().Users.ToListAsync(cancellationToken: cancellationToken);
+            var users = await GetDBContext().Users
+                .Include(u => u.ProfileInformation)
+                .ToListAsync(cancellationToken: cancellationToken);
 
             return Result.Success(users);
         }

@@ -7,6 +7,7 @@ using Presentation;
 using Presentation.Authentication;
 using Presentation.Interfaces;
 using Presentation.Services.BaseService;
+using Presentation.Services.OrganizationServices;
 using Presentation.Services.TokenProviderServices;
 using Presentation.Services.UserServices;
 
@@ -25,7 +26,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
-
+builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 
 builder.Services.AddAuthorizationCore();
 

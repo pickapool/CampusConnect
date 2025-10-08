@@ -15,8 +15,8 @@
     [Parameter] public EventCallback<string> OnClick { get; set; }
     [Parameter] public bool IsCreate { get; set; }
 
-    private void Procceed()
+    private async Task Procceed()
     {
-        OnClick.InvokeAsync(Redirect);
+        await OnClick.InvokeAsync(Redirect);
     }
 }

@@ -7,8 +7,7 @@
         public string Description { get; set; } = string.Empty;
 
         //Profile
-        public Guid? ProfileInformationId { get; set; }
-
-        public ProfileInfo? ProfileInfo { get; set; }
+        public string? Id { get; set; }
+        public ApplicationUserModel? User { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Domain.Models;
 using Infrastructure.Extensions;
 using Presentation.Interfaces;
+using System.Reflection;
 
 namespace Presentation.Services.UserServices
 {
@@ -29,6 +30,17 @@ namespace Presentation.Services.UserServices
             request.Data = model.Wrap("request"); 
 
             var response = await _baseService.SendAsync<TokenModel>(request);
+
+            return response;
+        }
+
+        public async Task<List<ApplicationUserModel>> GetAllUsers()
+        {
+            request.RequestUrl = $"{defaultRequestUrl}/getall";
+            request.RequestType = Enums.RequestType.POST;
+            request.Data = null;
+
+            var response = await _baseService.SendAsync<List<ApplicationUserModel>>(request);
 
             return response;
         }

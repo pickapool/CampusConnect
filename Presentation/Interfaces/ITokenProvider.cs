@@ -5,7 +5,7 @@ namespace Presentation.Interfaces
     public interface ITokenProvider
     {
         void SetToken(TokenModel token);
-        TokenModel GetToken();
+        Task<TokenModel?> GetToken();
         void ClearToken();
     }
 }
