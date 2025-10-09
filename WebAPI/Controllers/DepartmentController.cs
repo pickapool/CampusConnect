@@ -7,7 +7,7 @@ using WebAPI.Commands.Users.Commands.CreateCommand;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/dept")]
+    [Route("api/dept/")]
     [ApiController]
     [Authorize]
     public class DepartmentController : ControllerBase
@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("/create")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateDepartment([FromBody] CreateDepartmentCommand command)
         {
             var result = await _mediator.Send(command);
