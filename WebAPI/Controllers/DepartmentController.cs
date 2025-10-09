@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Commands.Departments.Queries;
 using WebAPI.Commands.Organizations.Commands;
 using WebAPI.Commands.Users.Commands.CreateCommand;
 
@@ -25,6 +26,14 @@ namespace WebAPI.Controllers
             var result = await _mediator.Send(command);
 
             return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _mediator.Send(new GetDepartmentsQuery());
+
+            return Ok(result.Value);
         }
     }
 }

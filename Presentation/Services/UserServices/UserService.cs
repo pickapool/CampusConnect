@@ -38,6 +38,7 @@ namespace Presentation.Services.UserServices
         {
             request.RequestType = Enums.RequestType.GET;
             request.Data = null;
+            request.RequestUrl = defaultRequestUrl;
 
             var response = await _baseService.SendAsync<List<ApplicationUserModel>>(request);
 

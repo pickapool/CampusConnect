@@ -15,5 +15,12 @@ namespace Domain
             DELETE,
             PUT
         }
+        public enum Action
+        {
+            Create,
+            Update,
+            Delete,
+            None
+        }
     }
 }

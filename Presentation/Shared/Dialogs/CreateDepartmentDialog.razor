@@ -1,0 +1,36 @@
+﻿@using Domain
+<MudDialog>
+    <TitleContent>
+        Create Organization
+    </TitleContent>
+    <DialogContent>
+        <MudStack Class="gap-2">
+            <MudTextField @bind-Value="Model.DepartmentName" Label="Department" Variant="Variant.Outlined" ShrinkLabel></MudTextField>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Variant="Variant.Filled">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public DepartmentModel Model { get; set; } = new();
+
+    [Parameter] public Enums.Action Action { get; set; }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        if(Action is Enums.Action.Create)
+            await _departmentService.CreateDepartmentAsync(Model);
+        else
+            await _departmentService.UpdateDepartmentAsync(Model);
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

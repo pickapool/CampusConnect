@@ -27,9 +27,9 @@
 
 @code {
 
-    private async Task Navigate(string redirect, bool isPage)
+    private void Navigate(string redirect, bool isPage)
     {
-        
+        _navigationManager.NavigateTo($"/{redirect}");
     }
     private async Task OpenOrg()
     {

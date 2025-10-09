@@ -125,3 +125,15 @@ code {
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
 }
+
+.standard-table {
+    height: calc(100vh - 70px);
+    position: relative;
+}
+
+.standard-table .mud-table-pagination {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
