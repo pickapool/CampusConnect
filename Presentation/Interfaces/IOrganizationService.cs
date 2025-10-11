@@ -9,6 +9,6 @@ namespace Presentation.Interfaces
         Task<Result> UpdateOrganizationAsync(MyOrganizationModel mode);
         Task<Result> DeleteOrganizationAsync(Guid organizationId);
         Task<MyOrganizationModel?> GetOrganizationByIdAsync(Guid organizationId);
-        Task<IEnumerable<MyOrganizationModel>> GetAllOrganizationsAsync();
+        Task<List<MyOrganizationModel>> GetAllOrganizationsAsync();
     }
 }

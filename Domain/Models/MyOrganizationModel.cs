@@ -6,6 +6,8 @@
         public string OrganizationName { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
 
+        public Enums.OrganizationType OrganizationType { get; set; }
+
         //Profile
         public string? Id { get; set; }
         public ApplicationUserModel? User { get; set; }

@@ -22,5 +22,10 @@ namespace Domain
             Delete,
             None
         }
+        public enum OrganizationType
+        {
+            Department,
+            Organization
+        }
     }
 }

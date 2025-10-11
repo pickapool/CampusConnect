@@ -15,6 +15,7 @@ namespace CamCon.Domain.Enitity
         public Guid MyOrganizationId { get; set; }
         public string OrganizationName { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public Enums.OrganizationType OrganizationType { get; set; }
 
         //Profile
         public string? Id { get; set; }

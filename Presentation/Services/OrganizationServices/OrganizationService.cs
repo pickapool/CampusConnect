@@ -21,7 +21,7 @@ namespace Presentation.Services.OrganizationServices
         {
             _configuration = configuration;
             _baseService = baseService;
-            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/auth";
+            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/org";
         }
         public async Task<Result> CreateOrganizationAsync(MyOrganizationModel model)
         {
@@ -39,9 +39,15 @@ namespace Presentation.Services.OrganizationServices
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<MyOrganizationModel>> GetAllOrganizationsAsync()
+        public async Task<List<MyOrganizationModel>> GetAllOrganizationsAsync()
         {
-            throw new NotImplementedException();
+            request.RequestType = Enums.RequestType.GET;
+            request.Data = null;
+            request.RequestUrl = defaultRequestUrl;
+
+            var response = await _baseService.SendAsync<List<MyOrganizationModel>>(request);
+
+            return response;
         }
 
         public Task<MyOrganizationModel?> GetOrganizationByIdAsync(Guid organizationId)

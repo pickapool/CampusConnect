@@ -15,5 +15,10 @@ namespace CamCon.Domain
             DELETE,
             PUT
         }
+        public enum OrganizationType
+        {
+            Department,
+            Organization
+        }
     }
 }

@@ -1,14 +1,25 @@
-﻿<MudDialog>
+﻿@using Domain;
+
+<MudDialog>
     <TitleContent>
         Create Organization
     </TitleContent>
     <DialogContent>
         <MudStack Class="gap-2">
-            <MudTextField @bind-Value="MyOrganziation.OrganizationName" Label="Name" Variant="Variant.Outlined" ShrinkLabel></MudTextField>
-            <MudTextField @bind-Value="MyOrganziation.Description" Label="Description" Variant="Variant.Outlined" ShrinkLabel></MudTextField>
-            <MudAutocomplete T="ApplicationUserModel" 
-                @bind-Value="MyOrganziation.User" 
-                Label="Assign" 
+            <MudTextField @bind-Value="Model.OrganizationName" Label="Name" Variant="Variant.Outlined" ShrinkLabel></MudTextField>
+            <MudTextField @bind-Value="Model.Description" Label="Description" Variant="Variant.Outlined" ShrinkLabel></MudTextField>
+            <MudSelect T="Enums.OrganizationType"
+                       @bind-Value="Model.OrganizationType"
+                       Variant="Variant.Outlined"
+                       Label="Type">
+                @foreach (Enums.OrganizationType type in Enum.GetValues(typeof(Enums.OrganizationType)))
+                {
+                    <MudSelectItem Value="type">@type</MudSelectItem>
+                }
+            </MudSelect>
+            <MudAutocomplete T="ApplicationUserModel"
+                             @bind-Value="Model.User"
+                             Label="Assign" 
                 Variant="Variant.Outlined" 
                 ShrinkLabel 
                 SearchFunc="SearchUser"
@@ -26,7 +37,9 @@
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public MyOrganizationModel MyOrganziation { get; set; } = new();
+    [Parameter] public MyOrganizationModel Model { get; set; } = new();
+
+    [Parameter] public Enums.Action Action { get; set; }
 
     private List<ApplicationUserModel> Users = new();
 
@@ -51,9 +64,12 @@
 
     private async Task Submit()
     {
-        MyOrganziation.Id = MyOrganziation.User!.Id;
+        Model.Id = Model.User?.Id;
 
-        await _organizationService.CreateOrganizationAsync(MyOrganziation);
+        if(Action == Enums.Action.Create)
+            await _organizationService.CreateOrganizationAsync(Model);
+        else
+            await _organizationService.UpdateOrganizationAsync(Model);
 
         MudDialog.Close(DialogResult.Ok(true));
     }
