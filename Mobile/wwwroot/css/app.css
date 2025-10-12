@@ -92,3 +92,15 @@ h1:focus {
     place-items: center;
     height: 100vh;
 }
+
+.text-center
+{
+    text-align: center;
+}
+
+.btn-back {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 2px;
+}

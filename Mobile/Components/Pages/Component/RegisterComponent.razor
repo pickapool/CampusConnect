@@ -1,0 +1,47 @@
+﻿<div class="btn-back">
+    <small>Already have an account?</small>
+    <MudButton 
+        OnClick="OnBack"
+        Size="Size.Small"
+        Variant="Variant.Filled"
+        Color="Color.Primary">
+        SIGN IN
+    </MudButton>
+</div>
+
+<MudStack Class="pa-2" Justify="Justify.Center">
+    <MudButton 
+        Class="color-main"
+        Variant="Variant.Filled" 
+        Size="Size.Large" 
+        OnClick="Register"
+        Color="Color.Primary">
+        <div class="d-flex flex-row gap-2">
+            @if (isLoading)
+            {
+                    <MudProgressCircular Class="align-self-start" Size="Size.Small" style="color: white;" Indeterminate></MudProgressCircular>
+                    <span>Creating account...</span>
+            }
+            else
+            {
+                    <span>Register</span>
+            }
+        </div>
+    </MudButton>
+</MudStack>
+
+@code {
+    [Parameter] public EventCallback OnBack { get; set; }
+
+    protected bool isLoading = false;
+
+    protected async Task Register()
+    {
+        isLoading = true;
+        await Task.Delay(100);
+
+        isLoading = false;
+    }
+
+    private void Back() => OnBack.InvokeAsync();
+}

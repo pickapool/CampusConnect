@@ -1,6 +1,6 @@
 ﻿@using global::Component.Shared.Helpers
 
-<MudStack Class="pa-2" Justify="Justify.Center" AlignItems="AlignItems.Center">
+<MudStack Class="pa-2" Justify="Justify.Center">
     <MudTextField 
                 @onkeydown="HandleKeyDown" 
                 @bind-Value="username"  
@@ -24,8 +24,8 @@
                 OnAdornmentClick="ShowPassword" 
                 AdornmentAriaLabel="Show Password" />
 
-            <MudButton 
-            Class="mb-5 color-main"
+    <MudButton 
+            Class="color-main"
             Variant="Variant.Filled" 
             Size="Size.Large" 
             OnClick="Login"
@@ -42,13 +42,20 @@
                     }
                 </div>
             </MudButton>
+
+    <MudLink Class="text-center"Typo="Typo.caption" OnClick="RegisterClick">Dont' have an account? <br />Register here.</MudLink>
+
 </MudStack>
 
 @code {
+    [Parameter] public EventCallback OnRegisterClick { get; set; }
+
     protected string username = string.Empty, password = string.Empty;
+    protected string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
     protected bool _open = false, isLoading = false, isShow = false;
     protected InputType PasswordInput = InputType.Password;
-    protected string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    
+    private void RegisterClick() => OnRegisterClick.InvokeAsync();
 
     protected void ToggleDrawer()
     {
@@ -114,4 +121,5 @@
             PasswordInput = InputType.Text;
         }
     }
+    
 }

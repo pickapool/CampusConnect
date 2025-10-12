@@ -17,10 +17,10 @@
         <div class="login">
             @if(!_isRegister)
             {
-                <LoginComponent></LoginComponent>
+                <LoginComponent OnRegisterClick="ToggleRegister"></LoginComponent>
             } else
             {
-            
+                <RegisterComponent OnBack="ToggleRegister"></RegisterComponent>
             }
         </div>
     </NotAuthorized>
@@ -29,5 +29,6 @@
 @code {
     private bool _isRegister, isLoading;
 
+    private void ToggleRegister() => _isRegister = !_isRegister;
 
 }
