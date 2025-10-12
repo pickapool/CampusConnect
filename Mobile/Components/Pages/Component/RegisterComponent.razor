@@ -16,7 +16,7 @@
     <MudTextField @bind-Value="User.Password" Label="Password" Variant="Variant.Outlined" InputType="InputType.Password" Margin="Margin.Dense" ShrinkLabel></MudTextField>
     <MudTextField @bind-Value="confirmPassword" Label="Confirm Password" Variant="Variant.Outlined" InputType="InputType.Password" Margin="Margin.Dense" ShrinkLabel></MudTextField>
 
-    <MudSelect Text="@User?.ProfileInformation?.MyOrganization?.OrganizationName" @bind-Value="User.ProfileInformation.MyOrganization" Label="Department" Variant="Variant.Outlined" Margin="Margin.Dense" ShrinkLabel>
+    <MudSelect Text="@User?.ProfileInformation?.MyOrganization?.OrganizationName" @bind-Value="User!.ProfileInformation!.MyOrganization" Label="Department" Variant="Variant.Outlined" Margin="Margin.Dense" ShrinkLabel>
         @foreach (var org in Organizations)
         {
             <MudSelectItem Value="org">@org.OrganizationName</MudSelectItem>
@@ -80,7 +80,7 @@
         {
             isLoading = true;
 
-            User.ProfileInformation.MyOrganizationId = User.ProfileInformation.MyOrganization.MyOrganizationId;
+            User.ProfileInformation!.MyOrganizationId = User.ProfileInformation.MyOrganization!.MyOrganizationId;
 
             var result = await _userService.CreateUser(User);
 
