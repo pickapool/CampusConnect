@@ -65,7 +65,7 @@ namespace MVC.WebAPI.Controllers
             try
             {
                 var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
-                var username = principal.Identity.Name;
+                var username = principal.Identity!.Name;
 
                 var tokenInfo = _context.TokenInfos.SingleOrDefault(u => u.Username == username);
                 if (tokenInfo == null
@@ -99,7 +99,7 @@ namespace MVC.WebAPI.Controllers
         {
             try
             {
-                var username = User.Identity.Name;
+                var username = User.Identity!.Name;
 
                 var user = _context.TokenInfos.SingleOrDefault(u => u.Username == username);
                 if (user == null)

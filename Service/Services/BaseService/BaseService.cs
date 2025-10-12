@@ -31,30 +31,22 @@ namespace Service.Services.BaseService
                 if (!string.IsNullOrEmpty(token.AccessToken))
                     message.Headers.Add("Authorization", $"Bearer {token.AccessToken}");
 
-            message.RequestUri = new Uri(request.RequestUrl);
+            message.RequestUri = new Uri(request.RequestUrl!);
 
             if (request.Data != null)
                 message.Content = new StringContent(JsonSerializer.Serialize(request.Data), Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = null;
+            HttpResponseMessage response;
 
-            switch (request.RequestType)
+            message.Method = request.RequestType switch
             {
-                case Enums.RequestType.GET:
-                    message.Method = HttpMethod.Get;
-                    break;
-                case Enums.RequestType.POST:
-                    message.Method = HttpMethod.Post;
-                    break;
-                case Enums.RequestType.PUT:
-                    message.Method = HttpMethod.Put;
-                    break;
-                case Enums.RequestType.DELETE:
-                    message.Method = HttpMethod.Delete;
-                    break;
-                default:
-                    throw new InvalidOperationException("Unsupported request type.");
-            }
+                Enums.RequestType.GET => HttpMethod.Get,
+                Enums.RequestType.POST => HttpMethod.Post,
+                Enums.RequestType.PUT => HttpMethod.Put,
+                Enums.RequestType.DELETE => HttpMethod.Delete,
+                _ => throw new InvalidOperationException("Unsupported request type."),
+            };
+
             response = await httpClient.SendAsync(message);
 
             if (!response.IsSuccessStatusCode)

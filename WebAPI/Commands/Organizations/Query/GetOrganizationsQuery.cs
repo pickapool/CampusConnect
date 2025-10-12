@@ -17,7 +17,7 @@ namespace WebAPI.Commands.Organizations.Query
         {
             var organizations = await GetDBContext().MyOrganizations
                 .Include(m => m.User)
-                .ThenInclude( u => u.ProfileInformation)
+                .ThenInclude( u => u!.ProfileInformation)
                 .ToListAsync(cancellationToken);
 
             return Result.Success(organizations);

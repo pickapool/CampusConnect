@@ -33,7 +33,7 @@ namespace Mobile.Authentication
                 if (!string.IsNullOrEmpty(currentToken))
                 {
                     var claims = ParseClaimsFromJwt(currentToken);
-                    var expClaim = claims.FirstOrDefault(c => c.Type == "exp")?.Value;
+                    var expClaim = claims?.FirstOrDefault(c => c.Type == "exp")?.Value;
                     if (expClaim != null && long.TryParse(expClaim, out long exp))
                     {
                         var expirationTime = DateTimeOffset.FromUnixTimeSeconds(exp);
@@ -61,7 +61,7 @@ namespace Mobile.Authentication
             var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-            return keyValuePairs?.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+            return keyValuePairs?.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!));
         }
 
         private byte[] ParseBase64WithoutPadding(string base64)

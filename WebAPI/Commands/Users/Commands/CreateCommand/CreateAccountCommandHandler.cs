@@ -26,10 +26,10 @@ namespace WebAPI.Commands.Users.Commands.CreateCommand
         {
             try
             {
-                var existingUser = await _userManager.FindByEmailAsync(command.Request.Email);
+                var existingUser = await _userManager.FindByEmailAsync(command.Request!.Email);
                 if (existingUser != null)
                 {
-                    return UserErrors.UserExist(existingUser.Email);
+                    return UserErrors.UserExist(existingUser.Email!);
                 }
                 if (await _roleManager.RoleExistsAsync(Roles.User) == false)
                 {

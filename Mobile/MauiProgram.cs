@@ -73,7 +73,7 @@ namespace Mobile
                 builder.Configuration.AddJsonStream(stream);
             }
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["BaseAPI:Url"]) });
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["BaseAPI:Url"]!) });
         }
     }
 }

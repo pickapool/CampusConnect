@@ -24,7 +24,7 @@
     <RowTemplate>
         <MudTd DataLabel="Nr">@context.Id</MudTd>
         <MudTd DataLabel="Sign">@context.Name</MudTd>
-        <MudTd DataLabel="Sign">@context.ProfileInformation?.Department?.DepartmentName</MudTd>
+        <MudTd DataLabel="Sign">@context.ProfileInformation?.MyOrganization?.OrganizationName</MudTd>
         <MudTd>
             <MudMenu Icon="@Icons.Material.Filled.MoreVert" AnchorOrigin="Origin.TopLeft" TransformOrigin="Origin.TopRight" Dense>
                 <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="() => OpenDialog(Enums.Action.Delete, context)" Label="Edit" />

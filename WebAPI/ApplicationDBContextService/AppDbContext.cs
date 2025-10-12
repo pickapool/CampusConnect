@@ -8,7 +8,7 @@ namespace WebAPI.ApplicationDBContextService;
 public class AppDbContext : IdentityDbContext<ApplicationUserModel>
 {
     public DbSet<TokenInfoModel> TokenInfos { get; set; }
-    public DbSet<ApplicationUserModel> Users { get; set; }
+    public override DbSet<ApplicationUserModel> Users { get; set; }
     public DbSet<ProfileInfo> ProfileInformations { get; set; }
     public DbSet<MyOrganizationModel> MyOrganizations { get; set; }
     public DbSet<DepartmentModel> Departments { get; set; }
