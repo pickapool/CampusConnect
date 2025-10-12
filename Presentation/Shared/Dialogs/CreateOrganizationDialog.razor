@@ -48,6 +48,7 @@
     protected override async Task OnInitializedAsync()
     {
         Users = await _userService.GetAllUsers();
+        Users = Users.Where(u => u.ProfileInformation is not null).ToList();
     }
 
     private Task<IEnumerable<ApplicationUserModel>> SearchUser(string value, CancellationToken cancellationToken)

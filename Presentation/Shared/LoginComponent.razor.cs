@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using Presentation.Authentication;
 using Presentation.Helpers;
-using Presentation.Interfaces;
+using Service.Interfaces;
 namespace ChatApp_MAUI.Shared.Components
 {
     public partial class LoginComponentBase : ComponentBase

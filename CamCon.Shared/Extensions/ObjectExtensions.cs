@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Extensions
+﻿namespace CamCon.Shared.Extensions
 {
     public static class ObjectExtensions
     {

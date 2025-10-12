@@ -1,9 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using Domain.Models;
-using Presentation.Interfaces;
+using Service.Interfaces;
 using System.Text.Json;
 
-namespace Presentation.Services.TokenProviderServices
+namespace Service.Services.TokenProviderServices
 {
     public class TokenProvider : ITokenProvider
     {

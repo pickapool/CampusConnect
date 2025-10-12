@@ -1,10 +1,11 @@
 ﻿using CamCon.Shared;
+using CamCon.Shared.Extensions;
 using Domain;
 using Domain.Models;
-using Infrastructure.Extensions;
-using Presentation.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Service.Interfaces;
 
-namespace Presentation.Services.DepartmentServices
+namespace Service.Services.DepartmentServices
 {
     public class DepartmentService : IDepartmentService
     {

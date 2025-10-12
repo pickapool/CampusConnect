@@ -15,5 +15,7 @@ namespace CamCon.Domain.Enitity
         public Guid? ProfileInformationId { get; set; }
         [ForeignKey("ProfileInformationId")]
         public ProfileInfo? ProfileInformation { get; set; }
+
+        public bool IsWebCreated { get; set; }
     }
 }

@@ -1,10 +1,11 @@
-﻿using Domain;
+﻿using CamCon.Shared.Extensions;
+using Domain;
 using Domain.Models;
-using Infrastructure.Extensions;
-using Presentation.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Service.Interfaces;
 using System.Reflection;
 
-namespace Presentation.Services.UserServices
+namespace Service.Services.UserServices
 {
     public class UserService : IUserService
     {

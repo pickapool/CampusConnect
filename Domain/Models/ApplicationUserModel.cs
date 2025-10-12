@@ -9,5 +9,7 @@ namespace Domain.Models
 
         public Guid? ProfileInformationId { get; set; }
         public ProfileInfo? ProfileInformation { get; set; }
+
+        public bool IsWebCreated { get; set; }
     }
 }

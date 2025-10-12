@@ -1,14 +1,13 @@
-﻿@page "/organizations"
+﻿@page "/users"
 
-<PageTitle>CamCon | Organization</PageTitle>
+<PageTitle>CamCon | User</PageTitle>
 
-<MudTable Class="standard-table mt-1" Items="MyOrganizationList" Hover Bordered Striped FixedFooter Dense Filter="new Func<MyOrganizationModel, bool>(FilterFunction)">
+<MudTable Class="standard-table mt-1" Items="UserList" Hover Bordered Striped FixedFooter Dense Filter="new Func<ApplicationUserModel, bool>(FilterFunction)">
     <ColGroup>
-        <col style="width: 30%;"/>
-        <col/>
+        <col style="width: 30%;" />
         <col />
         <col />
-        <col style="width: 1%;"/>
+        <col style="width: 1%;" />
     </ColGroup>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Organizations/Departments</MudText>
@@ -19,15 +18,13 @@
     <HeaderContent>
         <MudTh>Id</MudTh>
         <MudTh>Name</MudTh>
-        <MudTh>Type</MudTh>
-        <MudTh>User</MudTh>
+        <MudTh>Department</MudTh>
         <MudTh>Action</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Nr">@context.MyOrganizationId</MudTd>
-        <MudTd DataLabel="Sign">@context.OrganizationName</MudTd>
-        <MudTd DataLabel="Sign">@context.OrganizationType</MudTd>
-        <MudTd DataLabel="Sign">@context.User?.Name</MudTd>
+        <MudTd DataLabel="Nr">@context.Id</MudTd>
+        <MudTd DataLabel="Sign">@context.Name</MudTd>
+        <MudTd DataLabel="Sign">@context.ProfileInformation?.Department?.DepartmentName</MudTd>
         <MudTd>
             <MudMenu Icon="@Icons.Material.Filled.MoreVert" AnchorOrigin="Origin.TopLeft" TransformOrigin="Origin.TopRight" Dense>
                 <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="() => OpenDialog(Enums.Action.Delete, context)" Label="Edit" />
@@ -36,13 +33,13 @@
         </MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudTablePager/>
+        <MudTablePager />
     </PagerContent>
 </MudTable>
 
 
 @code {
-    private List<MyOrganizationModel> MyOrganizationList = new();
+    private List<ApplicationUserModel> UserList = new();
 
     private string searchString = string.Empty;
 
@@ -50,28 +47,21 @@
     {
         await base.OnInitializedAsync();
 
-        MyOrganizationList = await _organizationService.GetAllOrganizationsAsync();
+        UserList = await _userService.GetAllUsers();
     }
 
-    private bool FilterFunction(MyOrganizationModel element) => FilterFunction(element, searchString);
+    private bool FilterFunction(ApplicationUserModel element) => FilterFunction(element, searchString);
 
-    private bool FilterFunction(MyOrganizationModel element, string searchString)
+    private bool FilterFunction(ApplicationUserModel element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        if (element.OrganizationName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (element.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if (element.OrganizationType.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if(element.User is not null)
-            if (element.User.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
         return false;
     }
 
-    private async Task OpenDialog(Enums.Action action, MyOrganizationModel org)
+    private async Task OpenDialog(Enums.Action action, ApplicationUserModel org)
     {
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
 
@@ -83,8 +73,8 @@
 
         var result = await dialog.Result;
 
-        if(result is not null)
-            if(!result.Canceled)
+        if (result is not null)
+            if (!result.Canceled)
             {
                 await OnInitializedAsync();
             }

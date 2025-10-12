@@ -1,11 +1,11 @@
 ﻿using CamCon.Shared;
+using CamCon.Shared.Extensions;
 using Domain;
 using Domain.Models;
-using Infrastructure.Extensions;
-using Presentation.Interfaces;
-using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Service.Interfaces;
 
-namespace Presentation.Services.OrganizationServices
+namespace Service.Services.OrganizationServices
 {
     public class OrganizationService : IOrganizationService
     {

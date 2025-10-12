@@ -1,6 +1,6 @@
 ﻿using Domain;
 
-namespace Presentation.Interfaces
+namespace Service.Interfaces
 {
     public interface IBaseService
     {

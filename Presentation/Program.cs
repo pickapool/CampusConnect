@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using Presentation;
 using Presentation.Authentication;
-using Presentation.Interfaces;
-using Presentation.Services.BaseService;
-using Presentation.Services.DepartmentServices;
-using Presentation.Services.OrganizationServices;
-using Presentation.Services.TokenProviderServices;
-using Presentation.Services.UserServices;
+using Service.Interfaces;
+using Service.Services.BaseService;
+using Service.Services.DepartmentServices;
+using Service.Services.OrganizationServices;
+using Service.Services.TokenProviderServices;
+using Service.Services.UserServices;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

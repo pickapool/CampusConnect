@@ -1,11 +1,11 @@
 ﻿using Domain;
-using Presentation.Interfaces;
+using Service.Interfaces;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
-namespace Presentation.Services.BaseService
+namespace Service.Services.BaseService
 {
     public class BaseService : IBaseService
     {

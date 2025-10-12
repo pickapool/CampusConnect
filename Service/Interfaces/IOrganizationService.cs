@@ -1,7 +1,7 @@
 ﻿using CamCon.Shared;
 using Domain.Models;
 
-namespace Presentation.Interfaces
+namespace Service.Interfaces
 {
     public interface IOrganizationService
     {
