@@ -86,3 +86,9 @@ h1:focus {
         padding-left: env(safe-area-inset-left);
     }
 }
+
+.login {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}

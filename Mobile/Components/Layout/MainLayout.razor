@@ -14,13 +14,15 @@
         @Body
     </Authorized>
     <NotAuthorized>
-        @if(!_isRegister)
-        {
-            <LoginComponent></LoginComponent>
-        } else
-        {
+        <div class="login">
+            @if(!_isRegister)
+            {
+                <LoginComponent></LoginComponent>
+            } else
+            {
             
-        }
+            }
+        </div>
     </NotAuthorized>
 </AuthorizeView>
 

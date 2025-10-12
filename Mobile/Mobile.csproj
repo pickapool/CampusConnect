@@ -61,6 +61,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Remove="appsettings.mobile.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="appsettings.mobile.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.9" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.9" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.9" />

@@ -8,6 +8,6 @@ namespace Mobile.Global
 {
     public class Globals
     {
-        public static string BaseAPI = "http://localhost:5031";
+        
     }
 }

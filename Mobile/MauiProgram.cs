@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Mobile.Authentication;
 using Mobile.Global;
@@ -10,6 +11,7 @@ using Service.Services.DepartmentServices;
 using Service.Services.OrganizationServices;
 using Service.Services.TokenProviderServices;
 using Service.Services.UserServices;
+using System.Reflection;
 
 namespace Mobile
 {
@@ -28,7 +30,7 @@ namespace Mobile
 
             builder.Services.AddMauiBlazorWebView();
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(Globals.BaseAPI) });
+            AddAppSetting(builder);
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
@@ -49,14 +51,29 @@ namespace Mobile
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();
 
+            AddHttpCerficate();
+
+            return builder.Build();
+        }
+        private static void AddHttpCerficate()
+        {
             var handler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
             };
 
             var httpClient = new HttpClient(handler);
+        }
+        private static void AddAppSetting(MauiAppBuilder builder)
+        {
+            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Mobile.appsettings.mobile.json");
 
-            return builder.Build();
+            if (stream != null)
+            {
+                builder.Configuration.AddJsonStream(stream);
+            }
+
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["BaseAPI:Url"]) });
         }
     }
 }
