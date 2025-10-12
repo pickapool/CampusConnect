@@ -1,0 +1,31 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+<AuthorizeView>
+    <Authorized>
+        @Body
+    </Authorized>
+    <NotAuthorized>
+        @if(!_isRegister)
+        {
+            <LoginComponent></LoginComponent>
+        } else
+        {
+            
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private bool _isRegister, isLoading;
+
+
+}

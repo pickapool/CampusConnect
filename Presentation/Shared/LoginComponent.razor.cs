@@ -1,16 +1,17 @@
 ﻿using Blazored.LocalStorage;
+using Component.Shared.Helpers;
 using Domain.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using Presentation.Authentication;
-using Presentation.Helpers;
 using Service.Interfaces;
-namespace ChatApp_MAUI.Shared.Components
+
+namespace Presentation.Shared
 {
     public partial class LoginComponentBase : ComponentBase
-    {
+    {   
         [Inject] protected ISnackbar _snackBar { get; set; } = default!;
         [Inject] protected AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
         [Inject] protected IUserService _userService { get; set; } = default!;
@@ -40,7 +41,7 @@ namespace ChatApp_MAUI.Shared.Components
            
             try
             {
-                if (String.IsNullOrEmpty(username) || String.IsNullOrEmpty(password))
+                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 {
                     SnackBarHelper.ShowSnackbar("All fields are required", Variant.Filled, _snackBar, Severity.Error);
                     return;

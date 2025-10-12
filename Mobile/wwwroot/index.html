@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Mobile</title>
+    <base href="/" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="Mobile.styles.css" />
+    <link rel="icon" href="data:,">
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="status-bar-safe-area"></div>
+
+    <div id="app">
+        <div class="d-flex justify-center align-center" style="height: 100vh;">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.webview.js" autostart="false"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="_content/Blazored.LocalStorage/Blazored.LocalStorage.js"></script>
+
+</body>
+
+</html>
+
+<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+
+
+<style>
+    .loader {
+        height: 50px;
+        width: 50px;
+        aspect-ratio: 1;
+        --_c: no-repeat radial-gradient(farthest-side,#25b09b 92%,#0000);
+        background: var(--_c) top, var(--_c) left, var(--_c) right, var(--_c) bottom;
+        background-size: 12px 12px;
+        animation: l7 1s infinite;
+    }
+
+    @keyframes l7 {
+        to {
+            transform: rotate(.5turn)
+        }
+    }
+</style>

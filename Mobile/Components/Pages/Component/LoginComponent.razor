@@ -1,0 +1,117 @@
+﻿@using global::Component.Shared.Helpers
+
+<MudStack Class="pa-2" Justify="Justify.Center" AlignItems="AlignItems.Center">
+    <MudTextField 
+                @onkeydown="HandleKeyDown" 
+                @bind-Value="username"  
+                Variant="Variant.Outlined" 
+                Adornment="Adornment.End" 
+                Margin="Margin.Dense"
+                Label="Username"
+                ShrinkLabel
+                AdornmentIcon="@Icons.Material.Filled.Lock" />
+
+    <MudTextField 
+                @onkeydown="HandleKeyDown" 
+                @bind-Value="password" 
+                Variant="Variant.Outlined"
+                InputType="@PasswordInput" 
+                Adornment="Adornment.End" 
+                AdornmentIcon="@PasswordInputIcon" 
+                Margin="Margin.Dense"
+                Label="Password"
+                ShrinkLabel
+                OnAdornmentClick="ShowPassword" 
+                AdornmentAriaLabel="Show Password" />
+
+            <MudButton 
+            Class="mb-5 color-main"
+            
+            Variant="Variant.Filled" 
+            Size="Size.Large" 
+            Color="Color.Primary">
+                <div class="d-flex flex-row gap-2">
+                    @if (isLoading)
+                    {
+                            <MudProgressCircular Class="align-self-start" Size="Size.Small" style="color: white;" Indeterminate></MudProgressCircular>
+                            <span>Signing in...</span>
+                    }
+                    else
+                    {
+                            <span>Sign in</span>
+                    }
+                </div>
+            </MudButton>
+</MudStack>
+
+@code {
+    protected string username = string.Empty, password = string.Empty;
+    protected bool _open = false, isLoading = false, isShow = false;
+    protected InputType PasswordInput = InputType.Password;
+    protected string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    protected void ToggleDrawer()
+    {
+        _open = !_open;
+    }
+    protected async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Login();
+        }
+    }
+    protected async Task Login()
+    {
+        isLoading = true;
+        await Task.Delay(500);
+        StateHasChanged();
+
+        try
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                SnackBarHelper.ShowSnackbar("All fields are required", Variant.Filled, _snackBar, Severity.Error);
+                return;
+            }
+            var uid = await _userService.Authenticate(new LoginModel()
+            {
+                Username = username,
+                Password = password
+            });
+
+            await _localStorage.SetItemAsync("token", uid);
+
+            ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserAuthentication(uid.AccessToken);
+
+            username = string.Empty;
+            password = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message.ToLower().Contains("invalid"))
+                SnackBarHelper.ShowSnackbar("Invalid email or password", Variant.Filled, _snackBar, Severity.Error);
+            else
+                SnackBarHelper.ShowSnackbar(ex.Message, Variant.Filled, _snackBar, Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+    protected void ShowPassword()
+    {
+        if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+}
