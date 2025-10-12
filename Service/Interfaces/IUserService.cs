@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using CamCon.Shared;
+using Domain.Models;
 
 namespace Service.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Service.Interfaces
     {
         Task<TokenModel> Authenticate(LoginModel loginModel);
         Task<List<ApplicationUserModel>> GetAllUsers();
+        Task<Result> CreateUser(ApplicationUserModel userModel);
     }
 }

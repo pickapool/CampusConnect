@@ -28,6 +28,7 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetOrganizations()
         {

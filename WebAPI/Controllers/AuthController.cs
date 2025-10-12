@@ -9,7 +9,6 @@ using WebAPI.Commands.Users.Commands.CreateCommand;
 using WebAPI.Commands.Users.Commands.LoginCommand;
 using WebAPI.Commands.Users.Queries;
 using WebAPI.Services.TokenServices;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MVC.WebAPI.Controllers
 {
@@ -22,9 +21,9 @@ namespace MVC.WebAPI.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly ITokenService _tokenService;
         private readonly AppDbContext _context;
-        private readonly IMediator _sender;
+        private readonly IMediator _mediator;
         public AuthController(UserManager<ApplicationUserModel> userManager,
-                              RoleManager<IdentityRole> roleManager, 
+                              RoleManager<IdentityRole> roleManager,
                               ILogger<AuthController> logger,
                               ITokenService tokenService,
                               AppDbContext appDbContext,
@@ -35,21 +34,21 @@ namespace MVC.WebAPI.Controllers
             _logger = logger;
             _tokenService = tokenService;
             _context = appDbContext;
-            _sender = sender;
+            _mediator = sender;
         }
 
         [AllowAnonymous]
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] CreateAccountCommand createAccountCommand)
         {
-            var result = await _sender.Send(createAccountCommand);
+            var result = await _mediator.Send(createAccountCommand);
             return Ok(result);
         }
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginCommand loginCommand)
         {
-            Result<TokenModel> result = await _sender.Send(loginCommand);
+            Result<TokenModel> result = await _mediator.Send(loginCommand);
             if (result.IsSuccess)
                 return Ok(result.Value);
             if (result.Error.Code == StatusCodes.Status400BadRequest)
@@ -123,9 +122,17 @@ namespace MVC.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _sender.Send(new GetAllUsersCommand());
+            var result = await _mediator.Send(new GetAllUsersCommand());
 
             return Ok(result.Value);
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> Create([FromBody]CreateAccountCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
         }
     }
 }

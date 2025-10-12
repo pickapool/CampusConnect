@@ -1,4 +1,5 @@
-﻿using CamCon.Shared.Extensions;
+﻿using CamCon.Shared;
+using CamCon.Shared.Extensions;
 using Domain;
 using Domain.Models;
 using Microsoft.Extensions.Configuration;
@@ -42,6 +43,17 @@ namespace Service.Services.UserServices
             request.RequestUrl = defaultRequestUrl;
 
             var response = await _baseService.SendAsync<List<ApplicationUserModel>>(request);
+
+            return response;
+        }
+
+        public async Task<Result> CreateUser(ApplicationUserModel model)
+        {
+            request.RequestUrl = $"{defaultRequestUrl}/create";
+            request.RequestType = Enums.RequestType.POST;
+            request.Data = model.Wrap("request");
+
+            var response = await _baseService.SendAsync<Result>(request);
 
             return response;
         }

@@ -1,4 +1,5 @@
-﻿<div class="btn-back">
+﻿
+<div class="btn-back">
     <small>Already have an account?</small>
     <MudButton 
         OnClick="OnBack"
@@ -10,6 +11,18 @@
 </div>
 
 <MudStack Class="pa-2" Justify="Justify.Center">
+    <MudTextField @bind-Value="User.Name" Label="Full Name" Variant="Variant.Outlined" Margin="Margin.Dense" ShrinkLabel></MudTextField>
+    <MudTextField @bind-Value="User.Email" Label="Email" Variant="Variant.Outlined" Margin="Margin.Dense" ShrinkLabel></MudTextField>
+    <MudTextField @bind-Value="User.Password" Label="Password" Variant="Variant.Outlined" InputType="InputType.Password" Margin="Margin.Dense" ShrinkLabel></MudTextField>
+    <MudTextField @bind-Value="confirmPassword" Label="Confirm Password" Variant="Variant.Outlined" InputType="InputType.Password" Margin="Margin.Dense" ShrinkLabel></MudTextField>
+
+    <MudSelect Text="@User?.ProfileInformation?.MyOrganization?.OrganizationName" @bind-Value="User.ProfileInformation.MyOrganization" Label="Department" Variant="Variant.Outlined" Margin="Margin.Dense" ShrinkLabel>
+        @foreach (var org in Organizations)
+        {
+            <MudSelectItem Value="org">@org.OrganizationName</MudSelectItem>
+        }
+    </MudSelect>
+
     <MudButton 
         Class="color-main"
         Variant="Variant.Filled" 
@@ -33,14 +46,62 @@
 @code {
     [Parameter] public EventCallback OnBack { get; set; }
 
-    protected bool isLoading = false;
+    private ApplicationUserModel User = new();
+    private bool isLoading = false;
+    private string confirmPassword = string.Empty;
+    private List<MyOrganizationModel> Organizations = new();
 
-    protected async Task Register()
+    protected override async Task OnInitializedAsync()
     {
-        isLoading = true;
-        await Task.Delay(100);
+        User.ProfileInformation = new();
+        User.ProfileInformation.MyOrganization = new();
 
-        isLoading = false;
+        Organizations = await _organizationService.GetAllOrganizationsAsync();
+
+        Organizations = Organizations.Where(o => o.OrganizationType is Domain.Enums.OrganizationType.Department).ToList();
+    }
+
+    private async Task Register()
+    {
+        var validations = ModelValidator.Validate(User);
+        if (validations.Any())
+        {
+            SnackBarHelper.ShowSnackbar("All fields are required!", Variant.Filled, _snackBar, Severity.Error);
+            return;
+        }
+
+        if (!confirmPassword.Equals(User.Password, StringComparison.InvariantCultureIgnoreCase))
+        {
+            SnackBarHelper.ShowSnackbar("Passwords do not match", Variant.Filled, _snackBar, Severity.Error);
+            return;
+        }
+
+        try
+        {
+            isLoading = true;
+
+            User.ProfileInformation.MyOrganizationId = User.ProfileInformation.MyOrganization.MyOrganizationId;
+
+            var result = await _userService.CreateUser(User);
+
+            if(result.IsSuccess)
+            {
+                SnackBarHelper.ShowSnackbar("Account created successfully!", Variant.Filled, _snackBar, Severity.Success);
+                Back();
+            } else
+            {
+                throw new Exception(result.Error.Description);
+            }
+        }
+        catch (Exception ex)
+        {
+            SnackBarHelper.ShowSnackbar(ex.Message, Variant.Filled, _snackBar, Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+
     }
 
     private void Back() => OnBack.InvokeAsync();

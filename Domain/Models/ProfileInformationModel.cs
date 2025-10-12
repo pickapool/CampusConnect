@@ -1,4 +1,6 @@
-﻿namespace Domain.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Models
 {
     public class ProfileInfo
     {
@@ -8,9 +10,10 @@
 
         public byte[]? ProfilePicture { get; set; }
 
-        //Department
-        public Guid? DepartmentId { get; set; }
-        public DepartmentModel? Department { get; set; }
+        //Org
+        public Guid? MyOrganizationId { get; set; }
+
+        public MyOrganizationModel? MyOrganization { get; set; }
 
     }
 }

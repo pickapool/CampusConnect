@@ -1,4 +1,7 @@
-﻿namespace Domain.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace Domain.Models
 {
     public class MyOrganizationModel
     {
@@ -11,5 +14,7 @@
         //Profile
         public string? Id { get; set; }
         public ApplicationUserModel? User { get; set; }
+
+        public override string ToString() => OrganizationName;
     }
 }

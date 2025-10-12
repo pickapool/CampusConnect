@@ -21,5 +21,7 @@ namespace CamCon.Domain.Enitity
         [Required]
         [MaxLength(30)]
         public string Password { get; set; } = string.Empty;
+
+        public ProfileInfo? ProfileInformation { get; set; }
     }
 }

@@ -2,17 +2,20 @@
 using CamCon.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MVC.WebAPI.Controllers;
+using WebAPI.ApplicationDBContextService;
 using WebAPI.Constants;
+using WebAPI.Interfaces;
 
 namespace WebAPI.Commands.Users.Commands.CreateCommand
 {
-    public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, Result>
+    public class CreateAccountCommandHandler : AppDatabaseBase, IRequestHandler<CreateAccountCommand, Result>
     {
         private readonly UserManager<ApplicationUserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<AuthController> _logger;
-        public CreateAccountCommandHandler(UserManager<ApplicationUserModel> userManager, RoleManager<IdentityRole> roleManager, ILogger<AuthController> logger)
+        public CreateAccountCommandHandler(UserManager<ApplicationUserModel> userManager, RoleManager<IdentityRole> roleManager, ILogger<AuthController> logger, AppDbContext context) : base(context)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -40,14 +43,20 @@ namespace WebAPI.Commands.Users.Commands.CreateCommand
                     }
                 }
 
-                ApplicationUserModel user = new()
-                {
-                    Email = command.Request.Email,
-                    SecurityStamp = Guid.NewGuid().ToString(),
-                    UserName = command.Request.Email,
-                    Name = command.Request.Name,
-                    EmailConfirmed = true
-                };
+                var guid = Guid.NewGuid();
+                ApplicationUserModel user = new();
+                user.Email = command.Request.Email;
+                user.SecurityStamp = Guid.NewGuid().ToString();
+                user.UserName = command.Request.Email;
+                user.Name = command.Request.Name;
+                user.EmailConfirmed = true;
+                user.ProfileInformationId = guid;
+                user.ProfileInformation = command.Request.ProfileInformation;
+                user.ProfileInformation!.ProfileInformationId = guid;
+
+                if(user.ProfileInformation.MyOrganization is null) return StatusCodeErrors.StatusCode(StatusCodes.Status500InternalServerError, "Organization is null");
+
+                GetDBContext().Entry(user.ProfileInformation.MyOrganization).State = EntityState.Unchanged;
 
                 var createUserResult = await _userManager.CreateAsync(user, command.Request.Password);
                 if (createUserResult.Succeeded == false)
