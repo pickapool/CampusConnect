@@ -42,7 +42,7 @@
                     <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Warehouse">Department</MudNavLink>
                     <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Password">Change Password</MudNavLink>
                     <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.EditNotifications">Notification Settings</MudNavLink>
-                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Logout">Logout</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Logout" OnClick="Logout">Logout</MudNavLink>
                 </MudNavMenu>
             </MudDrawer>
             <MudMainContent>
@@ -72,4 +72,12 @@
 
     private void ToggleDrawer() => _open = !_open;
 
+    private async Task Logout()
+    {
+        await _localStorage.RemoveItemAsync("token");
+
+        ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserLogout();
+
+        _navigationManager.NavigateTo("/", true);
+    }
 }
