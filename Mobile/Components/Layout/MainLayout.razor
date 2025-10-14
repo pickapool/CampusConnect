@@ -9,9 +9,48 @@
 @* Needed for snackbars *@
 <MudSnackbarProvider />
 
+
 <AuthorizeView>
     <Authorized>
-        @Body
+        <MudLayout>
+            <MudAppBar Elevation="1">
+                <MudBadge Content="30" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
+                    <MudMenu Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit">
+                        <ActivatorContent>
+                            <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Default" />
+                        </ActivatorContent>
+                    </MudMenu>
+                </MudBadge>
+                <MudSpacer />
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer"></MudIconButton>
+            </MudAppBar>
+            <MudDrawer @bind-Open="@_open" Breakpoint="Breakpoint.Lg" Elevation="1" Anchor="Anchor.End" Variant="@DrawerVariant.Responsive">
+                <MudDrawerHeader>
+                    <MudStack Row>
+                        <MudAvatar>
+                            CM
+                            @* <MudImage Src="images/mony.jpg"></MudImage> *@
+                        </MudAvatar>
+                        <div>
+                            <MudText Typo="Typo.caption">Cyrille Con Morales</MudText>
+                            <small style="color: blue;">My Department</small>
+                        </div>
+                    </MudStack>
+                </MudDrawerHeader>
+                <MudNavMenu>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Warehouse">Department</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Password">Change Password</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.EditNotifications">Notification Settings</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Logout">Logout</MudNavLink>
+                </MudNavMenu>
+            </MudDrawer>
+            <MudMainContent>
+                <MudContainer Cladss="mt-6">
+                    @Body
+                </MudContainer>
+            </MudMainContent>
+        </MudLayout>
     </Authorized>
     <NotAuthorized>
         <div class="login">
@@ -27,8 +66,10 @@
 </AuthorizeView>
 
 @code {
-    private bool _isRegister;
+    private bool _isRegister, _open;
 
     private void ToggleRegister() => _isRegister = !_isRegister;
+
+    private void ToggleDrawer() => _open = !_open;
 
 }
