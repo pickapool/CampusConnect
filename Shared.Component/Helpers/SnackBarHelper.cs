@@ -1,6 +1,6 @@
 ﻿using MudBlazor;
 
-namespace Component.Shared.Helpers
+namespace Shared.Component.Helpers
 {
     public class SnackBarHelper
     {

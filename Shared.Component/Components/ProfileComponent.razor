@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+
+<MudContainer Class="d-flex justify-center my-4" Style="height: calc(100vh - 100px); max-width: unset !important">
+	<MudItem xs="12" sm="8" md="6" lg="4" xl="3">
+		<MudPaper Elevation="1" Class="d-flex flex-column px-2 py-4 gap-2 align-center">
+            <MudAvatar Size="Size.Large" Class="profile position-relative" Style="border : 1px solid #d3d3d3;">
+                <MudImage></MudImage>
+            </MudAvatar>
+            <MudGrid Spacing="2">
+                <MudItem xs="12">
+                    <MudFileUpload T="IBrowserFile" Accept="*" @bind-File="selectedFile" FilesChanged="UploadFiles">
+		                <ActivatorContent>
+			                <MudButton StartIcon="@Icons.Material.Filled.Upload" Variant="Variant.Filled" Color="Color.Default">Upload</MudButton>
+		                </ActivatorContent>
+	                </MudFileUpload>
+                </MudItem>
+
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudContainer>
+
+
+@code {
+    private IBrowserFile? selectedFile;
+
+    protected async Task UploadFiles(IBrowserFile file)
+    {
+        selectedFile = file;
+        if (selectedFile != null)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                //await UploadProfile(memoryStream);
+            }
+        }
+    }
+}
+<style>
+    .profile.mud-avatar.mud-avatar-large {
+        height: 200px;
+        width: 200px;
+    }
+
+</style>

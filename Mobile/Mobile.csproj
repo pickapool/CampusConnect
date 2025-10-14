@@ -84,7 +84,7 @@
       <ProjectReference Include="..\CamCon.Shared\CamCon.Shared.csproj" />
       <ProjectReference Include="..\Domain\Domain.csproj" />
       <ProjectReference Include="..\Service\Service.csproj" />
-      <ProjectReference Include="..\Share.Component\Component.Shared.csproj" />
+      <ProjectReference Include="..\Shared.Component\Shared.Component.csproj" />
     </ItemGroup>
 
     <ItemGroup>
