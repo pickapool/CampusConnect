@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Mobile.Authentication;
 using Mobile.Global;
 using MudBlazor.Services;
+using Service;
 using Service.Interfaces;
 using Service.Services.BaseService;
 using Service.Services.DepartmentServices;
@@ -36,8 +37,7 @@ namespace Mobile
             builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
-
-            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
+            
             builder.Services.AddHttpClient();
             builder.Services.AddMudServices();
             builder.Services.AddBlazoredLocalStorage();
@@ -50,6 +50,9 @@ namespace Mobile
 
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();
+
+            builder.Services.AddScoped<AppStateService>();
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
 
             AddHttpCerficate();
 

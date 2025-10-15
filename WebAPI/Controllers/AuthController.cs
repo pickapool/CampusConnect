@@ -134,5 +134,17 @@ namespace MVC.WebAPI.Controllers
 
             return Ok(result);
         }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(string id)
+        {
+            var result = await _mediator.Send(new GetUserByIdQuery(id));
+
+            if(result.IsFailure)
+                return StatusCode(result.Error.Code, result.Error.Description);
+
+            return Ok(result.Value);
+        }
     }
 }

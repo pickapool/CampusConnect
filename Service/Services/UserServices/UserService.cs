@@ -4,7 +4,6 @@ using Domain;
 using Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Service.Interfaces;
-using System.Reflection;
 
 namespace Service.Services.UserServices
 {
@@ -56,6 +55,24 @@ namespace Service.Services.UserServices
             var response = await _baseService.SendAsync<Result>(request);
 
             return response;
+        }
+
+        public async Task<ApplicationUserModel> GetUserById(string id)
+        {
+            try
+            {
+                request.RequestUrl = $"{defaultRequestUrl}/{id}";
+                request.RequestType = Enums.RequestType.GET;
+                request.Data = null;
+
+                var response = await _baseService.SendAsync<ApplicationUserModel>(request);
+
+                return response;
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

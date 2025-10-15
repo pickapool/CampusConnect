@@ -21,7 +21,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddMudServices();
 builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
+
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<IBaseService, BaseService>();
@@ -29,6 +29,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
 
 builder.Services.AddAuthorizationCore();
 

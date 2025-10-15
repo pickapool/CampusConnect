@@ -29,12 +29,20 @@
         selectedFile = file;
         if (selectedFile != null)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                //await UploadProfile(memoryStream);
-            }
+            await UpdateProfile();
         }
     }
+    public async Task UpdateProfile ()
+    {
+        using (MemoryStream memoryStream = new MemoryStream())
+        {
+            await selectedFile.OpenReadStream(209715200).CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+
+
+        }
+    }
+
 }
 <style>
     .profile.mud-avatar.mud-avatar-large {

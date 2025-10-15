@@ -8,5 +8,6 @@ namespace Service.Interfaces
         Task<TokenModel> Authenticate(LoginModel loginModel);
         Task<List<ApplicationUserModel>> GetAllUsers();
         Task<Result> CreateUser(ApplicationUserModel userModel);
+        Task<ApplicationUserModel> GetUserById(string id);
     }
 }

@@ -47,7 +47,8 @@ namespace WebAPI.Commands.Users.Commands.LoginCommand
                 List<Claim> authClaims = [ 
                     new (JwtRegisteredClaimNames.Name, user.UserName),
                     new (JwtRegisteredClaimNames.Email, user.Email),
-                    new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new (JwtRegisteredClaimNames.Sub, user.Id)
                     ];
 
                 var userRoles = await _userManager.GetRolesAsync(user);
