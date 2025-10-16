@@ -13,6 +13,7 @@
 
 @using Mobile.Components.Pages.Component
 
+@using Service
 @using Service.Interfaces
 @using Service.Services.UserServices
 @using Service.Services.OrganizationServices
@@ -27,9 +28,11 @@
 
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject NavigationManager _navigationManager
+@inject AppStateService _appStateService
 
 @inject ILocalStorageService _localStorage
 @inject ISnackbar _snackBar
 
 @inject IUserService _userService
 @inject IOrganizationService _organizationService
+@inject IProfileService _profileService

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Domain.Models
 {
@@ -14,6 +15,10 @@ namespace Domain.Models
         public Guid? MyOrganizationId { get; set; }
 
         public MyOrganizationModel? MyOrganization { get; set; }
+
+        [JsonIgnore]
+        public string? Photo => ProfilePicture is null ? "/images/blank_profile.png" : $"data:image/png;base64,{Convert.ToBase64String(ProfilePicture)}";
+
 
     }
 }

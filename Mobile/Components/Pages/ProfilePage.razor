@@ -1,7 +1,13 @@
 ﻿@page "/profile"
 
-<ProfileComponent></ProfileComponent>
+<ProfileComponent Profile="_appStateService.CurrentUser.ProfileInformation" OnProfileChanged="SaveProfile"></ProfileComponent>
 
 @code {
 
+    private async Task SaveProfile()
+    {
+        _appStateService.CurrentUser.ProfileInformation = await _profileService.UpdateProfile(_appStateService.CurrentUser.ProfileInformation);
+
+        StateHasChanged();
+    }
 }

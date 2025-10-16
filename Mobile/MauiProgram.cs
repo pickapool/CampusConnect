@@ -10,6 +10,7 @@ using Service.Interfaces;
 using Service.Services.BaseService;
 using Service.Services.DepartmentServices;
 using Service.Services.OrganizationServices;
+using Service.Services.ProfileServices;
 using Service.Services.TokenProviderServices;
 using Service.Services.UserServices;
 using System.Reflection;
@@ -47,6 +48,7 @@ namespace Mobile
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IOrganizationService, OrganizationService>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<IProfileService, ProfileService>();
 
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();

@@ -26,7 +26,6 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
         [HttpPut]
         public async Task<IActionResult> UpdateProfile([FromBody] UserUpdateProfileCommand command)
         {
@@ -35,7 +34,6 @@ namespace WebAPI.Controllers
             return Ok(result.Value);
         }
 
-        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProfile(Guid id)
         {
