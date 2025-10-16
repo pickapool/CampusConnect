@@ -1,23 +1,36 @@
-CampusConnect is a .NET application that connects students and organizations within a campus.  
-It uses **JWT authentication** for secure login and API access.
+# CampusConnect
+
+CampusConnect is a .NET-based platform aimed at connecting students and organizations within a campus. It provides secure API endpoints, user and organization management, and a hybrid front-end built on Blazor/MAUI.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **.NET 9 / ASP.NET Core Web API**
-- **Entity Framework Core** (Code-First)
-- **JWT Authentication**
-- **C#**
-- **SQL Server**
-- **Blazor / MAUI (Blazor Hybrid)
+- **Backend / API**: .NET 9 / ASP.NET Core Web API  
+- **ORM**: Entity Framework Core (Code-First)  
+- **Authentication**: JWT (JSON Web Tokens)  
+- **Language**: C#  
+- **Database**: SQL Server  
+- **Frontend / UI**: Blazor / .NET MAUI (Blazor Hybrid)  
 
 ---
 
-## ⚙️ Features
+## Features
 
-- User registration and login with JWT token  
-- Profile management (with profile picture upload)  
-- Organization linking (students can belong to organizations)  
-- Secure API endpoints using `[Authorize]`  
-- Supports role-based access
+- User registration & login  
+- JWT-based authentication & authorization  
+- Profile management (including image upload)  
+- Organization linking / membership  
+- Role-based access control  
+- Secure API endpoints  
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- .NET 9 SDK  
+- SQL Server instance  
+- (Optional) .NET MAUI / mobile SDKs  
+- IDE (Visual Studio, VS Code, etc.)
