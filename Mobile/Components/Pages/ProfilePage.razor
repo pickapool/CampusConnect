@@ -8,6 +8,18 @@
 
 @code {
 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (_appStateService.CurrentUser.ProfileInformation is null) return;
+
+        if(string.IsNullOrEmpty(_appStateService.CurrentUser.ProfileInformation.FullName))
+        {
+            _appStateService.CurrentUser.ProfileInformation.FullName = _appStateService.CurrentUser.Name;
+        };
+    }
+
     private async Task SaveProfile(ProfileInfo profile)
     {
         _appStateService.CurrentUser.ProfileInformation = await _profileService.UpdateProfile(profile);

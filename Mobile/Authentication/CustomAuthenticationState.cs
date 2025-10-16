@@ -90,7 +90,7 @@ namespace Mobile.Authentication
 
             var userId = authenticatedUser.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
 
-            await GetAccount(userId);
+            await GetAccount(token);
 
             var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
 
@@ -113,7 +113,6 @@ namespace Mobile.Authentication
                 var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
 
                 var userId = authenticatedUser.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-
 
                 var user = await _userService.GetUserById(userId!);
 
