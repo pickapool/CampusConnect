@@ -4,21 +4,26 @@
 <MudContainer Class="d-flex justify-center my-4" Style="height: calc(100vh - 100px); max-width: unset !important">
 	<MudItem xs="12" sm="8" md="6" lg="4" xl="3">
 		<MudPaper Elevation="1" Class="d-flex flex-column px-2 py-4 gap-2 align-center">
-            <MudAvatar Size="Size.Large" Class="profile position-relative" Style="border : 1px solid #d3d3d3;">
+            <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Outlined" Style="border : 1px solid #d3d3d3;">
                 <MudImage Src="@Profile.Photo"></MudImage>
             </MudAvatar>
-            <MudGrid Class="d-flex justify-center" Spacing="2">
-                <MudItem xs="12">
-                    <MudFileUpload T="IBrowserFile" Accept="*" @bind-File="selectedFile" FilesChanged="UploadFiles">
-		                <ActivatorContent>
-			                <MudButton StartIcon="@Icons.Material.Filled.Upload" Variant="Variant.Filled" Color="Color.Default" Size="Size.Small">Upload</MudButton>
-		                </ActivatorContent>
-	                </MudFileUpload>
-                </MudItem>
-                <MudItem xs="12">
+            <MudStack Justify="Justify.Center" Spacing="2" Style="width: 100%;">
+                
+                    <div class="d-flex justify-center">
+                        <MudFileUpload Class="d-flex justify-center" T="IBrowserFile" Accept="*" @bind-File="selectedFile" FilesChanged="UploadFiles">
+		                    <ActivatorContent>
+			                    <MudButton StartIcon="@Icons.Material.Filled.Upload" Variant="Variant.Filled" Color="Color.Default" Size="Size.Small">Upload</MudButton>
+		                    </ActivatorContent>
+	                    </MudFileUpload>
+                    </div>
+                    <MudDivider/>
+
+
+              
+                    <MudDivider/>
                     <MudButton OnClick="OnSave" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary">Save</MudButton>
-                </MudItem>
-            </MudGrid>
+                
+            </MudStack>
         </MudPaper>
     </MudItem>
 </MudContainer>
