@@ -9,6 +9,8 @@ namespace Domain.Models
 
         public bool IsAdmin { get; set; }
 
+        public string FullName { get; set; } = string.Empty;
+
         public byte[]? ProfilePicture { get; set; }
 
         //Org

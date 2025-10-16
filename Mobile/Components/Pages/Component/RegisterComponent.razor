@@ -81,6 +81,7 @@
             isLoading = true;
 
             User.ProfileInformation!.MyOrganizationId = User.ProfileInformation.MyOrganization!.MyOrganizationId;
+            User.ProfileInformation.FullName = User.Name;
 
             var result = await _userService.CreateUser(User);
 

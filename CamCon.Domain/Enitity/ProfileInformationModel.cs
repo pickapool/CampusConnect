@@ -18,5 +18,7 @@ namespace CamCon.Domain.Enitity
         [ForeignKey("MyOrganizationId")]
         public MyOrganizationModel? MyOrganization { get; set; }
 
+        public string FullName { get; set; } = string.Empty;
+
     }
 }

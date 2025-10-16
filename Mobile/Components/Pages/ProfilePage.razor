@@ -1,12 +1,18 @@
 ﻿@page "/profile"
 
-<ProfileComponent Profile="_appStateService.CurrentUser.ProfileInformation" OnProfileChanged="SaveProfile"></ProfileComponent>
+<ProfileComponent 
+    Profile="_appStateService.CurrentUser.ProfileInformation" 
+    Email="@_appStateService.CurrentUser.Email"
+    OnProfileChanged="SaveProfile">
+</ProfileComponent>
 
 @code {
 
-    private async Task SaveProfile()
+    private async Task SaveProfile(ProfileInfo profile)
     {
-        _appStateService.CurrentUser.ProfileInformation = await _profileService.UpdateProfile(_appStateService.CurrentUser.ProfileInformation);
+        _appStateService.CurrentUser.ProfileInformation = await _profileService.UpdateProfile(profile);
+
+        SnackBarHelper.ShowSnackbar("Profile successfully changed.", Variant.Filled, _snackBar, Severity.Success);
 
         StateHasChanged();
     }

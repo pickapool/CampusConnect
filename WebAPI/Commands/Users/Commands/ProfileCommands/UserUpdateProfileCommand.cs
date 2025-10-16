@@ -18,13 +18,14 @@ namespace WebAPI.Commands.Users.Commands.ProfileCommands
         public async Task<Result<ProfileInfo>> Handle(UserUpdateProfileCommand request, CancellationToken cancellationToken)
         {
 
-            var existingProfile = await GetDBContext().ProfileInformations
+            var existingProfile = await GetDBContext().ProfileInformations.Include( o => o.MyOrganization)
             .FirstOrDefaultAsync(p => p.ProfileInformationId == request.profile.ProfileInformationId, cancellationToken);
 
             if (existingProfile == null)
                 return Result.Failure<ProfileInfo>(new Error(StatusCodes.Status404NotFound, "Profile Not found."));
 
             existingProfile.ProfilePicture = request.profile.ProfilePicture;
+            existingProfile.FullName = request.profile.FullName;
 
             await GetDBContext().SaveChangesAsync(cancellationToken);
 

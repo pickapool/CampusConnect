@@ -4,24 +4,30 @@
 <MudContainer Class="d-flex justify-center my-4" Style="height: calc(100vh - 100px); max-width: unset !important">
 	<MudItem xs="12" sm="8" md="6" lg="4" xl="3">
 		<MudPaper Elevation="1" Class="d-flex flex-column px-2 py-4 gap-2 align-center">
-            <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Outlined" Style="border : 1px solid #d3d3d3;">
-                <MudImage Src="@Profile.Photo"></MudImage>
-            </MudAvatar>
+            <MudFileUpload Class="d-flex justify-center" T="IBrowserFile" Accept="*" @bind-File="selectedFile" FilesChanged="UploadFiles">
+		        <ActivatorContent>
+                    <MudBadge Icon="@Icons.Material.Filled.Edit" Color="Color.Default" BadgeClass="" Overlap="true" Bordered="true" Class="">
+                        <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Outlined" Style="border : 1px solid #d3d3d3;">
+                            <MudImage Src="@Profile.Photo"></MudImage>
+                        </MudAvatar>
+                    </MudBadge>
+                </ActivatorContent>
+            </MudFileUpload>
             <MudStack Justify="Justify.Center" Spacing="2" Style="width: 100%;">
                 
-                    <div class="d-flex justify-center">
-                        <MudFileUpload Class="d-flex justify-center" T="IBrowserFile" Accept="*" @bind-File="selectedFile" FilesChanged="UploadFiles">
-		                    <ActivatorContent>
-			                    <MudButton StartIcon="@Icons.Material.Filled.Upload" Variant="Variant.Filled" Color="Color.Default" Size="Size.Small">Upload</MudButton>
-		                    </ActivatorContent>
-	                    </MudFileUpload>
-                    </div>
-                    <MudDivider/>
+                <div class="d-flex flex-column align-center">
 
+                    <MudText Typo="Typo.caption"><i>@Email</i></MudText>
+                    <MudText Typo="Typo.caption"><b>@Profile.MyOrganization?.OrganizationName</b></MudText>
+
+                </div>
+                <MudDivider/>
+
+                <MudTextField @bind-Value="Profile.FullName" Variant="Variant.Outlined" Label="Full Name" Margin="Margin.Dense"></MudTextField>
 
               
-                    <MudDivider/>
-                    <MudButton OnClick="OnSave" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary">Save</MudButton>
+                <MudDivider/>
+                <MudButton OnClick="OnSave" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary">Save</MudButton>
                 
             </MudStack>
         </MudPaper>
@@ -34,7 +40,7 @@
 
     [Parameter] public ProfileInfo Profile { get; set; } = new();
     [Parameter] public EventCallback<ProfileInfo> OnProfileChanged { get; set; }
-
+    [Parameter] public string Email { get; set; } = string.Empty;
 
     private async Task UploadFiles(IBrowserFile file)
     {
