@@ -1,9 +1,9 @@
 ﻿@using Domain.Models
 @using Microsoft.AspNetCore.Components.Forms
 
-<MudContainer Class="d-flex justify-center my-2 px-2" Style="height: calc(100vh - 100px); max-width: unset !important">
+<MudContainer Class="d-flex justify-center mb-2 px-2" Style="height: calc(100vh - 100px); max-width: unset !important">
 	<MudItem xs="12" sm="8" md="6" lg="4" xl="3">
-		<MudPaper Elevation="2" Class="d-flex flex-column gap-2 align-center">
+		<MudPaper Elevation="2" Class="d-flex flex-column gap-2 align-center relative" Style="height: 100%;">
             <MudGrid>
                 <MudItem Class="relative d-flex flex-column" xs="12">
                     <MudFileUpload Class="d-flex justify-center file-upload" T="IBrowserFile" Accept="*" @bind-File="selectedCoverPhoto" FilesChanged="UploadCover" Style="width: 100%;">
@@ -24,30 +24,31 @@
                         </MudFileUpload>
                 </MudItem>
 
-                <MudItem xs="12">
+                <MudItem Class="flex-grow-1" xs="12">
                     <MudStack Class="pa-2" Justify="Justify.Center" Spacing="2" Style="width: 100%;">
 
-                        <div class="d-flex flex-column pl-3">
+                        <MudStack Class="pl-3">
 
                             <MudText Typo="Typo.h6">@(string.IsNullOrEmpty(Profile.FullName) ? CurrentFullname : Profile.FullName)</MudText>
                             <small style="color: blue">@Profile.MyOrganization?.OrganizationName</small>
 
-                        </div>
+                        </MudStack>
                         <MudDivider />
 
-                        <div>
-                            <MudIcon Icon="@Icons.Material.Filled.LocationCity"></MudIcon>
-                            <small>@Profile.Address</small>
-                        </div>
-                        <div>
-                            <MudIcon Icon="@Icons.Material.Filled.Warehouse"></MudIcon>
-                            <small>@Profile.Course</small>
-                        </div>
-      
-                        <MudDivider />
-                        <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary">Edit Profile</MudButton>
+                        <MudStack AlignItems="AlignItems.Center" Row>
+                            <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small"></MudIcon>
+                            <small>@(string.IsNullOrEmpty(Profile.Address) ? "Address not found" : Profile.Address)</small>
+                        </MudStack>
+                        <MudStack AlignItems="AlignItems.Center" Row>
+                            <MudIcon Icon="@Icons.Material.Filled.Warehouse" Size="Size.Small"></MudIcon>
+                            <small>@(string.IsNullOrEmpty(Profile.Course) ? "Course not found" : Profile.Course)</small>
+                        </MudStack>
 
                     </MudStack>
+                </MudItem>
+                
+                <MudItem Class="absolute d-flex justify-center width-100p mb-2" xs="12" Style="bottom: 0;">
+                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary">Edit Profile</MudButton>
                 </MudItem>
             </MudGrid>
         </MudPaper>
