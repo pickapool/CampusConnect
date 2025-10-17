@@ -26,6 +26,8 @@ namespace WebAPI.Commands.Users.Commands.ProfileCommands
 
             existingProfile.ProfilePicture = request.profile.ProfilePicture;
             existingProfile.FullName = request.profile.FullName;
+            existingProfile.Address = request.profile.Address;
+            existingProfile.Course = request.profile.Course;
 
             await GetDBContext().SaveChangesAsync(cancellationToken);
 

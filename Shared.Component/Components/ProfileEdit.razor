@@ -1,0 +1,34 @@
+﻿@using Domain.Models
+
+<MudStack class="pa-2 width-100p heigth-100p" Spacing="2">
+    <MudStack Class="gap-1">
+        <MudTextField @bind-Value="Profile.FullName" Variant="Variant.Outlined" Margin="Margin.Dense" Label="Full Name" ShrinkLabel></MudTextField>
+
+        <MudTextField @bind-Value="Profile.Address" Variant="Variant.Outlined" Margin="Margin.Dense" Label="Address" ShrinkLabel></MudTextField>
+
+        <MudTextField @bind-Value="Profile.Course" Variant="Variant.Outlined" Margin="Margin.Dense" Label="Course" ShrinkLabel></MudTextField>
+    </MudStack>
+
+    <div class="flex-grow-1"></div>
+
+    <MudStack Justify="Justify.Center" Row>
+        <MudButton OnClick="Back" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">Cancel</MudButton>
+        <MudButton OnClick="UpdateProfile" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small">Update</MudButton>
+    </MudStack>
+</MudStack>
+
+@code {
+    [Parameter] public ProfileInfo Profile { get; set; } = new();
+    [Parameter] public EventCallback<ProfileInfo> OnUpdateProfile { get; set; }
+    [Parameter] public EventCallback OnBack { get; set; }
+
+    private async Task UpdateProfile()
+    {
+        await OnUpdateProfile.InvokeAsync(Profile);
+    }
+
+    private async Task Back()
+    {
+        await OnBack.InvokeAsync();
+    }
+}

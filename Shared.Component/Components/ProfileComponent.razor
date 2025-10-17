@@ -4,16 +4,18 @@
 <MudContainer Class="d-flex justify-center mb-2 px-2" Style="height: calc(100vh - 100px); max-width: unset !important">
 	<MudItem xs="12" sm="8" md="6" lg="4" xl="3">
 		<MudPaper Elevation="2" Class="d-flex flex-column gap-2 align-center relative" Style="height: 100%;">
-            <MudGrid>
-                <MudItem Class="relative d-flex flex-column" xs="12">
-                    <MudFileUpload Class="d-flex justify-center file-upload" T="IBrowserFile" Accept="*" @bind-File="selectedCoverPhoto" FilesChanged="UploadCover" Style="width: 100%;">
+            @if (!IsEdit)
+            {
+                <MudGrid>
+                    <MudItem Class="relative d-flex flex-column" xs="12">
+                        <MudFileUpload Class="@($"{(IsView ? "hide-badge" : "")}d-flex justify-center file-upload")" T="IBrowserFile" Accept="*" @bind-File="selectedCoverPhoto" FilesChanged="UploadCover" Style="width: 100%;" Disabled="IsView">
 		                <ActivatorContent>
                             <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
                                 <MudImage Class="cover-photo rounded-lg" Elevation="1" Src="@Profile.CoverPhoto" Height="150"></MudImage>
                             </MudBadge>
                         </ActivatorContent>
                     </MudFileUpload>
-                        <MudFileUpload Class="d-flex justify-center absolute profile-container" T="IBrowserFile" Accept="*" @bind-File="selectedProfile" FilesChanged="UploadProfilePicture">
+                        <MudFileUpload Class="d-flex justify-center absolute profile-container" T="IBrowserFile" Accept="*" @bind-File="selectedProfile" FilesChanged="UploadProfilePicture" Disabled="IsView">
                             <ActivatorContent>
                                 <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
                                     <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
@@ -47,24 +49,32 @@
                     </MudStack>
                 </MudItem>
                 
-                <MudItem Class="absolute d-flex justify-center width-100p mb-2" xs="12" Style="bottom: 0;">
-                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary">Edit Profile</MudButton>
-                </MudItem>
-            </MudGrid>
+                @if (!IsView)
+                {
+                    <MudItem Class="absolute d-flex justify-center width-100p mb-2" xs="12" Style="bottom: 0;">
+                        <MudButton OnClick=EditProfile Variant="Variant.Filled" Size="Size.Small" Color="Color.Default">Edit Profile</MudButton>
+                    </MudItem>
+                }
+                </MudGrid>
+            } else
+            {
+                <ProfileEdit Profile="Profile" OnUpdateProfile="UpdateProfile" OnBack="() => IsEdit = !IsEdit"></ProfileEdit>
+            }
         </MudPaper>
     </MudItem>
 </MudContainer>
 
 
 @code {
-    private IBrowserFile? selectedCoverPhoto;
-    private IBrowserFile? selectedProfile;
-
     [Parameter] public ProfileInfo Profile { get; set; } = new();
     [Parameter] public EventCallback<ProfileInfo> OnProfileChanged { get; set; }
     [Parameter] public string Email { get; set; } = string.Empty;
     [Parameter] public bool IsView { get; set; }
     [Parameter] public string CurrentFullname { get; set; } = string.Empty;
+
+    private IBrowserFile? selectedCoverPhoto;
+    private IBrowserFile? selectedProfile;
+    private bool IsEdit;
 
     private async Task UploadCover(IBrowserFile file)
     {
@@ -101,14 +111,22 @@
             }
         }
     }
-    public async Task ChangePicture ()
+
+
+    public async Task UpdateProfile(ProfileInfo currentEdit)
     {
-        
+
+        await OnProfileChanged.InvokeAsync(currentEdit);
+
+        Profile = currentEdit;
+
+        EditProfile();
     }
-    // private void OnSave()
-    // {
-    //     OnProfileChanged.InvokeAsync(Profile);
-    // }
+
+    private void EditProfile()
+    {
+        IsEdit = !IsEdit;
+    }
 
 }
 <style>
@@ -140,5 +158,8 @@
     .profile-container {
         bottom: -25px;
         left: 30px;
+    }
+    .hide-badge {
+        display: none !important;
     }
 </style>

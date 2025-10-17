@@ -4,7 +4,7 @@
     Profile="_appStateService.CurrentUser.ProfileInformation" 
     Email="@_appStateService.CurrentUser.Email"
     CurrentFullname="@_appStateService.CurrentUser.Name"
-    OnProfileChanged="UploadPicture">
+    OnProfileChanged="UpdateProfile">
 </ProfileComponent>
 
 @code {
@@ -21,7 +21,7 @@
         };
     }
 
-    private async Task UploadPicture(ProfileInfo profile)
+    private async Task UpdateProfile(ProfileInfo profile)
     {
         _appStateService.CurrentUser.ProfileInformation = await _profileService.UpdateProfile(profile);
 
