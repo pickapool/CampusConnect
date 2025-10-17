@@ -13,6 +13,8 @@ namespace CamCon.Domain.Enitity
 
         public byte[]? ProfilePicture { get; set; }
 
+        public byte[]? CoverPicture { get; set; }
+
         //Department
         public Guid? MyOrganizationId { get; set; }
         [ForeignKey("MyOrganizationId")]
@@ -20,5 +22,8 @@ namespace CamCon.Domain.Enitity
 
         public string FullName { get; set; } = string.Empty;
 
+        public string Address { get; set; } = string.Empty;
+
+        public string Course { get; set; } = string.Empty;
     }
 }

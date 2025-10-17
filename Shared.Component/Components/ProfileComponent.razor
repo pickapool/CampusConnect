@@ -1,76 +1,143 @@
 ﻿@using Domain.Models
 @using Microsoft.AspNetCore.Components.Forms
 
-<MudContainer Class="d-flex justify-center my-4" Style="height: calc(100vh - 100px); max-width: unset !important">
+<MudContainer Class="d-flex justify-center my-2 px-2" Style="height: calc(100vh - 100px); max-width: unset !important">
 	<MudItem xs="12" sm="8" md="6" lg="4" xl="3">
-		<MudPaper Elevation="1" Class="d-flex flex-column px-2 py-4 gap-2 align-center">
-            <MudFileUpload Class="d-flex justify-center" T="IBrowserFile" Accept="*" @bind-File="selectedFile" FilesChanged="UploadFiles">
-		        <ActivatorContent>
-                    <MudBadge Icon="@Icons.Material.Filled.Edit" Color="Color.Default" BadgeClass="" Overlap="true" Bordered="true" Class="">
-                        <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Outlined" Style="border : 1px solid #d3d3d3;">
-                            <MudImage Src="@Profile.Photo"></MudImage>
-                        </MudAvatar>
-                    </MudBadge>
-                </ActivatorContent>
-            </MudFileUpload>
-            <MudStack Justify="Justify.Center" Spacing="2" Style="width: 100%;">
-                
-                <div class="d-flex flex-column align-center">
+		<MudPaper Elevation="2" Class="d-flex flex-column gap-2 align-center">
+            <MudGrid>
+                <MudItem Class="relative d-flex flex-column" xs="12">
+                    <MudFileUpload Class="d-flex justify-center file-upload" T="IBrowserFile" Accept="*" @bind-File="selectedCoverPhoto" FilesChanged="UploadCover" Style="width: 100%;">
+		                <ActivatorContent>
+                            <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
+                                <MudImage Class="cover-photo rounded-lg" Elevation="1" Src="@Profile.CoverPhoto" Height="150"></MudImage>
+                            </MudBadge>
+                        </ActivatorContent>
+                    </MudFileUpload>
+                        <MudFileUpload Class="d-flex justify-center absolute profile-container" T="IBrowserFile" Accept="*" @bind-File="selectedProfile" FilesChanged="UploadProfilePicture">
+                            <ActivatorContent>
+                                <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
+                                    <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
+                                        <MudImage Src="@Profile.Photo"></MudImage>
+                                    </MudAvatar>
+                                </MudBadge>
+                            </ActivatorContent>
+                        </MudFileUpload>
+                </MudItem>
 
-                    <MudText Typo="Typo.caption"><i>@Email</i></MudText>
-                    <MudText Typo="Typo.caption"><b>@Profile.MyOrganization?.OrganizationName</b></MudText>
+                <MudItem xs="12">
+                    <MudStack Class="pa-2" Justify="Justify.Center" Spacing="2" Style="width: 100%;">
 
-                </div>
-                <MudDivider/>
+                        <div class="d-flex flex-column pl-3">
 
-                <MudTextField @bind-Value="Profile.FullName" Variant="Variant.Outlined" Label="Full Name" Margin="Margin.Dense"></MudTextField>
+                            <MudText Typo="Typo.h6">@(string.IsNullOrEmpty(Profile.FullName) ? CurrentFullname : Profile.FullName)</MudText>
+                            <small style="color: blue">@Profile.MyOrganization?.OrganizationName</small>
 
-              
-                <MudDivider/>
-                <MudButton OnClick="OnSave" Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary">Save</MudButton>
-                
-            </MudStack>
+                        </div>
+                        <MudDivider />
+
+                        <div>
+                            <MudIcon Icon="@Icons.Material.Filled.LocationCity"></MudIcon>
+                            <small>@Profile.Address</small>
+                        </div>
+                        <div>
+                            <MudIcon Icon="@Icons.Material.Filled.Warehouse"></MudIcon>
+                            <small>@Profile.Course</small>
+                        </div>
+      
+                        <MudDivider />
+                        <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary">Edit Profile</MudButton>
+
+                    </MudStack>
+                </MudItem>
+            </MudGrid>
         </MudPaper>
     </MudItem>
 </MudContainer>
 
 
 @code {
-    private IBrowserFile? selectedFile;
+    private IBrowserFile? selectedCoverPhoto;
+    private IBrowserFile? selectedProfile;
 
     [Parameter] public ProfileInfo Profile { get; set; } = new();
     [Parameter] public EventCallback<ProfileInfo> OnProfileChanged { get; set; }
     [Parameter] public string Email { get; set; } = string.Empty;
+    [Parameter] public bool IsView { get; set; }
+    [Parameter] public string CurrentFullname { get; set; } = string.Empty;
 
-    private async Task UploadFiles(IBrowserFile file)
+    private async Task UploadCover(IBrowserFile file)
     {
-        selectedFile = file;
-        if (selectedFile != null)
+        selectedCoverPhoto = file;
+        if (selectedCoverPhoto != null)
         {
-            await ChangePicture();
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await selectedCoverPhoto.OpenReadStream(209715200).CopyToAsync(memoryStream);
+
+                Profile.CoverPicture = memoryStream.ToArray();
+
+                await OnProfileChanged.InvokeAsync(Profile);
+
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task UploadProfilePicture(IBrowserFile file)
+    {
+        selectedProfile = file;
+        if (selectedProfile != null)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await selectedProfile.OpenReadStream(209715200).CopyToAsync(memoryStream);
+
+                Profile.ProfilePicture = memoryStream.ToArray();
+
+                await OnProfileChanged.InvokeAsync(Profile);
+
+                StateHasChanged();
+            }
         }
     }
     public async Task ChangePicture ()
     {
-        using (MemoryStream memoryStream = new MemoryStream())
-        {
-            await selectedFile.OpenReadStream(209715200).CopyToAsync(memoryStream);
-
-            Profile.ProfilePicture = memoryStream.ToArray();
-
-            StateHasChanged();
-        }
+        
     }
-    private void OnSave()
-    {
-        OnProfileChanged.InvokeAsync(Profile);
-    }
+    // private void OnSave()
+    // {
+    //     OnProfileChanged.InvokeAsync(Profile);
+    // }
 
 }
 <style>
     .profile.mud-avatar.mud-avatar-large {
-        height: 200px;
-        width: 200px;
+        height: 120px;
+        width: 120px;
+        border: 1px solid white;
     }
 
+    .cover-photo {
+        width: 100%;
+        object-fit:cover;
+    }
+
+    .badge-edit.mud-badge.mud-badge-bottom.right.mud-badge-overlap {
+        height: 23px;
+        width: 23px;
+    }
+
+    .badge-edit .mud-badge.mud-badge-icon .mud-icon-badge {
+        font-size: 16px;
+    }
+
+    .file-upload .mud-badge-root {
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .profile-container {
+        bottom: -25px;
+        left: 30px;
+    }
 </style>
