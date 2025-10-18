@@ -12,6 +12,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
     public DbSet<ProfileInfo> ProfileInformations { get; set; }
     public DbSet<MyOrganizationModel> MyOrganizations { get; set; }
     public DbSet<DepartmentModel> Departments { get; set; }
+    public DbSet<NewsFeedModel> NewsFeeds { get; set; }
+    public DbSet<NewsFeedImageModel> NewsFeedImages { get; set; }
+    public DbSet<NewsFeedCommentModel> NewsFeedComments { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -40,6 +43,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
         builder.Entity<ProfileInfo>().ToTable("ProfileInformations");
         builder.Entity<MyOrganizationModel>().ToTable("MyOrganizations");
         builder.Entity<DepartmentModel>().ToTable("Departments");
-
+        builder.Entity<NewsFeedModel>().ToTable("NewsFeeds");
+        builder.Entity<NewsFeedImageModel>().ToTable("NewsFeedImages");
+        builder.Entity<NewsFeedCommentModel>().ToTable("NewsFeedComments");
     }
 }

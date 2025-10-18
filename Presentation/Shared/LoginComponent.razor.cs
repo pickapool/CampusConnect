@@ -1,5 +1,4 @@
 ﻿using Blazored.LocalStorage;
-using Component.Shared.Helpers;
 using Domain.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using Presentation.Authentication;
 using Service.Interfaces;
+using Shared.Component.Helpers;
 
 namespace Presentation.Shared
 {
