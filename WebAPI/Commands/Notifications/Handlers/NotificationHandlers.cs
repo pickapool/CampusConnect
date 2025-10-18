@@ -23,6 +23,7 @@ namespace WebAPI.Commands.Notifications.Handlers
             try
             {
                 _logger.LogInformation("Sending admin notification: {NotificationId}", notification.NotificationId);
+
                 await _hubContext.Clients.All.SendAsync("AdminNotification", notification.NotificationId, cancellationToken);
             }
             catch (Exception ex)
@@ -32,28 +33,26 @@ namespace WebAPI.Commands.Notifications.Handlers
         }
     }
 
-    public class UserNotificationHandler : INotificationHandler<UserNotificationEvent>
+    public class NotificationHandler : INotificationHandler<NotificationEvent>
     {
         private readonly IHubContext<NotificationHub> _hubContext;
-        private readonly ILogger<UserNotificationHandler> _logger;
+        private readonly ILogger<NotificationHandler> _logger;
 
-        public UserNotificationHandler(
+        public NotificationHandler(
             IHubContext<NotificationHub> hubContext,
-            ILogger<UserNotificationHandler> logger)
+            ILogger<NotificationHandler> logger)
         {
             _hubContext = hubContext;
             _logger = logger;
         }
 
-        public async Task Handle(UserNotificationEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(NotificationEvent notification, CancellationToken cancellationToken)
         {
             try
             {
-                _logger.LogInformation("Sending user notification: {NotificationId} to user: {UserId}",
-                    notification.NotificationId, notification.UserId);
+                _logger.LogInformation("Sending user notification: {NotificationId}", notification.NotificationId);
 
-                await _hubContext.Clients.User(notification.UserId)
-                    .SendAsync("UserNotification", notification.NotificationId, cancellationToken);
+                await _hubContext.Clients.All.SendAsync("UserNotification", notification.NotificationId, cancellationToken);
             }
             catch (Exception ex)
             {
