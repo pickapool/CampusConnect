@@ -1,5 +1,6 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using Blazored.LocalStorage
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -24,6 +25,8 @@
 @inject NavigationManager _navigationManager
 @inject HubNotificationService _hubNotificationService
 @inject LayoutNotifierService _layoutNotifierService
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject ILocalStorageService _localStorage
 
 @inject IDialogService _dialogService
 @inject IUserService _userService

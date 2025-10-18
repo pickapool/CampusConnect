@@ -53,7 +53,7 @@
     protected string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
     protected bool _open = false, isLoading = false, isShow = false;
     protected InputType PasswordInput = InputType.Password;
-    
+
     private void RegisterClick() => OnRegisterClick.InvokeAsync();
 
     protected void ToggleDrawer()
@@ -88,7 +88,11 @@
 
             await _localStorage.SetItemAsync("token", uid);
 
-            ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserAuthentication(uid.AccessToken);
+            await ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserAuthentication(uid.AccessToken);
+
+            await _hubNotificationService.StartAllNotificationConnection();
+
+            //await _hubNotificationService.StartUserNotificationConnection(uid.AccessToken);
 
             username = string.Empty;
             password = string.Empty;

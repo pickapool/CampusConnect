@@ -3,6 +3,7 @@ using CamCon.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.ApplicationDBContextService;
+using WebAPI.Commands.Notifications.Events;
 using WebAPI.Interfaces;
 
 namespace WebAPI.Commands.Organizations.Query
@@ -11,7 +12,8 @@ namespace WebAPI.Commands.Organizations.Query
     
     public class GetOrganizationsQueryHandler : AppDatabaseBase, IRequestHandler<GetOrganizationsQuery, Result<List<MyOrganizationModel>>>
     {
-        public GetOrganizationsQueryHandler(AppDbContext context) : base(context) { }
+        private readonly IMediator mediator;
+        public GetOrganizationsQueryHandler(AppDbContext context, IMediator mediator) : base(context) => this.mediator = mediator;
 
         public async Task<Result<List<MyOrganizationModel>>> Handle(GetOrganizationsQuery request, CancellationToken cancellationToken)
         {
@@ -19,6 +21,8 @@ namespace WebAPI.Commands.Organizations.Query
                 .Include(m => m.User)
                 .ThenInclude( u => u!.ProfileInformation)
                 .ToListAsync(cancellationToken);
+
+            await mediator.Publish(new AllNotificationEvent(new Guid("8E83D189-CE65-4515-C353-08DE0E3B9093")), cancellationToken);
 
             return Result.Success(organizations);
         }

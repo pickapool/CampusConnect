@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Service;
 using Service.Interfaces;
+using Service.Notifiers;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -16,13 +17,15 @@ namespace Mobile.Authentication
         private readonly IJSRuntime _jsRuntime;
         private readonly IUserService _userService;
         private readonly AppStateService _appstateService;
+        private readonly HubNotificationService _hubNotificationService;
 
-        public CustomAuthenticationState(ILocalStorageService localStorage, IJSRuntime jsRuntime, IUserService userService, AppStateService appStateService)
+        public CustomAuthenticationState(ILocalStorageService localStorage, IJSRuntime jsRuntime, IUserService userService, AppStateService appStateService, HubNotificationService hubnotificationService)
         {
             _localStorage = localStorage;
             _jsRuntime = jsRuntime;
             _userService = userService;
             _appstateService = appStateService;
+            _hubNotificationService = hubnotificationService;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -37,10 +40,11 @@ namespace Mobile.Authentication
             }
             try
             {
-                var currentToken = await _localStorage.GetItemAsStringAsync("token");
-                if (!string.IsNullOrEmpty(currentToken))
+                var currentToken = await _localStorage.GetItemAsync<TokenModel>("token");
+
+                if (currentToken is not null)
                 {
-                    var claims = ParseClaimsFromJwt(currentToken);
+                    var claims = ParseClaimsFromJwt(currentToken.AccessToken);
                     var expClaim = claims?.FirstOrDefault(c => c.Type == "exp")?.Value;
                     if (expClaim != null && long.TryParse(expClaim, out long exp))
                     {
@@ -51,7 +55,7 @@ namespace Mobile.Authentication
                             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
                         }
                     }
-                    await GetAccount(currentToken);
+                    await GetAccount(currentToken.AccessToken);
 
                     var identity = new ClaimsIdentity(claims, "jwt");
 
@@ -88,8 +92,6 @@ namespace Mobile.Authentication
         {
             var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
 
-            var userId = authenticatedUser.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-
             await GetAccount(token);
 
             var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
@@ -107,9 +109,6 @@ namespace Mobile.Authentication
         {
             try
             {
-                //Can be remove if production ready
-                await Task.Delay(3000);
-
                 var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
 
                 var userId = authenticatedUser.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
@@ -117,6 +116,7 @@ namespace Mobile.Authentication
                 var user = await _userService.GetUserById(userId!);
 
                 _appstateService.CurrentUser = user;
+
             } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
             }

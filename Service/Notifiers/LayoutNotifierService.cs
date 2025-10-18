@@ -10,18 +10,34 @@ namespace Service.Notifiers
     {
         public event Action? OnChanged;
 
-        public event Func<Guid, Task?>? OnNotificationReceived;
+        public event Func<Guid, Task?>? OnAdminNotificationReceived;
 
-        public void NotifyChanged()
+        public event Func<Guid, Task?>? OnUserNotificationReceived;
+
+        public event Func<Guid, Task?>? OnAllNotificationReceived;
+
+        public void NotifyLayoutChanged()
         {
             if (OnChanged is not null)
                 OnChanged?.Invoke();
         }
 
-        public void NotificationReceived(Guid id)
+        public void AdminNotificationReceived(Guid id)
         {
-            if (OnNotificationReceived is not null)
-                OnNotificationReceived?.Invoke(id);
+            if (OnAdminNotificationReceived is not null)
+                OnAdminNotificationReceived?.Invoke(id);
+        }
+
+        public void UserNotificationReceived(Guid id)
+        {
+            if (OnUserNotificationReceived is not null)
+                OnUserNotificationReceived?.Invoke(id);
+        }
+
+        public void AllNotificationReceived(Guid id)
+        {
+            if (OnAllNotificationReceived is not null)
+                OnAllNotificationReceived?.Invoke(id);
         }
 
     }

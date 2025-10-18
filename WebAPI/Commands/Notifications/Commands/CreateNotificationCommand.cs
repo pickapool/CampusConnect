@@ -2,8 +2,10 @@
 using CamCon.Domain.Enitity;
 using CamCon.Shared;
 using MediatR;
+using System.Text.Json;
 using WebAPI.ApplicationDBContextService;
 using WebAPI.Commands.Notifications.Events;
+using WebAPI.Commands.Notifications.Handlers;
 using WebAPI.Interfaces;
 using WebAPI.Services.NotificationService;
 
@@ -30,8 +32,15 @@ namespace WebAPI.Commands.Notifications.Commands
                 
                 await GetDBContext().SaveChangesAsync(cancellationToken);
 
-                //Trigger notification to admin
+
                 await mediator.Publish(new AdminNotificationEvent(request.Notify.NotifyId), cancellationToken);
+
+                //await mediator.Publish(new AllNotificationEvent(request.Notify.NotifyId), cancellationToken);
+
+                //var requestModel = JsonSerializer.Deserialize<AdminPageRequestModel>(request.Notify.DataJson);
+
+                //if(requestModel is not null)
+                //  await mediator.Publish(new UserNotificationEvent(request.Notify.NotifyId, requestModel.User.Id),cancellationToken);
 
                 return Result.Success(request.Notify.NotifyId);
             }

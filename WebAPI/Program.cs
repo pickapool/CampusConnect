@@ -1,9 +1,11 @@
+using Azure.Core;
 using CamCon.Domain.Enitity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MVC.WebAPI.Data;
+using Newtonsoft.Json.Linq;
 using System.Text;
 using WebAPI.ApplicationDBContextService;
 using WebAPI.NotifyHub;
@@ -37,11 +39,34 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
         ValidAudience = builder.Configuration["JWT:ValidAudience"],
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
         ClockSkew = TimeSpan.Zero,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:secret"]))
     };
+
+
+    //options.Events = new JwtBearerEvents
+    //{
+    //    OnMessageReceived = context =>
+    //    {
+    //        var token = context.Request.Query["access_token"];
+    //        var path = context.HttpContext.Request.Path;
+
+    //        Console.WriteLine("Token-" + token);
+    //        Console.WriteLine($"OnMessageReceived - Path: {path}, QueryString: {context.Request.QueryString}, TokenPresent: {!string.IsNullOrEmpty(token)}");
+
+    //        if (!string.IsNullOrEmpty(token) && context.HttpContext.Request.Path.StartsWithSegments("/hubs"))
+    //        {
+    //            context.Token = token;
+    //        }
+
+    //        return Task.CompletedTask;
+    //    }
+    //};
+
 });
 
 builder.Services.AddMediatR(config =>

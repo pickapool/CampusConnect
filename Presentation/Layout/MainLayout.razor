@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Presentation.Authentication
 @using Presentation.Shared
 
 @inherits LayoutComponentBase
@@ -30,7 +31,7 @@
                 <MudNavMenu>
                     <MudNavLink Match="NavLinkMatch.All">Profile</MudNavLink>
                     <MudNavLink Match="NavLinkMatch.All">Change Password</MudNavLink>
-                    <MudNavLink Match="NavLinkMatch.All">Logout</MudNavLink>
+                    <MudNavLink OnClick="Logout" Match="NavLinkMatch.All">Logout</MudNavLink>
                 </MudNavMenu>
             </MudDrawer>
             <MudMainContent>
@@ -49,29 +50,47 @@
     </NotAuthorized>
 </AuthorizeView>
 @code {
+
+
     private bool _open = false;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        await _hubNotificationService.StartAdminConnection();
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        _layoutNotifierService.OnNotificationReceived += GetNotification;
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            await _hubNotificationService.StartAdminNotificationConnection();
+        }
+        _layoutNotifierService.OnAdminNotificationReceived += GetNotification;
     }
 
     private async Task GetNotification(Guid id)
     {
         var notification = await _notificationService.GetByIdAsync(id);
+
         if (notification is not null)
         {
             Console.WriteLine("Notification received in layout: " + notification);
         }
     }
 
-
     private void ToggleDrawer()
     {
         _open = !_open;
-    } 
+    }
+
+    private async Task Logout()
+    {
+        await _localStorage.RemoveItemAsync("token");
+
+        ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserLogout();
+
+        await _hubNotificationService.StopConnectionAsync();
+
+        _navigationManager.NavigateTo("/", true);
+    }
 }

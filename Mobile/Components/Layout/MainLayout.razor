@@ -78,19 +78,47 @@
 
     private void ToggleDrawer() => _open = !_open;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        await base.OnInitializedAsync();
 
-        _notifierLayoutService.OnChanged += HandleChange;
+        _layoutNotifierService.OnChanged += HandleChange;
+
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var token = await _localStorage.GetItemAsync<TokenModel>("token");
+
+            await _hubNotificationService.StartAllNotificationConnection();
+
+            //await _hubNotificationService.StartUserNotificationConnection(token.AccessToken);
+        }
+        
+        _layoutNotifierService.OnAllNotificationReceived += GetNotification;
+
+        //_layoutNotifierService.OnAllNotificationReceived += GetNotification;
     }
 
+    private async Task GetNotification(Guid id)
+    {
+        var notification = await _notificationService.GetByIdAsync(id);
+
+        if (notification is not null)
+        {
+            SnackBarHelper.ShowSnackbar("Sample", Variant.Filled, _snackBar, Severity.Success);
+        }
+    }
 
     private async Task Logout()
     {
         await _localStorage.RemoveItemAsync("token");
 
         ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserLogout();
+
+        await _hubNotificationService.StopConnectionAsync();
 
         _navigationManager.NavigateTo("/", true);
     }
@@ -102,7 +130,7 @@
 
     public void Dispose()
     {
-        _notifierLayoutService.OnChanged -= HandleChange;
+        _layoutNotifierService.OnChanged -= HandleChange;
     }
 
     private async Task RequestPage()

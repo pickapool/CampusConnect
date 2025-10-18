@@ -2,7 +2,7 @@
 
 namespace WebAPI.Commands.Notifications.Events
 {
-    public record NotificationEvent(Guid NotificationId) : INotification;
+    public record AllNotificationEvent(Guid NotificationId) : INotification;
 
     public record AdminNotificationEvent(Guid NotificationId) : INotification;
 

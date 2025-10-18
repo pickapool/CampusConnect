@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using Service.Notifiers;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -10,7 +11,6 @@ namespace Presentation.Authentication
     {
         private readonly ILocalStorageService _localStorage;
         private readonly IJSRuntime _jsRuntime;
-
         public CustomAuthenticationState(ILocalStorageService localStorage, IJSRuntime jsRuntime)
         {
             _localStorage = localStorage;
@@ -44,6 +44,7 @@ namespace Presentation.Authentication
                         }
                     }
                     var identity = new ClaimsIdentity(claims, "jwt");
+
                     return new AuthenticationState(new ClaimsPrincipal(identity));
                 }
             }
@@ -76,7 +77,9 @@ namespace Presentation.Authentication
         public void NotifyUserAuthentication(string token)
         {
             var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
+
             var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
+
             NotifyAuthenticationStateChanged(authState);
         }
         public void NotifyUserLogout()

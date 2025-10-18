@@ -12,8 +12,6 @@ else
 @code {
     [Parameter] public RenderFragment ChildComponent { get; set; } = default!;
 
-    [Inject] protected AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
-
     protected bool isAuthorizing = true, isAuthorized = false;
 
     protected override async Task OnAfterRenderAsync(bool isFirstRender)

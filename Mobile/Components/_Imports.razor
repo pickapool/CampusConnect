@@ -29,11 +29,13 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject AppStateService _appStateService
-@inject LayoutNotifierService _notifierLayoutService
+@inject LayoutNotifierService _layoutNotifierService
+@inject HubNotificationService _hubNotificationService
 
 @inject ILocalStorageService _localStorage
 @inject ISnackbar _snackBar
 @inject IDialogService _dialogService
+@inject ITokenProvider _tokenProvider
 
 @inject IUserService _userService
 @inject IOrganizationService _organizationService

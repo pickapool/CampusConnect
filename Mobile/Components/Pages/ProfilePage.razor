@@ -18,7 +18,7 @@
         if(string.IsNullOrEmpty(_appStateService.CurrentUser.ProfileInformation.FullName))
         {
             _appStateService.CurrentUser.ProfileInformation.FullName = _appStateService.CurrentUser.Name;
-        };
+        }
     }
 
     private async Task UpdateProfile(ProfileInfo profile)
@@ -27,7 +27,7 @@
 
         SnackBarHelper.ShowSnackbar("Profile successfully changed.", Variant.Filled, _snackBar, Severity.Success);
 
-        _notifierLayoutService.NotifyChanged();
+        _layoutNotifierService.NotifyLayoutChanged();
 
         StateHasChanged();
     }

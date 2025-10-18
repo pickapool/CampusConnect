@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using Presentation.Authentication;
 using Service.Interfaces;
+using Service.Notifiers;
 using Shared.Component.Helpers;
 
 namespace Presentation.Shared
@@ -16,6 +17,7 @@ namespace Presentation.Shared
         [Inject] protected AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
         [Inject] protected IUserService _userService { get; set; } = default!;
         [Inject] protected ILocalStorageService _localStorage { get; set; } = default!;
+        [Inject] protected HubNotificationService _hubNotificationService { get; set; } = default!; 
 
         protected string username = string.Empty, password = string.Empty;
         protected bool _open = false, isLoading = false, isShow = false;
@@ -55,6 +57,8 @@ namespace Presentation.Shared
                 await _localStorage.SetItemAsync("token", uid);
 
                 ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserAuthentication(uid.AccessToken);
+
+                await _hubNotificationService.StartAdminNotificationConnection();
 
                 username = string.Empty;
                 password = string.Empty;
