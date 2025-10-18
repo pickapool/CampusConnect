@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain
+﻿namespace Domain
 {
     public class Enums
     {
@@ -26,6 +20,18 @@ namespace Domain
         {
             Department,
             Organization
+        }
+        public enum NotificationType
+        {
+            PageRequest,
+            Comment,
+            Post
+        }
+        public enum PageRequestStatus
+        {
+            Pending,
+            Approved,
+            Rejected
         }
     }
 }

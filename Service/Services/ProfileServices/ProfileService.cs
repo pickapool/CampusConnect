@@ -26,7 +26,7 @@ namespace Service.Services.ProfileServices
         {
             _configuration = configuration;
             _baseService = baseService;
-            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/profile"; ;
+            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/profile";
         }
 
         public async Task<ProfileInfo> UpdateProfile(ProfileInfo model)

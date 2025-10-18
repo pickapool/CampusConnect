@@ -10,9 +10,19 @@ namespace Service.Notifiers
     {
         public event Action? OnChanged;
 
+        public event Func<Guid, Task?>? OnNotificationReceived;
+
         public void NotifyChanged()
         {
-            OnChanged?.Invoke();
+            if (OnChanged is not null)
+                OnChanged?.Invoke();
         }
+
+        public void NotificationReceived(Guid id)
+        {
+            if (OnNotificationReceived is not null)
+                OnNotificationReceived?.Invoke(id);
+        }
+
     }
 }

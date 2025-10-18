@@ -51,6 +51,25 @@
 @code {
     private bool _open = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await _hubNotificationService.StartAdminConnection();
+
+        _layoutNotifierService.OnNotificationReceived += GetNotification;
+    }
+
+    private async Task GetNotification(Guid id)
+    {
+        var notification = await _notificationService.GetByIdAsync(id);
+        if (notification is not null)
+        {
+            Console.WriteLine("Notification received in layout: " + notification);
+        }
+    }
+
+
     private void ToggleDrawer()
     {
         _open = !_open;

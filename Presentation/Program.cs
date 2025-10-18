@@ -6,8 +6,10 @@ using MudBlazor.Services;
 using Presentation;
 using Presentation.Authentication;
 using Service.Interfaces;
+using Service.Notifiers;
 using Service.Services.BaseService;
 using Service.Services.DepartmentServices;
+using Service.Services.NotificationServices;
 using Service.Services.OrganizationServices;
 using Service.Services.TokenProviderServices;
 using Service.Services.UserServices;
@@ -24,11 +26,14 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddHttpClient();
 
+builder.Services.AddSingleton<HubNotificationService>();
+builder.Services.AddSingleton<LayoutNotifierService>();
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
 

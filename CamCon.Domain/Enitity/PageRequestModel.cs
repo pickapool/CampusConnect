@@ -17,12 +17,14 @@ namespace CamCon.Domain.Enitity
         public string? Id { get; set; }
 
         [ForeignKey("Id")]
-        public ApplicationUserModel? Uer { get; set; }
+        public ApplicationUserModel? User { get; set; }
 
         public Guid? MyOrganizationId { get; set; }
 
         [ForeignKey("MyOrganizationId")]
         public MyOrganizationModel? MyOrganization { get; set; }
+
+        public Enums.PageRequestStatus PageRequestStatus { get; set; } = Enums.PageRequestStatus.Pending;
 
     }
 }

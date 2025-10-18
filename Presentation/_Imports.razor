@@ -16,13 +16,17 @@
 @using Domain
 @using Presentation.Shared.Dialogs
 @using Service.Interfaces
+@using Service.Notifiers
 @using global::Shared.Component.Helpers     
 @using global::Shared.Component
 @using global::Shared.Component.Components
 
 @inject NavigationManager _navigationManager
+@inject HubNotificationService _hubNotificationService
+@inject LayoutNotifierService _layoutNotifierService
 
 @inject IDialogService _dialogService
 @inject IUserService _userService
 @inject IOrganizationService _organizationService
 @inject IDepartmentService _departmentService
+@inject INotificationService _notificationService

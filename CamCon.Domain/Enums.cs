@@ -30,6 +30,7 @@ namespace CamCon.Domain
         public enum NotificationType {
             PageRequest,
             Comment,
+            Post
 
         }
     }

@@ -3,14 +3,15 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Mobile.Authentication;
-using Mobile.Global;
 using MudBlazor.Services;
 using Service;
 using Service.Interfaces;
 using Service.Notifiers;
 using Service.Services.BaseService;
 using Service.Services.DepartmentServices;
+using Service.Services.NotificationServices;
 using Service.Services.OrganizationServices;
+using Service.Services.PageRequestServices;
 using Service.Services.ProfileServices;
 using Service.Services.TokenProviderServices;
 using Service.Services.UserServices;
@@ -50,10 +51,13 @@ namespace Mobile
             builder.Services.AddScoped<IOrganizationService, OrganizationService>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
             builder.Services.AddScoped<IProfileService, ProfileService>();
+            builder.Services.AddScoped<IPageRequestService, PageRequestService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
 
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();
 
+            builder.Services.AddSingleton<HubNotificationService>();
             builder.Services.AddScoped<AppStateService>();
             builder.Services.AddScoped<LayoutNotifierService>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();

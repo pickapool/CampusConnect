@@ -6,7 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using MVC.WebAPI.Data;
 using System.Text;
 using WebAPI.ApplicationDBContextService;
-using WebAPI.Commands.Users.Queries;
+using WebAPI.NotifyHub;
+using WebAPI.Services.NotificationService;
 using WebAPI.Services.TokenServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,10 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddIdentity<ApplicationUserModel, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+
+builder.Services.AddSignalR();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -39,7 +44,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
@@ -84,6 +88,9 @@ app.MapControllers();
 await DbSeeder.SeedData(app);
 
 ApplyMigrations(app);
+
+app.MapHub<NotificationHub>("/hubs/notifications");
+
 app.Run();
 
 void ApplyMigrations(IApplicationBuilder app)

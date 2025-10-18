@@ -6,36 +6,37 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
-@using Mobile
-@using Mobile.Components
-
 @using Microsoft.AspNetCore.Components.Authorization
 
-@using Mobile.Components.Pages.Component
-
+@using MudBlazor
 @using Service
 @using Service.Interfaces
 @using Service.Notifiers
 @using Service.Services.UserServices
 @using Service.Services.OrganizationServices
-@using MudBlazor
-@using CamCon.Shared.Validator
+@using Shared.Component.Dialogs
 @using Shared.Component.Helpers
 @using Shared.Component
 @using Shared.Component.Components
 @using CamCon.Shared.Extensions
-
-@using Domain.Models
+@using CamCon.Shared.Validator
+@using Mobile.Components.Pages.Component
 @using Mobile.Authentication
+@using Mobile
+@using Mobile.Components
+@using Domain.Models
 
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject NavigationManager _navigationManager
 @inject AppStateService _appStateService
+@inject LayoutNotifierService _notifierLayoutService
 
 @inject ILocalStorageService _localStorage
 @inject ISnackbar _snackBar
+@inject IDialogService _dialogService
 
 @inject IUserService _userService
 @inject IOrganizationService _organizationService
 @inject IProfileService _profileService
-@inject LayoutNotifierService _notifierLayoutService
+@inject IPageRequestService _pageRequestService
+@inject INotificationService _notificationService
