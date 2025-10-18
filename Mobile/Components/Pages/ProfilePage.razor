@@ -27,6 +27,8 @@
 
         SnackBarHelper.ShowSnackbar("Profile successfully changed.", Variant.Filled, _snackBar, Severity.Success);
 
+        _notifierLayoutService.NotifyChanged();
+
         StateHasChanged();
     }
 }

@@ -28,12 +28,17 @@
                 <MudDrawerHeader>
                     <MudStack Row>
                         <MudAvatar>
-                            CM
-                            @* <MudImage Src="images/mony.jpg"></MudImage> *@
+                            @if (_appStateService.CurrentUser.ProfileInformation?.Photo is null)
+                            {
+                                <span>@(string.IsNullOrEmpty(_appStateService.CurrentUser.ProfileInformation?.FullName) ? _appStateService.CurrentUser.Name.GetInitials() : _appStateService.CurrentUser.ProfileInformation?.FullName.GetInitials())</span>
+                            } else
+                            {
+                                <MudImage Src="@_appStateService.CurrentUser.ProfileInformation?.Photo"></MudImage>
+                            }
                         </MudAvatar>
                         <div class="d-flex flex-column">
-                            <MudText Typo="Typo.caption">Cyrille Con Morales</MudText>
-                            <small style="color: blue;">My Department</small>
+                            <MudText Typo="Typo.caption">@(string.IsNullOrEmpty(_appStateService.CurrentUser.ProfileInformation?.FullName) ? _appStateService.CurrentUser.Name : _appStateService.CurrentUser.ProfileInformation?.FullName)</MudText>
+                            <small style="color: blue;">@_appStateService.CurrentUser.ProfileInformation?.MyOrganization?.OrganizationName</small>
                         </div>
                     </MudStack>
                 </MudDrawerHeader>
@@ -66,11 +71,20 @@
 </AuthorizeView>
 
 @code {
+
     private bool _isRegister, _open;
 
     private void ToggleRegister() => _isRegister = !_isRegister;
 
     private void ToggleDrawer() => _open = !_open;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _notifierLayoutService.OnChanged += HandleChange;
+    }
+
 
     private async Task Logout()
     {
@@ -79,5 +93,15 @@
         ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserLogout();
 
         _navigationManager.NavigateTo("/", true);
+    }
+
+    private void HandleChange()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        _notifierLayoutService.OnChanged -= HandleChange;
     }
 }

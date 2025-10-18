@@ -7,6 +7,7 @@ using Mobile.Global;
 using MudBlazor.Services;
 using Service;
 using Service.Interfaces;
+using Service.Notifiers;
 using Service.Services.BaseService;
 using Service.Services.DepartmentServices;
 using Service.Services.OrganizationServices;
@@ -54,6 +55,7 @@ namespace Mobile
             builder.Services.AddCascadingAuthenticationState();
 
             builder.Services.AddScoped<AppStateService>();
+            builder.Services.AddScoped<LayoutNotifierService>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
 
             AddHttpCerficate();
