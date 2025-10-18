@@ -20,5 +20,17 @@ namespace CamCon.Domain
             Department,
             Organization
         }
+        public enum PageRequestStatus
+        {
+            Pending,
+            Approved,
+            Rejected
+        }
+
+        public enum NotificationType {
+            PageRequest,
+            Comment,
+
+        }
     }
 }

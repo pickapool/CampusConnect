@@ -16,6 +16,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
     public DbSet<NewsFeedImageModel> NewsFeedImages { get; set; }
     public DbSet<NewsFeedCommentModel> NewsFeedComments { get; set; }
 
+    public DbSet<NotifyModel> Notifications { get; set; }
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
 
@@ -46,5 +48,6 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
         builder.Entity<NewsFeedModel>().ToTable("NewsFeeds");
         builder.Entity<NewsFeedImageModel>().ToTable("NewsFeedImages");
         builder.Entity<NewsFeedCommentModel>().ToTable("NewsFeedComments");
+        builder.Entity<NotifyModel>().ToTable("Notifications");
     }
 }
