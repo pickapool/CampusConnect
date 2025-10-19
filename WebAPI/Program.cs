@@ -48,29 +48,30 @@ builder.Services.AddAuthentication(options =>
     };
 
 
-    //options.Events = new JwtBearerEvents
-    //{
-    //    OnMessageReceived = context =>
-    //    {
-    //        var token = context.Request.Query["access_token"];
-    //        var path = context.HttpContext.Request.Path;
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
 
-    //        Console.WriteLine("Token-" + token);
-    //        Console.WriteLine($"OnMessageReceived - Path: {path}, QueryString: {context.Request.QueryString}, TokenPresent: {!string.IsNullOrEmpty(token)}");
+            Console.WriteLine("Token-" + token);
+            Console.WriteLine($"OnMessageReceived - Path: {path}, QueryString: {context.Request.QueryString}, TokenPresent: {!string.IsNullOrEmpty(token)}");
 
-    //        if (!string.IsNullOrEmpty(token) && context.HttpContext.Request.Path.StartsWithSegments("/hubs"))
-    //        {
-    //            context.Token = token;
-    //        }
+            if (!string.IsNullOrEmpty(token) && context.HttpContext.Request.Path.StartsWithSegments("/hubs"))
+            {
+                context.Token = token;
+            }
 
-    //        return Task.CompletedTask;
-    //    }
-    //};
+            return Task.CompletedTask;
+        }
+    };
 
 });
 
 builder.Services.AddMediatR(config =>
 {
+    config.LicenseKey = builder.Configuration["LuckyPennySoftware:LicenseKey"];
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 

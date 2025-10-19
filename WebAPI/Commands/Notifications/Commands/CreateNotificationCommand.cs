@@ -32,15 +32,7 @@ namespace WebAPI.Commands.Notifications.Commands
                 
                 await GetDBContext().SaveChangesAsync(cancellationToken);
 
-
                 await mediator.Publish(new AdminNotificationEvent(request.Notify.NotifyId), cancellationToken);
-
-                //await mediator.Publish(new AllNotificationEvent(request.Notify.NotifyId), cancellationToken);
-
-                //var requestModel = JsonSerializer.Deserialize<AdminPageRequestModel>(request.Notify.DataJson);
-
-                //if(requestModel is not null)
-                //  await mediator.Publish(new UserNotificationEvent(request.Notify.NotifyId, requestModel.User.Id),cancellationToken);
 
                 return Result.Success(request.Notify.NotifyId);
             }

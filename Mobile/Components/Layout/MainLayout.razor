@@ -90,16 +90,16 @@
 
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
-            var token = await _localStorage.GetItemAsync<TokenModel>("token");
+            var token = await _tokenProvider.GetToken();
 
             await _hubNotificationService.StartAllNotificationConnection();
 
-            //await _hubNotificationService.StartUserNotificationConnection(token.AccessToken);
+            await _hubNotificationService.StartUserNotificationConnection(token.AccessToken);
         }
         
         _layoutNotifierService.OnAllNotificationReceived += GetNotification;
 
-        //_layoutNotifierService.OnAllNotificationReceived += GetNotification;
+        _layoutNotifierService.OnUserNotificationReceived += GetNotification;
     }
 
     private async Task GetNotification(Guid id)

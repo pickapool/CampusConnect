@@ -35,6 +35,12 @@ namespace WebAPI.Commands.AdminPageRequests.Commands
 
                 await GetDBContext().SaveChangesAsync(cancellationToken);
 
+                if (request.Request.User?.ProfileInformation is not null)
+                {
+                    request.Request.User.ProfileInformation.ProfilePicture = null;
+                    request.Request.User.ProfileInformation.CoverPicture = null;
+                }
+
                 var notification = new NotifyModel<AdminPageRequestModel>
                 {
                     NotificationType = Enums.NotificationType.PageRequest,

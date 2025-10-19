@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,15 @@ namespace Service.Notifiers
                 return;
 
             _hubConnection2 = new HubConnectionBuilder()
-                .WithUrl($"{configuration["BaseAPI:Url"]}/hubs/notifications")
+                .WithUrl($"{configuration["BaseAPI:Url"]}/hubs/notifications", options =>
+                {
+                    options.HttpMessageHandlerFactory = handler =>
+                    {
+                        return handler;
+                    };
+
+                    options.Transports = HttpTransportType.WebSockets;
+                })
                 .WithAutomaticReconnect()
                 .Build();
 
@@ -68,7 +77,15 @@ namespace Service.Notifiers
                 return;
 
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl($"{configuration["BaseAPI:Url"]}/hubs/notifications?access_token={accessToken}")
+                .WithUrl($"{configuration["BaseAPI:Url"]}/hubs/notifications?access_token={accessToken}", options =>
+                {
+                    options.HttpMessageHandlerFactory = handler =>
+                    {
+                        return handler;
+                    };
+                    options.AccessTokenProvider = () => Task.FromResult(accessToken);
+                    options.Transports = HttpTransportType.WebSockets;
+                })
                 .WithAutomaticReconnect()
                 .Build();
 

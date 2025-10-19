@@ -57,7 +57,7 @@ namespace Mobile
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();
 
-            builder.Services.AddSingleton<HubNotificationService>();
+            builder.Services.AddScoped<HubNotificationService>();
             builder.Services.AddScoped<AppStateService>();
             builder.Services.AddScoped<LayoutNotifierService>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
