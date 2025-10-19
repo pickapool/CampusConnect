@@ -22,7 +22,8 @@ namespace WebAPI.Commands.Organizations.Query
                 .ThenInclude( u => u!.ProfileInformation)
                 .ToListAsync(cancellationToken);
 
-            await mediator.Publish(new UserNotificationEvent(new Guid("8E83D189-CE65-4515-C353-08DE0E3B9093"), "7b6df5ff-f5c8-40ab-bd28-89ea52dcd3df"), cancellationToken);
+           //Sample Development
+           // await mediator.Publish(new UserNotificationEvent(new Guid("8E83D189-CE65-4515-C353-08DE0E3B9093"), "7b6df5ff-f5c8-40ab-bd28-89ea52dcd3df"), cancellationToken);
 
             return Result.Success(organizations);
         }
