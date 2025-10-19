@@ -14,6 +14,7 @@ namespace Service.Notifiers
     {
         private HubConnection? _hubConnection;
         private HubConnection? _hubConnection2;
+        private HubConnection? _hubConnection3;
         private readonly LayoutNotifierService layoutNotifierService;
         private readonly IConfiguration configuration;
         private bool _disposed = false;
@@ -73,10 +74,10 @@ namespace Service.Notifiers
 
         public async Task StartUserNotificationConnection(string? accessToken = null)
         {
-            if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
+            if (_hubConnection3 != null && _hubConnection3.State == HubConnectionState.Connected)
                 return;
 
-            _hubConnection = new HubConnectionBuilder()
+            _hubConnection3 = new HubConnectionBuilder()
                 .WithUrl($"{configuration["BaseAPI:Url"]}/hubs/notifications?access_token={accessToken}", options =>
                 {
                     options.HttpMessageHandlerFactory = handler =>
@@ -89,19 +90,31 @@ namespace Service.Notifiers
                 .WithAutomaticReconnect()
                 .Build();
 
-            _hubConnection.On<Guid>("UserNotification", (notificationId) =>
+            _hubConnection3.On<Guid>("UserNotification", (notificationId) =>
             {
                 Console.WriteLine($"UserNotification received: {notificationId}");
                 layoutNotifierService?.UserNotificationReceived(notificationId);
             });
 
-            await _hubConnection.StartAsync();
+            await _hubConnection3.StartAsync();
         }
 
-        public async Task StopConnectionAsync()
+        public async Task StopConnectionAsyncAdmin()
         {
             if (_hubConnection != null)
                 await _hubConnection.StopAsync();
+        }
+
+        public async Task StopConnectionAsyncUser()
+        {
+            if (_hubConnection3 != null)
+                await _hubConnection3.StopAsync();
+        }
+
+        public async Task StopConnectionAsyncAll()
+        {
+            if (_hubConnection2 != null)
+                await _hubConnection2.StopAsync();
         }
 
         public async ValueTask DisposeAsync()

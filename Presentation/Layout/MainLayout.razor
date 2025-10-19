@@ -23,9 +23,29 @@
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
                 <MudText Typo="Typo.h6" Class="mr-4" Style="color:white;">Campus Connect</MudText>
                 <MudSpacer />
-                <MudBadge Content="100" Color="Color.Inherit" Overlap="true" Class="mx-6 my-4">
-                    <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"></MudIcon>
-                </MudBadge>
+                <MudMenu ListClass="notify-container">
+                    <ActivatorContent>
+                        <MudBadge Content="@NotificationList.Where(c => !c.IsRead).ToList().Count.ToString()" Color="Color.Inherit" Overlap="true" Class="mx-6 my-4">
+                            <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"></MudIcon>
+                        </MudBadge>
+                    </ActivatorContent>
+                    <ChildContent>
+                  
+                            @foreach (var notification in NotificationList)
+                            {
+                                @if(notification.NotificationType == Enums.NotificationType.PageRequest)
+                                {
+                                    var model = JsonSerializer.Deserialize<AdminPageRequestModel>(notification.DataJson);
+                                    <MudMenuItem>
+                                        <ChildContent>
+                                            <PageRequestComponent Notify="notification" Model="model" IsNotification></PageRequestComponent>
+                                        </ChildContent>
+                                    </MudMenuItem>
+                                }
+                            }
+                       
+                    </ChildContent>
+                </MudMenu>
             </MudAppBar>
             <MudDrawer @bind-Open="@_open" Class="" ClipMode="DrawerClipMode.Docked" Elevation="1" Variant="@DrawerVariant.Responsive">
                 <MudNavMenu>
@@ -44,28 +64,39 @@
     <NotAuthorized>
         <PreLoaderComponent>
             <ChildComponent>
-                <LoginComponent></LoginComponent>
+                <LoginComponent OnLoginSuccess="LoginCallback"></LoginComponent>
             </ChildComponent>
         </PreLoaderComponent>
     </NotAuthorized>
 </AuthorizeView>
 @code {
-
-
     private bool _open = false;
+
+    private List<NotifyModel> NotificationList = [];
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+
         var user = authState.User;
 
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
             await _hubNotificationService.StartAdminNotificationConnection();
+
+            NotificationList = await _notificationService.GetAll();
+
         }
+
         _layoutNotifierService.OnAdminNotificationReceived += GetNotification;
+    }
+
+    private async Task LoginCallback()
+    {
+        NotificationList = await _notificationService.GetAll();
+
     }
 
     private async Task GetNotification(Guid id)
@@ -74,7 +105,9 @@
 
         if (notification is not null)
         {
-            Console.WriteLine("Notification received in layout: " + notification);
+            NotificationList.Insert(0, notification);
+
+            StateHasChanged();
         }
     }
 
@@ -89,8 +122,17 @@
 
         ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserLogout();
 
-        await _hubNotificationService.StopConnectionAsync();
+        await _hubNotificationService.StopConnectionAsyncAdmin();
 
         _navigationManager.NavigateTo("/", true);
     }
 }
+
+<style>
+    .notify-container {
+        width: 300px;
+        max-width: 300px;
+        height: 600px;
+        overflow-y: auto;
+    }
+</style>

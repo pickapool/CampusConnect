@@ -17,7 +17,9 @@ namespace Presentation.Shared
         [Inject] protected AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
         [Inject] protected IUserService _userService { get; set; } = default!;
         [Inject] protected ILocalStorageService _localStorage { get; set; } = default!;
-        [Inject] protected HubNotificationService _hubNotificationService { get; set; } = default!; 
+        [Inject] protected HubNotificationService _hubNotificationService { get; set; } = default!;
+
+        [Parameter] public EventCallback OnLoginSuccess { get; set; }
 
         protected string username = string.Empty, password = string.Empty;
         protected bool _open = false, isLoading = false, isShow = false;
@@ -62,6 +64,8 @@ namespace Presentation.Shared
 
                 username = string.Empty;
                 password = string.Empty;
+
+                await OnLoginSuccess.InvokeAsync();
             }
             catch (Exception ex)
             {

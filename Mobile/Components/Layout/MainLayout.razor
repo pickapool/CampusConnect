@@ -118,7 +118,8 @@
 
         ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserLogout();
 
-        await _hubNotificationService.StopConnectionAsync();
+        await _hubNotificationService.StopConnectionAsyncUser();
+        await _hubNotificationService.StopConnectionAsyncAll();
 
         _navigationManager.NavigateTo("/", true);
     }

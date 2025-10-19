@@ -1,0 +1,25 @@
+﻿
+@if(IsNotification)
+{
+    <MudStack AlignItems="AlignItems.Start" Spacing="1" Row>
+        <MudAvatar Size="Size.Medium">
+            @Model.User?.Name.GetInitials()
+        </MudAvatar>
+        <MudStack Spacing="0">
+            <MudText Typo="Typo.body2"><b>@Model.User?.Name</b></MudText>
+            <span style="font-size: 14px;">Request Admin Page</span>
+            <MudText Typo="Typo.caption">@Notify.CreatedAt.Humanize()</MudText>
+        </MudStack>
+    </MudStack>
+} else
+{
+    
+}
+
+@code {
+    [Parameter] public NotifyModel Notify { get; set; } = new();
+
+    [Parameter] public AdminPageRequestModel Model { get; set; } = new();
+
+    [Parameter] public bool IsNotification { get; set; }
+}
