@@ -34,5 +34,16 @@ namespace Service.Services.PageRequestServices
 
             return response;
         }
+
+        public async Task<Result> UpdatePageRequestAsync(AdminPageRequestModel model, Guid notificationId)
+        {
+            request.RequestUrl = $"{defaultRequestUrl}/{notificationId}";
+            request.RequestType = Enums.RequestType.PUT;
+            request.Data = model;
+
+            var response = await _baseService.SendAsync<Result>(request);
+
+            return response;
+        }
     }
 }

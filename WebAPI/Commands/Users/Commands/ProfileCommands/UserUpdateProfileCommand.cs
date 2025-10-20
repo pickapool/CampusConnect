@@ -7,7 +7,7 @@ using WebAPI.Interfaces;
 
 namespace WebAPI.Commands.Users.Commands.ProfileCommands
 {
-    public record UserUpdateProfileCommand(ProfileInfo profile) : IRequest<Result<ProfileInfo>>;
+    public record UserUpdateProfileCommand(ProfileInfo profile, bool? IsAdmin = null) : IRequest<Result<ProfileInfo>>;
 
     public class UserUpdateProfileCommandHandler :AppDatabaseBase, IRequestHandler<UserUpdateProfileCommand, Result<ProfileInfo>>
     {
@@ -24,10 +24,16 @@ namespace WebAPI.Commands.Users.Commands.ProfileCommands
             if (existingProfile == null)
                 return Result.Failure<ProfileInfo>(new Error(StatusCodes.Status404NotFound, "Profile Not found."));
 
-            existingProfile.ProfilePicture = request.profile.ProfilePicture;
-            existingProfile.FullName = request.profile.FullName;
-            existingProfile.Address = request.profile.Address;
-            existingProfile.Course = request.profile.Course;
+            if (request.IsAdmin is null)
+            {
+                existingProfile.ProfilePicture = request.profile.ProfilePicture;
+                existingProfile.FullName = request.profile.FullName;
+                existingProfile.Address = request.profile.Address;
+                existingProfile.Course = request.profile.Course;
+            }
+
+            if(request.IsAdmin is not null)
+                existingProfile.IsAdmin = request.IsAdmin.Value;
 
             await GetDBContext().SaveChangesAsync(cancellationToken);
 

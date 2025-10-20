@@ -11,6 +11,7 @@ using Service.Services.BaseService;
 using Service.Services.DepartmentServices;
 using Service.Services.NotificationServices;
 using Service.Services.OrganizationServices;
+using Service.Services.PageRequestServices;
 using Service.Services.TokenProviderServices;
 using Service.Services.UserServices;
 
@@ -34,6 +35,7 @@ builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IPageRequestService, PageRequestService>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
 

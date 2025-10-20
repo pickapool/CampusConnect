@@ -36,7 +36,7 @@
                                 @if(notification.NotificationType == Enums.NotificationType.PageRequest)
                                 {
                                     var model = JsonSerializer.Deserialize<AdminPageRequestModel>(notification.DataJson);
-                                    <MudMenuItem>
+                                <MudMenuItem OnClick="() => OpenRequestDialog(model, notification.NotifyId)">
                                         <ChildContent>
                                             <PageRequestComponent Notify="notification" Model="model" IsNotification></PageRequestComponent>
                                         </ChildContent>
@@ -125,6 +125,20 @@
         await _hubNotificationService.StopConnectionAsyncAdmin();
 
         _navigationManager.NavigateTo("/", true);
+    }
+
+    private async Task OpenRequestDialog(AdminPageRequestModel request, Guid notificationId)
+    {
+        var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = true };
+
+        var parameters = new DialogParameters()
+        {
+            {"Model", request},
+            {"NotificationId", notificationId}
+        };
+
+        var dialog = await _dialogService.ShowAsync<RequestAdminDialog>(string.Empty, parameters, options);
+
     }
 }
 

@@ -1,0 +1,40 @@
+﻿@using Domain;
+
+<MudDialog>
+    <TitleContent>
+        Request Admin Page
+    </TitleContent>
+    <DialogContent>
+        <MudStack Class="gap-2">
+            @Model?.User?.Name is requesting for a page admin in @Model?.MyOrganization?.OrganizationName
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="() => Submit(Enums.PageRequestStatus.Rejected)" Variant="Variant.Text">Reject</MudButton>
+        <MudButton Color="Color.Primary" OnClick="() => Submit(Enums.PageRequestStatus.Approved)" Variant="Variant.Filled">Approve</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public AdminPageRequestModel Model { get; set; } = new();
+
+    [Parameter] public Guid NotificationId { get; set; }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit(Enums.PageRequestStatus status)
+    {
+       
+        Model.PageRequestStatus = status;
+
+        await _pageRequestService.UpdatePageRequestAsync(Model, NotificationId);
+
+        SnackBarHelper.ShowSnackbar($"Request has been {status.Humanize()}.", Variant.Filled, _snackBar, Severity.Success);
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}
