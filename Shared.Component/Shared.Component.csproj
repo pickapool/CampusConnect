@@ -22,11 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer" Version="2.14.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.8" />
     <PackageReference Include="MudBlazor" Version="8.13.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CamCon.Shared\CamCon.Shared.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 

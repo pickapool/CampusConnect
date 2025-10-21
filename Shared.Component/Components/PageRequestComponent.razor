@@ -1,4 +1,7 @@
-﻿
+﻿@using CamCon.Shared.Extensions
+@using Domain.Models
+@using Humanizer
+
 @if(IsNotification)
 {
     <MudStack AlignItems="AlignItems.Start" Spacing="1" Row>
@@ -11,9 +14,18 @@
             <MudText Typo="Typo.caption">@Notify.CreatedAt.Humanize()</MudText>
         </MudStack>
     </MudStack>
-} else
+} else if(IsUserNotification)
 {
-    
+    <MudStack AlignItems="AlignItems.Start" Spacing="1" Row>
+        <MudAvatar Size="Size.Medium">
+            AD
+        </MudAvatar>
+        <MudStack Spacing="0">
+            <MudText Typo="Typo.body2"><b>Admin</b></MudText>
+            <span style="font-size: 14px;">Your Request has been @Model.PageRequestStatus.Humanize()</span>
+            <MudText Typo="Typo.caption">@Notify.UpdatedAt.Humanize()</MudText>
+        </MudStack>
+    </MudStack>
 }
 
 @code {
@@ -22,4 +34,6 @@
     [Parameter] public AdminPageRequestModel Model { get; set; } = new();
 
     [Parameter] public bool IsNotification { get; set; }
+
+    [Parameter] public bool IsUserNotification { get; set; }
 }

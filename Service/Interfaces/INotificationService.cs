@@ -6,5 +6,7 @@ namespace Service.Interfaces
     {
         Task<NotifyModel> GetByIdAsync(Guid notifyId);
         Task<List<NotifyModel>> GetAll();
+
+        Task<List<NotifyModel>> GetByRecipientAsync(string recipientUserId);
     }
 }

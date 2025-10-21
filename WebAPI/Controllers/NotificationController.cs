@@ -33,5 +33,13 @@ namespace WebAPI.Controllers
 
             return Ok(result.Value);
         }
+
+        [HttpGet("recipient/{id}")]
+        public async Task<IActionResult> GetByRecipient(string id)
+        {
+            var result = await _mediator.Send(new GetByIdReciepientNotificationQuery(id));
+
+            return Ok(result.Value);
+        }
     }
 }

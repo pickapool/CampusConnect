@@ -3,6 +3,7 @@ using CamCon.Domain.Enitity;
 using CamCon.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using WebAPI.ApplicationDBContextService;
 using WebAPI.Commands.Notifications.Events;
 using WebAPI.Commands.Users.Commands.ProfileCommands;
@@ -25,9 +26,11 @@ namespace WebAPI.Commands.AdminPageRequests.Commands
         {
             try
             {
-                var pageRequest = await GetDBContext().RequestPages.FirstOrDefaultAsync( rp => rp.AdminPageRequestId == request.Request.AdminPageRequestId);
+                var pageRequest = await GetDBContext().RequestPages.FirstOrDefaultAsync(rp => rp.AdminPageRequestId == request.Request.AdminPageRequestId);
 
-                if(pageRequest is null)
+                var notify = await GetDBContext().Notifications.FirstOrDefaultAsync(rp => rp.NotifyId == request.NotificationId);
+
+                if (pageRequest is null || notify is null)
                     return Result.Failure(new Error(StatusCodes.Status404NotFound, "Page request not found."));
 
                 if (request.Request.MyOrganization is not null)
@@ -35,11 +38,14 @@ namespace WebAPI.Commands.AdminPageRequests.Commands
                 if(request.Request.User is not null)
                     GetDBContext().Entry(request.Request.User).State = EntityState.Unchanged;
 
-                request.Request.PageRequestStatus = request.Request.PageRequestStatus;
+                pageRequest.PageRequestStatus = request.Request.PageRequestStatus;
+
+                notify.UpdatedAt = DateTime.UtcNow;
+                notify.DataJson = JsonSerializer.Serialize(pageRequest);
 
                 await GetDBContext().SaveChangesAsync(cancellationToken);
 
-                await _mediator.Publish(new UserNotificationEvent(request.NotificationId, request.Request.Id));
+                await _mediator.Publish(new UserNotificationEvent(notify.NotifyId, request.Request.Id));
 
                 var profile = await GetDBContext().ProfileInformations.FirstOrDefaultAsync(p => p.ProfileInformationId == request.Request.User.ProfileInformationId, cancellationToken: cancellationToken);
 

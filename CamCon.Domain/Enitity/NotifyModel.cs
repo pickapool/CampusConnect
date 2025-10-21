@@ -22,6 +22,10 @@ namespace CamCon.Domain.Enitity
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public bool IsRead { get; set; }
+
+        public string RecipientUserId { get; set; } = string.Empty;
+
+        public DateTime? UpdatedAt { get; set; }
     }
 
     public class NotifyModel<T> : NotifyModel

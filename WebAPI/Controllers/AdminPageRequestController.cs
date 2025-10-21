@@ -12,9 +12,9 @@ namespace WebAPI.Controllers
     [Authorize]
     public class AdminPageRequestController : ControllerBase
     {
-        private readonly ISender _mediator;
+        private readonly IMediator _mediator;
 
-        public AdminPageRequestController(ISender mediator)
+        public AdminPageRequestController(IMediator mediator)
         {
             _mediator = mediator;
         }

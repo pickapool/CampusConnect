@@ -44,5 +44,16 @@ namespace Service.Services.NotificationServices
 
             return response;
         }
+
+        public async Task<List<NotifyModel>> GetByRecipientAsync(string recipientId)
+        {
+            request.RequestUrl = $"{defaultRequestUrl}/recipient/{recipientId}";
+            request.RequestType = Enums.RequestType.GET;
+            request.Data = null;
+
+            var response = await _baseService.SendAsync<List<NotifyModel>>(request);
+
+            return response;
+        }
     }
 }

@@ -45,6 +45,7 @@ namespace WebAPI.Commands.AdminPageRequests.Commands
                 {
                     NotificationType = Enums.NotificationType.PageRequest,
                     DataJson = JsonSerializer.Serialize(request.Request),
+                    RecipientUserId = request.Request.Id!,
                 };
 
                 await Mediator.Send(new CreateNotificationCommand(notification), cancellationToken);

@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Text.Json
+@using Domain
+@inherits LayoutComponentBase
 
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -13,13 +15,29 @@
     <Authorized>
         <MudLayout>
             <MudAppBar Elevation="1">
-                <MudBadge Content="30" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
-                    <MudMenu Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit">
-                        <ActivatorContent>
-                            <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Default" />
-                        </ActivatorContent>
-                    </MudMenu>
-                </MudBadge>
+                <MudMenu ListClass="notify-container" Size="Size.Small">
+                    <ActivatorContent>
+                        <MudBadge Content="@NotificationList.Count" Color="Color.Inherit" Overlap="true" Class="mx-6 my-4">
+                            <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"></MudIcon>
+                        </MudBadge>
+                    </ActivatorContent>
+                    <ChildContent>
+                            @foreach (var notification in NotificationList)
+                            {
+                                @if(notification.NotificationType == Enums.NotificationType.PageRequest)
+                                {
+                                var model = JsonSerializer.Deserialize<AdminPageRequestModel>(notification.DataJson);
+
+                                <MudMenuItem>
+                                        <ChildContent>
+                                            <PageRequestComponent Notify="notification" Model="model" IsUserNotification></PageRequestComponent>
+                                        </ChildContent>
+                                    </MudMenuItem>
+                                }
+                            }
+                       
+                    </ChildContent>
+                </MudMenu>
                 <MudSpacer />
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer"></MudIconButton>
             </MudAppBar>
@@ -78,6 +96,8 @@
 
     private void ToggleDrawer() => _open = !_open;
 
+    List<NotifyModel> NotificationList = new();
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -96,10 +116,12 @@
 
             await _hubNotificationService.StartUserNotificationConnection(token.AccessToken);
         }
-        
+
         _layoutNotifierService.OnAllNotificationReceived += GetNotification;
 
         _layoutNotifierService.OnUserNotificationReceived += GetNotification;
+
+        NotificationList = await _notificationService.GetByRecipientAsync(_appStateService.CurrentUser.Id);
     }
 
     private async Task GetNotification(Guid id)
@@ -108,7 +130,9 @@
 
         if (notification is not null)
         {
-            SnackBarHelper.ShowSnackbar("Sample", Variant.Filled, _snackBar, Severity.Success);
+            NotificationList.Insert(0, notification);
+
+            HandleChange();
         }
     }
 

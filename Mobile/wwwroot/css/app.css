@@ -111,3 +111,6 @@ h1:focus {
 .heigth-100p {
     height: 100%;
 }
+.mud-toolbar-gutters {
+    padding-left: unset !important;
+}

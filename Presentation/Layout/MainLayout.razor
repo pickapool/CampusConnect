@@ -25,25 +25,23 @@
                 <MudSpacer />
                 <MudMenu ListClass="notify-container">
                     <ActivatorContent>
-                        <MudBadge Content="@NotificationList.Where(c => !c.IsRead).ToList().Count.ToString()" Color="Color.Inherit" Overlap="true" Class="mx-6 my-4">
+                        <MudBadge Content="@NotificationList.Where(c => !c.IsRead).ToList().Count" Color="Color.Inherit" Overlap="true" Class="mx-6 my-4">
                             <MudIcon Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"></MudIcon>
                         </MudBadge>
                     </ActivatorContent>
                     <ChildContent>
-                  
-                            @foreach (var notification in NotificationList)
+                        @foreach (var notification in NotificationList)
+                        {
+                            @if(notification.NotificationType == Enums.NotificationType.PageRequest)
                             {
-                                @if(notification.NotificationType == Enums.NotificationType.PageRequest)
-                                {
-                                    var model = JsonSerializer.Deserialize<AdminPageRequestModel>(notification.DataJson);
-                                <MudMenuItem OnClick="() => OpenRequestDialog(model, notification.NotifyId)">
-                                        <ChildContent>
-                                            <PageRequestComponent Notify="notification" Model="model" IsNotification></PageRequestComponent>
-                                        </ChildContent>
-                                    </MudMenuItem>
-                                }
+                                var model = JsonSerializer.Deserialize<AdminPageRequestModel>(notification.DataJson);
+                            <MudMenuItem OnClick="() => OpenRequestDialog(model, notification.NotifyId)">
+                                    <ChildContent>
+                                        <PageRequestComponent Notify="notification" Model="model" IsNotification></PageRequestComponent>
+                                    </ChildContent>
+                                </MudMenuItem>
                             }
-                       
+                        }
                     </ChildContent>
                 </MudMenu>
             </MudAppBar>
