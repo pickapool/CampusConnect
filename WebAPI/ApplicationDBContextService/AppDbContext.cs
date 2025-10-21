@@ -17,6 +17,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
     public DbSet<NewsFeedCommentModel> NewsFeedComments { get; set; }
     public DbSet<AdminPageRequestModel> RequestPages { get; set; }
     public DbSet<NotifyModel> Notifications { get; set; }
+    public DbSet<PageRequestImageModel> PageRequestImages { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -50,5 +51,6 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
         builder.Entity<NewsFeedCommentModel>().ToTable("NewsFeedComments");
         builder.Entity<NotifyModel>().ToTable("Notifications");
         builder.Entity<AdminPageRequestModel>().ToTable("RequestPages");
+        builder.Entity<PageRequestImageModel>().ToTable("PageRequestImages");
     }
 }

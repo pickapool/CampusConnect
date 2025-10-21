@@ -39,6 +39,7 @@ namespace WebAPI.Commands.AdminPageRequests.Commands
                 {
                     request.Request.User.ProfileInformation.ProfilePicture = null;
                     request.Request.User.ProfileInformation.CoverPicture = null;
+                    request.Request.PageRequestImages = null;
                 }
 
                 var notification = new NotifyModel<AdminPageRequestModel>

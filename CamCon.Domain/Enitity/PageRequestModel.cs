@@ -26,5 +26,8 @@ namespace CamCon.Domain.Enitity
 
         public Enums.PageRequestStatus PageRequestStatus { get; set; } = Enums.PageRequestStatus.Pending;
 
+        [ForeignKey("AdminPageRequestId")]
+        public List<PageRequestImageModel>? PageRequestImages { get; set; }
+
     }
 }

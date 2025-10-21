@@ -1,4 +1,6 @@
-﻿namespace Domain.Models
+﻿using CamCon.Domain.Enitity;
+
+namespace Domain.Models
 {
     public class AdminPageRequestModel
     {
@@ -14,5 +16,6 @@
 
         public Enums.PageRequestStatus PageRequestStatus { get; set; }
 
+        public List<PageRequestImageModel>? PageRequestImages { get; set; }
     }
 }
