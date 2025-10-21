@@ -18,6 +18,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
     public DbSet<AdminPageRequestModel> RequestPages { get; set; }
     public DbSet<NotifyModel> Notifications { get; set; }
     public DbSet<PageRequestImageModel> PageRequestImages { get; set; }
+    public DbSet<OrganizationDepartmentModel> OrganizationDepartments { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -52,5 +53,6 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
         builder.Entity<NotifyModel>().ToTable("Notifications");
         builder.Entity<AdminPageRequestModel>().ToTable("RequestPages");
         builder.Entity<PageRequestImageModel>().ToTable("PageRequestImages");
+        builder.Entity<OrganizationDepartmentModel>().ToTable("OrganizationDepartments");
     }
 }

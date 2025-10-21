@@ -17,7 +17,7 @@ namespace Domain.Models
 
         //Org
         public Guid? MyOrganizationId { get; set; }
-
+        //My Department
         public MyOrganizationModel? MyOrganization { get; set; }
 
         public string Address { get; set; } = string.Empty;

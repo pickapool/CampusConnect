@@ -29,5 +29,8 @@ namespace CamCon.Domain.Enitity
         [ForeignKey("AdminPageRequestId")]
         public List<PageRequestImageModel>? PageRequestImages { get; set; }
 
+        [NotMapped]
+        public OrganizationDepartmentModel? Department { get; set; }
+
     }
 }

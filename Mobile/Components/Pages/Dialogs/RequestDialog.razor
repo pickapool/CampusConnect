@@ -1,0 +1,154 @@
+﻿@using Domain
+
+<MudDialog>
+    <TitleContent>
+        Request
+    </TitleContent>
+    <DialogContent>
+        <MudStack Class="gap-2">
+            <MudTextField @bind-Value="Model.OrganizationName" Label="Organization" Variant="Variant.Outlined" ShrinkLabel></MudTextField>
+
+            <MudSelect T="MyOrganizationModel" Text="@department?.OrganizationName" Value="department" ValueChanged="(e) => OnDepartmentChanged(e)" Variant="Variant.Outlined" Margin="Margin.Dense" ShrinkLabel>
+                @foreach (var org in DepartmentList)
+                {
+                    <MudSelectItem Value="org">@org.OrganizationName</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                           @ref="@_fileUpload"
+                           OnFilesChanged="OnInputFileChanged"
+                           AppendMultipleFiles
+                           Hidden="@false"
+                           InputClass="file-upload-input"
+                           tabindex="-1">
+                <ActivatorContent>
+                    <MudPaper Height="300px"
+                              Outlined="true">
+                        <MudText Typo="Typo.h6">
+                            Drag and drop files here or click
+                        </MudText>
+                        @foreach (var file in _files)
+                        {
+                            <MudChip T="string"
+                                     Color="Color.Dark"
+                                     Text="@file.Name"
+                                     tabindex="-1"
+                                     OnClose="()=> _files.Remove(file)"/>
+                        }
+                    </MudPaper>
+                </ActivatorContent>
+            </MudFileUpload>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Variant="Variant.Filled">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public AdminPageRequestModel Model { get; set; } = new();
+
+    private List<MyOrganizationModel> DepartmentList = [];
+
+    private MyOrganizationModel department = new();
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private MudFileUpload<IReadOnlyList<IBrowserFile>>? _fileUpload;
+
+    private IList<IBrowserFile> _files = new List<IBrowserFile>();
+
+    private List<PageRequestImageModel> requestedFiles = new();
+
+    private void UploadFiles(IBrowserFile file)
+    {
+        _files.Add(file);
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        DepartmentList = await _organizationService.GetAllOrganizationsAsync();
+
+        DepartmentList = DepartmentList.Where(c => c.OrganizationType == Enums.OrganizationType.Department).ToList();
+    }
+
+    private void OnDepartmentChanged(MyOrganizationModel value)
+    {
+        department = value;
+
+        Model.Department ??= new();
+
+        Model.Department.MyOrganizationId = department.MyOrganizationId;
+    }
+
+    private async Task ClearAsync()
+    {
+        await (_fileUpload?.ClearAsync() ?? Task.CompletedTask);
+        _files.Clear();
+    }
+
+    private Task OpenFilePickerAsync()
+        => _fileUpload?.OpenFilePickerAsync() ?? Task.CompletedTask;
+
+    private void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+
+        foreach (var file in files)
+        {
+            _files.Add(file);
+        }
+    }
+
+    private async Task Submit()
+    {
+        Model.MyOrganizationId = _appStateService.CurrentUser.ProfileInformation?.MyOrganizationId;
+        Model.MyOrganization = _appStateService.CurrentUser.ProfileInformation?.MyOrganization;
+        Model.Id = _appStateService.CurrentUser.Id;
+        Model.User = _appStateService.CurrentUser;
+
+        foreach(var file in _files)
+        {
+            var PageRequestImageModel = new PageRequestImageModel();
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await file.OpenReadStream(209715200).CopyToAsync(memoryStream);
+
+                PageRequestImageModel.Image = memoryStream.ToArray();
+            }
+
+            Model.PageRequestImages ??= [];
+
+            Model.PageRequestImages.Add(PageRequestImageModel);
+        }
+
+
+        var dialog = await _dialogService.ShowAsync<ConfirmDialog>("Request Admin Page",
+        new DialogParameters
+        {
+            { "Description", "Are you sure you want to request an admin page?" }
+        });
+        var result = await dialog.Result;
+
+        if (result is not null) {
+            if (!result.Canceled)
+            {
+                await _pageRequestService.CreatePageRequestAsync(Model);
+
+                _snackBar.Add("Your request has been submitted successfully.", Severity.Success);
+            }
+        } else
+        {
+            _snackBar.Add("There was a problem sending your request.", Severity.Error);
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

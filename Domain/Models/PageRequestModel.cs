@@ -1,4 +1,4 @@
-﻿using CamCon.Domain.Enitity;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Models
 {
@@ -17,5 +17,9 @@ namespace Domain.Models
         public Enums.PageRequestStatus PageRequestStatus { get; set; }
 
         public List<PageRequestImageModel>? PageRequestImages { get; set; }
+
+        public string OrganizationName { get; set; } = string.Empty;
+
+        public OrganizationDepartmentModel? Department { get; set; }
     }
 }

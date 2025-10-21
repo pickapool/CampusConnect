@@ -88,8 +88,4 @@
       <ProjectReference Include="..\Shared.Component\Shared.Component.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Components\Pages\Shared\" />
-    </ItemGroup>
-
 </Project>

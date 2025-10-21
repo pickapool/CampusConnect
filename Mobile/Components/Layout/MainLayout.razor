@@ -1,5 +1,7 @@
 ﻿@using System.Text.Json
 @using Domain
+@using Mobile.Components.Pages.Dialogs
+
 @inherits LayoutComponentBase
 
 <MudThemeProvider />
@@ -115,13 +117,15 @@
             await _hubNotificationService.StartAllNotificationConnection();
 
             await _hubNotificationService.StartUserNotificationConnection(token.AccessToken);
+
+            NotificationList = await _notificationService.GetByRecipientAsync(_appStateService.CurrentUser.Id);
         }
 
         _layoutNotifierService.OnAllNotificationReceived += GetNotification;
 
         _layoutNotifierService.OnUserNotificationReceived += GetNotification;
 
-        NotificationList = await _notificationService.GetByRecipientAsync(_appStateService.CurrentUser.Id);
+        
     }
 
     private async Task GetNotification(Guid id)
@@ -160,26 +164,9 @@
 
     private async Task RequestPage()
     {
-        AdminPageRequestModel requestModel = new();
+        var dialog = await _dialogService.ShowAsync<RequestDialog>();
 
-        requestModel.MyOrganizationId = _appStateService.CurrentUser.ProfileInformation?.MyOrganizationId;
-        requestModel.MyOrganization = _appStateService.CurrentUser.ProfileInformation?.MyOrganization;
-        requestModel.Id = _appStateService.CurrentUser.Id;
-        requestModel.User = _appStateService.CurrentUser;
-
-        var dialog = await _dialogService.ShowAsync<ConfirmDialog>("Request Admin Page", 
-        new DialogParameters
-        {
-            { "Description", "Are you sure you want to request an admin page for your organization?" }
-        }); 
         var result = await dialog.Result;
 
-        if(result is not null)
-            if(!result.Canceled)
-            {
-                await _pageRequestService.CreatePageRequestAsync(requestModel);
-
-                _snackBar.Add("Your request has been submitted successfully.", Severity.Success);
-            }
     }
 }

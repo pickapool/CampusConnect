@@ -1,4 +1,4 @@
-﻿namespace CamCon.Domain.Enitity
+﻿namespace Domain.Models
 {
     public class PageRequestImageModel
     {

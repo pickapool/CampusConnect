@@ -21,5 +21,9 @@ namespace CamCon.Domain.Enitity
         public string? Id { get; set; }
         [ForeignKey("Id")]
         public ApplicationUserModel? User { get; set; }
+
+        public Guid? OrganizationDepartmentId { get; set; }
+        [ForeignKey("OrganizationDepartmentId")]
+        public OrganizationDepartmentModel? OrganizationDepartment { get; set; }
     }
 }
