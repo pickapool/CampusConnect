@@ -55,9 +55,15 @@ namespace Service.Services.OrganizationServices
             throw new NotImplementedException();
         }
 
-        public Task<Result> UpdateOrganizationAsync(MyOrganizationModel mode)
+        public async Task<Result> UpdateOrganizationAsync(MyOrganizationModel model)
         {
-            throw new NotImplementedException();
+            request.RequestType = Enums.RequestType.PUT;
+            request.Data = model.Wrap("request");
+            request.RequestUrl = defaultRequestUrl;
+
+            var response = await _baseService.SendAsync<Result>(request);
+
+            return response;
         }
     }
 }

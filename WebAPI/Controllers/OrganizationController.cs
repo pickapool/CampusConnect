@@ -36,5 +36,14 @@ namespace WebAPI.Controllers
 
             return Ok(result.Value);
         }
+
+        [AllowAnonymous]
+        [HttpPut]
+        public async Task<IActionResult> Updateorganization([FromBody] UpdateOrganizationCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
     }
 }
