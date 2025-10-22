@@ -69,7 +69,7 @@ namespace WebAPI.Commands.AdminPageRequests.Commands
                     OrganizationDepartment = cloneRequest.Department
                 };
 
-                await Mediator.Send(new CreateOrganizationCommand(new MyOrganizationModel()
+                await Mediator.Send(new CreateOrganizationCommand(new MyOrganizationModel()));
 
                 //Notify
                 var notification = new NotifyModel<AdminPageRequestModel>
