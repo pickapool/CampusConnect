@@ -64,12 +64,11 @@ namespace WebAPI.Commands.AdminPageRequests.Commands
                     OrganizationName = cloneRequest.OrganizationName,
                     OrganizationType = Enums.OrganizationType.Organization,
                     Id = cloneRequest.Id,
-                    User = cloneRequest.User,
-                    OrganizationDepartmentId = cloneRequest.Department?.OrganizationDepartmentId,
-                    OrganizationDepartment = cloneRequest.Department
+                    User = request.Request.User,
+                    OrganizationDepartment = new OrganizationDepartmentModel() { MyOrganizationId = request.Request.Department.MyOrganizationId }
                 };
 
-                await Mediator.Send(new CreateOrganizationCommand(new MyOrganizationModel()));
+                await Mediator.Send(new CreateOrganizationCommand(newOrg), cancellationToken);
 
                 //Notify
                 var notification = new NotifyModel<AdminPageRequestModel>

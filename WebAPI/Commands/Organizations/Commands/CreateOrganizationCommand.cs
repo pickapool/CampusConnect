@@ -14,6 +14,13 @@ namespace WebAPI.Commands.Organizations.Commands
         public CreateCommandHandler(AppDbContext context)  : base(context) { }
         public async Task<Result> Handle(CreateOrganizationCommand request, CancellationToken cancellationToken)
         {
+            if (request.Organization.OrganizationDepartment is not null)
+            {
+                GetDBContext().Entry(request.Organization.OrganizationDepartment).State = EntityState.Added;
+
+                request.Organization.OrganizationDepartmentId = request.Organization.OrganizationDepartment.OrganizationDepartmentId;
+            }
+
             GetDBContext().MyOrganizations.Add(request.Organization);
 
             if (request.Organization.User is not null)
