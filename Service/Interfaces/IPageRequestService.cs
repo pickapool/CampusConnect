@@ -7,5 +7,6 @@ namespace Service.Interfaces
     {
         Task<Result> CreatePageRequestAsync(AdminPageRequestModel model);
         Task<Result> UpdatePageRequestAsync(AdminPageRequestModel model, Guid notificationId);
+        Task<AdminPageRequestModel> GetById(Guid requestId);
     }
 }

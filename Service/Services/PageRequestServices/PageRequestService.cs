@@ -4,6 +4,7 @@ using Domain;
 using Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Service.Interfaces;
+using System.Reflection;
 
 namespace Service.Services.PageRequestServices
 {
@@ -31,6 +32,17 @@ namespace Service.Services.PageRequestServices
             request.Data = model.Wrap("request");
 
             var response = await _baseService.SendAsync<Result>(request);
+
+            return response;
+        }
+
+        public async Task<AdminPageRequestModel> GetById(Guid requestId)
+        {
+            request.RequestUrl = $"{defaultRequestUrl}/{requestId}";
+            request.RequestType = Enums.RequestType.GET;
+            request.Data = null;
+
+            var response = await _baseService.SendAsync<AdminPageRequestModel>(request);
 
             return response;
         }

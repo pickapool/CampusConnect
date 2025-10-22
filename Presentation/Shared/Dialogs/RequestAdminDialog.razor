@@ -6,7 +6,13 @@
     </TitleContent>
     <DialogContent>
         <MudStack Class="gap-2">
-            @Model?.User?.Name is requesting for a page admin in @Model?.MyOrganization?.OrganizationName
+            <MudText Typo="Typo.caption">@Model?.User?.Name is requesting for a page admin of @Model?.OrganizationName</MudText>
+            @foreach (var image in PageRequest.PageRequestImages ?? [])
+            {
+                <MudPaper Elevation="1" Class="pa-2">
+                    <MudImage Src="@image.ImageUrl" Alt="Requested Image" Width="100%"></MudImage>
+                </MudPaper>
+            }
         </MudStack>
     </DialogContent>
     <DialogActions>
@@ -25,6 +31,15 @@
     [Parameter] public Guid NotificationId { get; set; }
 
     private void Cancel() => MudDialog.Cancel();
+
+    private AdminPageRequestModel PageRequest = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        PageRequest = await _pageRequestService.GetById(Model.AdminPageRequestId);
+    }
 
     private async Task Submit(Enums.PageRequestStatus status)
     {

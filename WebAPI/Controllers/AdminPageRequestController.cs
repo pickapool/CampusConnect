@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Commands.AdminPageRequests.Commands;
+using WebAPI.Commands.AdminPageRequests.Queries;
 using WebAPI.Commands.Notifications.Queries;
 
 namespace WebAPI.Controllers
@@ -31,6 +32,14 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> UpdateRequest(Guid notificationId, [FromBody] AdminPageRequestModel model)
         {
             var result = await _mediator.Send(new UpdateRequestAdminCommand(model, notificationId));
+
+            return Ok(result);
+        }
+
+        [HttpGet("{requestId}")]
+        public async Task<IActionResult> GetById(Guid requestId)
+        {
+            var result = await _mediator.Send(new GetByIdRequestPageQuery(requestId));
 
             return Ok(result);
         }
