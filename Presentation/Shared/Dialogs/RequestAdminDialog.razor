@@ -1,4 +1,9 @@
 ﻿@using Domain;
+@using MudBlazor.Extensions
+@using MudBlazor.Extensions.Components
+
+@using MudBlazor.Extensions.Options
+@inject MudBlazor.Extensions.Services.MudExDialogService MudExDialogService
 
 <MudDialog>
     <TitleContent>
@@ -9,9 +14,7 @@
             <MudText Typo="Typo.caption">@Model?.User?.Name is requesting for a page admin of @Model?.OrganizationName</MudText>
             @foreach (var image in PageRequest.PageRequestImages ?? [])
             {
-                <MudPaper Elevation="1" Class="pa-2">
-                    <MudImage Src="@image.ImageUrl" Alt="Requested Image" Width="100%"></MudImage>
-                </MudPaper>
+                <MudButton OnClick="() => OpenAsDialog(image.Image)" Variant="Variant.Filled" Color="Color.Primary">Show As Dialog</MudButton>
             }
         </MudStack>
     </DialogContent>
@@ -51,5 +54,27 @@
         SnackBarHelper.ShowSnackbar($"Request has been {status.Humanize()}.", Variant.Filled, _snackBar, Severity.Success);
 
         MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private async Task OpenAsDialog(byte[] image)
+    {
+        using var stream = new MemoryStream(image);
+
+        var parameters = new DialogParameters {
+            { nameof(MudExFileDisplay.StreamUrlHandling), StreamUrlHandling.BlobUrl },
+            { nameof(MudExFileDisplay.Dense), true }
+        };
+        await MudExDialogService.ShowFileDisplayDialogAsync(stream, "FileName", "Content", HandleContentError, null, parameters);
+    }
+
+    private Task<MudExFileDisplayContentErrorResult> HandleContentError(IMudExFileDisplayInfos arg)
+    {   
+        if (arg.ContentType.Contains("word"))
+        {
+            return Task.FromResult(MudExFileDisplayContentErrorResult
+                .RedirectTo("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiZiqnBKWS8NHcKbRH04UkYjrCgxUMz6sVNw&usqp=CAU", "image/png")
+                .WithMessage("No word plugin found"));
+        }
+        return Task.FromResult(MudExFileDisplayContentErrorResult.Unhandled);
     }
 }

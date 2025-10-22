@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Extensions;
 using MudBlazor.Services;
 using Presentation;
 using Presentation.Authentication;
@@ -23,7 +24,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddMudServices();
 builder.Services.AddBlazoredLocalStorage();
-
+builder.Services.AddMudServicesWithExtensions();
+builder.Services.AddMudExtensions();
 
 builder.Services.AddHttpClient();
 
