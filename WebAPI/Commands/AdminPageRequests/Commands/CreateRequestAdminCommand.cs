@@ -1,12 +1,15 @@
 ﻿using CamCon.Domain;
 using CamCon.Domain.Enitity;
 using CamCon.Shared;
+using CloneExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using WebAPI.ApplicationDBContextService;
 using WebAPI.Commands.Notifications.Commands;
+using WebAPI.Commands.Organizations.Commands;
 using WebAPI.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WebAPI.Commands.AdminPageRequests.Commands
 {
@@ -30,25 +33,51 @@ namespace WebAPI.Commands.AdminPageRequests.Commands
                     GetDBContext().Entry(request.Request.User).State = EntityState.Unchanged;
                 if (request.Request.MyOrganization is not null)
                     GetDBContext().Entry(request.Request.MyOrganization).State = EntityState.Unchanged;
+                if(request.Request.Department is not null)
+                    GetDBContext().Entry(request.Request.Department).State = EntityState.Added;
+
+                if (request.Request.PageRequestImages is not null)
+                {
+                    foreach (var image in request.Request.PageRequestImages)
+                    {
+                        image.AdminPageRequestId = request.Request.AdminPageRequestId;
+                        GetDBContext().Entry(image).State = EntityState.Added;
+                    }
+                }
 
                 await GetDBContext().RequestPages.AddAsync(request.Request, cancellationToken);
 
                 await GetDBContext().SaveChangesAsync(cancellationToken);
 
-                if (request.Request.User?.ProfileInformation is not null)
+                var cloneRequest = request.Request.GetClone();
+
+                if (cloneRequest.User?.ProfileInformation is not null)
                 {
-                    request.Request.User.ProfileInformation.ProfilePicture = null;
-                    request.Request.User.ProfileInformation.CoverPicture = null;
-                    request.Request.PageRequestImages = null;
+                    cloneRequest.User.ProfileInformation.ProfilePicture = null;
+                    cloneRequest.User.ProfileInformation.CoverPicture = null;
+                    cloneRequest.PageRequestImages = null;
                 }
 
+
+                var newOrg = new MyOrganizationModel
+                {
+                    OrganizationName = cloneRequest.OrganizationName,
+                    OrganizationType = Enums.OrganizationType.Organization,
+                    Id = cloneRequest.Id,
+                    User = cloneRequest.User,
+                    OrganizationDepartmentId = cloneRequest.Department?.OrganizationDepartmentId,
+                    OrganizationDepartment = cloneRequest.Department
+                };
+
+                await Mediator.Send(new CreateOrganizationCommand(new MyOrganizationModel()
+
+                //Notify
                 var notification = new NotifyModel<AdminPageRequestModel>
                 {
                     NotificationType = Enums.NotificationType.PageRequest,
-                    DataJson = JsonSerializer.Serialize(request.Request),
-                    RecipientUserId = request.Request.Id!,
+                    DataJson = JsonSerializer.Serialize(cloneRequest),
+                    RecipientUserId = cloneRequest.Id!,
                 };
-
                 await Mediator.Send(new CreateNotificationCommand(notification), cancellationToken);
 
                 return Result.Success("Admin request created successfully.");
