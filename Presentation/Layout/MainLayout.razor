@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor.Extensions
 @using Presentation.Authentication
 @using Presentation.Shared
 
@@ -125,19 +126,19 @@
         _navigationManager.NavigateTo("/", true);
     }
 
-    private async Task OpenRequestDialog(AdminPageRequestModel request, Guid notificationId)
-    {
-        var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = true };
-
-        var parameters = new DialogParameters()
+        private async Task OpenRequestDialog(AdminPageRequestModel request, Guid notificationId)
         {
-            {"Model", request},
-            {"NotificationId", notificationId}
-        };
+            var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = true, CloseButton = true };
 
-        var dialog = await _dialogService.ShowAsync<RequestAdminDialog>(string.Empty, parameters, options);
+            var parameters = new DialogParameters()
+            {
+                {"Model", request},
+                {"NotificationId", notificationId}
+            };
 
-    }
+        var dialog = await _dialogService.ShowExAsync<RequestAdminDialog>(string.Empty, parameters, options);
+
+        }
 }
 
 <style>

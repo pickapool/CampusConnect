@@ -2,20 +2,19 @@
 @using MudBlazor.Extensions
 @using MudBlazor.Extensions.Components
 
-@using MudBlazor.Extensions.Options
-@inject MudBlazor.Extensions.Services.MudExDialogService MudExDialogService
-
-<MudDialog>
+<MudExDialog>
     <TitleContent>
         Request Admin Page
     </TitleContent>
     <DialogContent>
         <MudStack Class="gap-2">
             <MudText Typo="Typo.caption">@Model?.User?.Name is requesting for a page admin of @Model?.OrganizationName</MudText>
-            @foreach (var image in PageRequest.PageRequestImages ?? [])
-            {
-                <MudButton OnClick="() => OpenAsDialog(image.Image)" Variant="Variant.Filled" Color="Color.Primary">Show As Dialog</MudButton>
-            }
+           
+                @foreach (var image in PageRequest.PageRequestImages ?? [])
+                {
+                    <MudButton OnClick="() => OpenAsDialog(image)" Variant="Variant.Text" Color="Color.Secondary">@image.Filename</MudButton>
+                }
+            
         </MudStack>
     </DialogContent>
     <DialogActions>
@@ -23,7 +22,7 @@
         <MudButton Color="Color.Error" OnClick="() => Submit(Enums.PageRequestStatus.Rejected)" Variant="Variant.Text">Reject</MudButton>
         <MudButton Color="Color.Primary" OnClick="() => Submit(Enums.PageRequestStatus.Approved)" Variant="Variant.Filled">Approve</MudButton>
     </DialogActions>
-</MudDialog>
+</MudExDialog>
 
 @code {
     [CascadingParameter]
@@ -36,12 +35,15 @@
     private void Cancel() => MudDialog.Cancel();
 
     private AdminPageRequestModel PageRequest = new();
+    private bool Isloaded;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
         PageRequest = await _pageRequestService.GetById(Model.AdminPageRequestId);
+
+        StateHasChanged();
     }
 
     private async Task Submit(Enums.PageRequestStatus status)
@@ -56,15 +58,15 @@
         MudDialog.Close(DialogResult.Ok(true));
     }
 
-    private async Task OpenAsDialog(byte[] image)
+    private async Task OpenAsDialog(PageRequestImageModel image)
     {
-        using var stream = new MemoryStream(image);
+        using var stream = new MemoryStream(image.Image);
 
         var parameters = new DialogParameters {
             { nameof(MudExFileDisplay.StreamUrlHandling), StreamUrlHandling.BlobUrl },
             { nameof(MudExFileDisplay.Dense), true }
         };
-        await MudExDialogService.ShowFileDisplayDialogAsync(stream, "FileName", "Content", HandleContentError, null, parameters);
+        await _dialogService.ShowFileDisplayDialogAsync(stream, image.Filename, image.ContentType, HandleContentError, null, parameters);
     }
 
     private Task<MudExFileDisplayContentErrorResult> HandleContentError(IMudExFileDisplayInfos arg)

@@ -122,6 +122,8 @@
                 await file.OpenReadStream(209715200).CopyToAsync(memoryStream);
 
                 PageRequestImageModel.Image = memoryStream.ToArray();
+                PageRequestImageModel.Filename = file.Name;
+                PageRequestImageModel.ContentType = file.ContentType;
             }
 
             Model.PageRequestImages ??= [];

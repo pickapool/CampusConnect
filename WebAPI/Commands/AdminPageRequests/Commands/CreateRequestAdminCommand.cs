@@ -40,7 +40,7 @@ namespace WebAPI.Commands.AdminPageRequests.Commands
                 {
                     foreach (var image in request.Request.PageRequestImages)
                     {
-                        image.AdminPageRequestId = request.Request.AdminPageRequestId;
+                        //image.AdminPageRequestId = request.Request.AdminPageRequestId;
                         GetDBContext().Entry(image).State = EntityState.Added;
                     }
                 }

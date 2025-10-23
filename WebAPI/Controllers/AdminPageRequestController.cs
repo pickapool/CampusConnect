@@ -41,7 +41,7 @@ namespace WebAPI.Controllers
         {
             var result = await _mediator.Send(new GetByIdRequestPageQuery(requestId));
 
-            return Ok(result);
+            return Ok(result.Value);
         }
     }
 }
