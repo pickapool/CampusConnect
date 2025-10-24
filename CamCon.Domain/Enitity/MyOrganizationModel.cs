@@ -25,5 +25,9 @@ namespace CamCon.Domain.Enitity
         public Guid? OrganizationDepartmentId { get; set; }
         [ForeignKey("OrganizationDepartmentId")]
         public OrganizationDepartmentModel? OrganizationDepartment { get; set; }
+
+        public byte[]? Photo { get; set; }
+
+        public byte[]? CoverPhoto { get; set; }
     }
 }

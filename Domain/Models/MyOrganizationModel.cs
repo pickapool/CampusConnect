@@ -21,5 +21,15 @@ namespace Domain.Models
         public Guid? OrganizationDepartmentId { get; set; }
         [ForeignKey("OrganizationDepartmentId")]
         public OrganizationDepartmentModel? OrganizationDepartment { get; set; }
+
+        public byte[]? ProfilePicture { get; set; }
+
+        public byte[]? CoverPicture { get; set; }
+
+        [JsonIgnore]
+        public string? Photo => ProfilePicture is null ? "/images/blank_profile.png" : $"data:image/png;base64,{Convert.ToBase64String(ProfilePicture)}";
+
+        [JsonIgnore]
+        public string? CoverPhoto => CoverPicture is null ? "/images/coverphoto.png" : $"data:image/png;base64,{Convert.ToBase64String(CoverPicture)}";
     }
 }
