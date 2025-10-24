@@ -1,5 +1,20 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<NewsFeed OrganizationList="OrganizationList"></NewsFeed>
 
-Welcome to your new app.
+@code {
+
+    List<MyOrganizationModel> OrganizationList = new(); 
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        OrganizationList = await _organizationService.GetAllOrganizationsAsync();
+
+        StateHasChanged();
+
+    }
+}
