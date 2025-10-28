@@ -1,0 +1,17 @@
+﻿@using Domain.Models
+@using Service.Interfaces
+
+
+
+@code {
+    [Parameter] public Guid OrganizationId { get; set; }
+
+    [Inject] IOrganizationService organizationService { get; set; } = null!;
+
+    private MyOrganizationModel myOrganizationModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        myOrganizationModel = await organizationService.GetOrganizationByIdAsync(OrganizationId);
+    }
+}

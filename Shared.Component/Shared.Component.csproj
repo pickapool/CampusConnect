@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Components\NewsFeed.razor" />
+    <None Include="Components\Header.razor" />
     <None Include="Components\ProfileComponent.razor" />
   </ItemGroup>
 
@@ -30,6 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CamCon.Shared\CamCon.Shared.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Service\Service.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,25 @@
+﻿@using Domain.Models
+@using Service.Interfaces
+
+<MudStack Class="organizations hide-scrollbar" Spacing="2" Row>
+    <MudIconButton Icon="@Icons.Material.Filled.Home" Color="Color.Primary" Class="ma-o pa-0" Size="Size.Large"></MudIconButton>
+    @foreach (var org in OrganizationList)
+    {
+        <MudAvatar Class="cursor-pointer mud-ripple" @onclick="() => OnOrganizationClick(org.MyOrganizationId)" Size="Size.Large">
+            <MudImage Src="@(org.ProfilePicture is null ? "/images/blank_organization.jpg" : org.Photo)"></MudImage>
+        </MudAvatar>
+    }
+</MudStack>
+
+@code {
+    [Parameter] public List<MyOrganizationModel> OrganizationList { get; set; } = new();
+    [Parameter] public IFeedNotifier? Notifier { get; set; }
+
+    private async Task OnOrganizationClick(Guid guid)
+    {
+        if (Notifier != null)
+        {
+            await Notifier.OnOrganizationClick(guid);
+        }
+    }
+}

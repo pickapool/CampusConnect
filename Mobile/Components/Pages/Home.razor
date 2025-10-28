@@ -1,12 +1,18 @@
 ﻿@page "/"
 
-<NewsFeed OrganizationList="OrganizationList"></NewsFeed>
+@implements IFeedNotifier
+
+<Header OrganizationList="OrganizationList" Notifier="this"></Header>
+
 
 @code {
 
     List<MyOrganizationModel> OrganizationList = new(); 
 
+    public async Task OnOrganizationClick(Guid gui)
+    {
 
+    }
 
     protected override async Task OnInitializedAsync()
     {

@@ -53,6 +53,8 @@ namespace Mobile
             builder.Services.AddScoped<IProfileService, ProfileService>();
             builder.Services.AddScoped<IPageRequestService, PageRequestService>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<IFeedNotifier, FeedNotifier>();
+
 
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();
