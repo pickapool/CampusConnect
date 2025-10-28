@@ -22,9 +22,10 @@ namespace WebAPI.Commands.Organizations.Commands
             existingOrg.OrganizationName = request.Request.OrganizationName;
             existingOrg.OrganizationType = request.Request.OrganizationType;
             existingOrg.Description = request.Request.Description;
+            existingOrg.Photo = request.Request.Photo;
+            existingOrg.CoverPhoto = request.Request.CoverPhoto;
 
-
-            if(request.Request.User is not null)
+            if (request.Request.User is not null)
             {
                 existingOrg.User = request.Request.User;
                 existingOrg.Id = request.Request.Id;

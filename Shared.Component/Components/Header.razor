@@ -5,8 +5,8 @@
     <MudIconButton OnClick="() => OnOrganizationClick(new Guid())" Icon="@Icons.Material.Filled.Home" Color="Color.Primary" Class="ma-o pa-0" Size="Size.Large"></MudIconButton>
     @foreach (var org in OrganizationList)
     {
-        <MudAvatar Class="cursor-pointer mud-ripple" @onclick="() => OnOrganizationClick(org.MyOrganizationId)" Size="Size.Large">
-            <MudImage Src="@(org.ProfilePicture is null ? "/images/blank_organization.jpg" : org.Photo)"></MudImage>
+        <MudAvatar Class="cursor-pointer no-bg" @onclick="() => OnOrganizationClick(org.MyOrganizationId)" Size="Size.Large">
+            <MudImage Src="@(org.Photo is null ? "/images/blank_organization.jpg" : org.ProfilePicture)"></MudImage>
         </MudAvatar>
     }
 </MudStack>
@@ -23,3 +23,9 @@
         }
     }
 }
+
+<style>
+    .no-bg.mud-avatar {
+        background-color: unset !important;
+    }
+</style>

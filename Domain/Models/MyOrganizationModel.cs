@@ -22,14 +22,14 @@ namespace Domain.Models
         [ForeignKey("OrganizationDepartmentId")]
         public OrganizationDepartmentModel? OrganizationDepartment { get; set; }
 
-        public byte[]? ProfilePicture { get; set; }
+        public byte[]? Photo { get; set; }
 
-        public byte[]? CoverPicture { get; set; }
-
-        [JsonIgnore]
-        public string? Photo => ProfilePicture is null ? "/images/blank_profile.png" : $"data:image/png;base64,{Convert.ToBase64String(ProfilePicture)}";
+        public byte[]? CoverPhoto { get; set; }
 
         [JsonIgnore]
-        public string? CoverPhoto => CoverPicture is null ? "/images/coverphoto.png" : $"data:image/png;base64,{Convert.ToBase64String(CoverPicture)}";
+        public string? ProfilePicture => Photo is null ? "/images/blank_profile.png" : $"data:image/png;base64,{Convert.ToBase64String(Photo)}";
+
+        [JsonIgnore]
+        public string? CoverPicture => CoverPhoto is null ? "/images/coverphoto.png" : $"data:image/png;base64,{Convert.ToBase64String(CoverPhoto)}";
     }
 }

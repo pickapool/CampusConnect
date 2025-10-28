@@ -2,12 +2,14 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Service.Interfaces
 
+@inject IOrganizationService _organizationService
+
 <MudGrid Class="px-2 pt-2 relative"> 
     <MudItem Class="relative d-flex flex-column" xs="12">
         <MudFileUpload Class="@($"{(IsView ? "hide-badge" : "")} d-flex justify-center file-upload")" T="IBrowserFile" Accept="*" @bind-File="selectedCoverPhoto" FilesChanged="UploadCover" Style="width: 100%;" Disabled="IsView">
             <ActivatorContent>
                 <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
-                    <MudImage Class="cover-photo rounded-lg" Elevation="1" Src="@(Organizaton.CoverPhoto is null ? "/images/blank_organization.jpg" : Organizaton.CoverPhoto)" Height="150"></MudImage>
+                    <MudImage Class="cover-photo rounded-lg" Elevation="1" Src="@Organizaton.CoverPicture" Height="150"></MudImage>
                 </MudBadge>
             </ActivatorContent>
         </MudFileUpload>
@@ -15,7 +17,7 @@
             <ActivatorContent>
                 <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
                     <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
-                        <MudImage Src="@(Organizaton.CoverPhoto is null ? "/images/blank_profile.png" : Organizaton.Photo)"></MudImage>
+                        <MudImage Src="@Organizaton.ProfilePicture"></MudImage>
                     </MudAvatar>
                 </MudBadge>
             </ActivatorContent>
@@ -64,7 +66,9 @@
             {
                 await selectedCoverPhoto.OpenReadStream(209715200).CopyToAsync(memoryStream);
 
-                Organizaton.CoverPicture = memoryStream.ToArray();
+                Organizaton.CoverPhoto = memoryStream.ToArray();
+
+                await _organizationService.UpdateOrganizationAsync(Organizaton);
 
                 StateHasChanged();
             }
@@ -80,8 +84,9 @@
             {
                 await selectedProfile.OpenReadStream(209715200).CopyToAsync(memoryStream);
 
-                Organizaton.ProfilePicture = memoryStream.ToArray();
+                Organizaton.Photo = memoryStream.ToArray();
 
+                await _organizationService.UpdateOrganizationAsync(Organizaton);
 
                 StateHasChanged();
             }
