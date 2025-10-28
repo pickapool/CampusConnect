@@ -1,17 +1,132 @@
 ﻿@using Domain.Models
+@using Microsoft.AspNetCore.Components.Forms
 @using Service.Interfaces
 
+<MudGrid Class="px-2 pt-2 relative"> 
+    <MudItem Class="relative d-flex flex-column" xs="12">
+        <MudFileUpload Class="@($"{(IsView ? "hide-badge" : "")} d-flex justify-center file-upload")" T="IBrowserFile" Accept="*" @bind-File="selectedCoverPhoto" FilesChanged="UploadCover" Style="width: 100%;" Disabled="IsView">
+            <ActivatorContent>
+                <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
+                    <MudImage Class="cover-photo rounded-lg" Elevation="1" Src="@(Organizaton.CoverPhoto is null ? "/images/blank_organization.jpg" : Organizaton.CoverPhoto)" Height="150"></MudImage>
+                </MudBadge>
+            </ActivatorContent>
+        </MudFileUpload>
+        <MudFileUpload Class=@($"{(IsView ? "hide-badge" : "")} d-flex justify-center absolute profile-container") T="IBrowserFile" Accept="*" @bind-File="selectedProfile" FilesChanged="UploadProfilePicture" Disabled="IsView">
+            <ActivatorContent>
+                <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
+                    <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
+                        <MudImage Src="@(Organizaton.CoverPhoto is null ? "/images/blank_profile.png" : Organizaton.Photo)"></MudImage>
+                    </MudAvatar>
+                </MudBadge>
+            </ActivatorContent>
+        </MudFileUpload>
+    </MudItem>
 
+    <MudItem Class="flex-grow-1" xs="12">
+        <MudStack Class="pa-2" Justify="Justify.Center" Spacing="2" Style="width: 100%;">
+
+            @* <MudStack Class="pl-3">
+
+                <MudText Typo="Typo.h6">@(string.IsNullOrEmpty(Profile.FullName) ? CurrentFullname : Profile.FullName)</MudText>
+                <small style="color: blue">@Profile.MyOrganization?.OrganizationName</small>
+
+            </MudStack>
+            <MudDivider />
+
+            <MudStack AlignItems="AlignItems.Center" Row>
+                <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small"></MudIcon>
+                <small>@(string.IsNullOrEmpty(Profile.Address) ? "Address not found" : Profile.Address)</small>
+            </MudStack>
+            <MudStack AlignItems="AlignItems.Center" Row>
+                <MudIcon Icon="@Icons.Material.Filled.Warehouse" Size="Size.Small"></MudIcon>
+                <small>@(string.IsNullOrEmpty(Profile.Course) ? "Course not found" : Profile.Course)</small>
+            </MudStack> *@
+
+        </MudStack>
+    </MudItem>
+
+</MudGrid>
 
 @code {
-    [Parameter] public Guid OrganizationId { get; set; }
+    [Parameter] public MyOrganizationModel? Organizaton { get; set; }
 
-    [Inject] IOrganizationService organizationService { get; set; } = null!;
+    [Parameter] public bool IsView { get; set; } = false;
 
-    private MyOrganizationModel myOrganizationModel = new();
+    private IBrowserFile? selectedCoverPhoto;
+    private IBrowserFile? selectedProfile;
 
-    protected override async Task OnInitializedAsync()
+    private async Task UploadCover(IBrowserFile file)
     {
-        myOrganizationModel = await organizationService.GetOrganizationByIdAsync(OrganizationId);
+        selectedCoverPhoto = file;
+        if (selectedCoverPhoto != null)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await selectedCoverPhoto.OpenReadStream(209715200).CopyToAsync(memoryStream);
+
+                Organizaton.CoverPicture = memoryStream.ToArray();
+
+                StateHasChanged();
+            }
+        }
     }
+
+    private async Task UploadProfilePicture(IBrowserFile file)
+    {
+        selectedProfile = file;
+        if (selectedProfile != null)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await selectedProfile.OpenReadStream(209715200).CopyToAsync(memoryStream);
+
+                Organizaton.ProfilePicture = memoryStream.ToArray();
+
+
+                StateHasChanged();
+            }
+        }
+    }
+
+
 }
+
+<style>
+    .profile.mud-avatar.mud-avatar-large {
+        height: 120px;
+        width: 120px;
+        border: 1px solid white;
+    }   
+
+    .cover-photo {
+        width: 100%;
+        object-fit: cover !important;
+    }
+
+    .badge-edit.mud-badge.mud-badge-bottom.right.mud-badge-overlap {
+        height: 23px;
+        width: 23px;
+    }
+
+    .badge-edit .mud-badge.mud-badge-icon .mud-icon-badge {
+        font-size: 16px;
+    }
+
+    .file-upload .mud-badge-root {
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .file-upload:not(.hide-badge) .mud-badge-root {
+        cursor: pointer;
+    }
+
+    .profile-container {
+        bottom: -25px;
+        left: 30px;
+    }
+
+    .hide-badge .mud-badge {
+        display: none !important;
+    }
+</style>

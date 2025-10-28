@@ -2,16 +2,32 @@
 
 @implements IFeedNotifier
 
-<Header OrganizationList="OrganizationList" Notifier="this"></Header>
-
-
+<MudStack Spacing="0">
+    <Header OrganizationList="OrganizationList" Notifier="this"></Header>
+    <NewsFeeds MyOrganization="CurrentOrganization">
+        <ProfileContent>
+            <OrganizationView Organizaton="CurrentOrganization" IsView="true"></OrganizationView>
+        </ProfileContent>
+    </NewsFeeds>
+</MudStack>
 @code {
 
-    List<MyOrganizationModel> OrganizationList = new(); 
+    List<MyOrganizationModel> OrganizationList = new();
+
+    private MyOrganizationModel? CurrentOrganization;
 
     public async Task OnOrganizationClick(Guid gui)
     {
+        if(gui.Equals(new Guid()))
+        {
+            CurrentOrganization = null;
+        } 
+        else
+        {
+            CurrentOrganization = OrganizationList.FirstOrDefault(x => x.MyOrganizationId == gui);
+        }
 
+        await InvokeAsync(StateHasChanged);
     }
 
     protected override async Task OnInitializedAsync()

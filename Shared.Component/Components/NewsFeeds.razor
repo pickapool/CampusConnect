@@ -1,0 +1,16 @@
+﻿@using Domain.Models
+
+<MudStack Spacing="0">
+    <MudStack Spacing="0">
+        @if(MyOrganization is not null) {
+            @ProfileContent
+        }
+    </MudStack>
+    
+</MudStack>
+
+
+@code {
+    [Parameter] public RenderFragment? ProfileContent { get; set; }
+    [Parameter] public MyOrganizationModel? MyOrganization { get; set; }
+}

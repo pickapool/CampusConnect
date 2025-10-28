@@ -2,7 +2,7 @@
 @using Service.Interfaces
 
 <MudStack Class="organizations hide-scrollbar" Spacing="2" Row>
-    <MudIconButton Icon="@Icons.Material.Filled.Home" Color="Color.Primary" Class="ma-o pa-0" Size="Size.Large"></MudIconButton>
+    <MudIconButton OnClick="() => OnOrganizationClick(new Guid())" Icon="@Icons.Material.Filled.Home" Color="Color.Primary" Class="ma-o pa-0" Size="Size.Large"></MudIconButton>
     @foreach (var org in OrganizationList)
     {
         <MudAvatar Class="cursor-pointer mud-ripple" @onclick="() => OnOrganizationClick(org.MyOrganizationId)" Size="Size.Large">

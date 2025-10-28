@@ -15,7 +15,7 @@
                             </MudBadge>
                         </ActivatorContent>
                     </MudFileUpload>
-                        <MudFileUpload Class="d-flex justify-center absolute profile-container" T="IBrowserFile" Accept="*" @bind-File="selectedProfile" FilesChanged="UploadProfilePicture" Disabled="IsView">
+                        <MudFileUpload Class=@($"{(IsView ? "hide-badge" : "")} d-flex justify-center absolute profile-container")  T="IBrowserFile" Accept="*" @bind-File="selectedProfile" FilesChanged="UploadProfilePicture" Disabled="IsView">
                             <ActivatorContent>
                                 <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
                                     <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
@@ -159,7 +159,8 @@
         bottom: -25px;
         left: 30px;
     }
-    .hide-badge {
+
+    .hide-badge .mud-badge {
         display: none !important;
     }
 </style>
