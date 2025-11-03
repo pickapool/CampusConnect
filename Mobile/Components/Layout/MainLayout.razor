@@ -81,7 +81,7 @@
         <div class="login">
             @if(!_isRegister)
             {
-                <LoginComponent OnRegisterClick="ToggleRegister"></LoginComponent>
+                <LoginComponent OnRegisterClick="ToggleRegister" OnLogin="OnInitializedAsync"></LoginComponent>
             } else
             {
                 <RegisterComponent OnBack="ToggleRegister"></RegisterComponent>

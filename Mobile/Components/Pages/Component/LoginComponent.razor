@@ -48,6 +48,7 @@
 
 @code {
     [Parameter] public EventCallback OnRegisterClick { get; set; }
+    [Parameter] public EventCallback OnLogin { get; set; }
 
     protected string username = string.Empty, password = string.Empty;
     protected string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
@@ -93,6 +94,8 @@
             await _hubNotificationService.StartAllNotificationConnection();
 
             //await _hubNotificationService.StartUserNotificationConnection(uid.AccessToken);
+
+            await OnLogin.InvokeAsync();
 
             username = string.Empty;
             password = string.Empty;
