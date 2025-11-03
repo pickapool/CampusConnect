@@ -18,8 +18,8 @@ namespace WebAPI.Commands.Organizations.Query
         public async Task<Result<List<MyOrganizationModel>>> Handle(GetOrganizationsQuery request, CancellationToken cancellationToken)
         {
             var organizations = await GetDBContext().MyOrganizations
-                .Include(m => m.User)
-                .ThenInclude( u => u!.ProfileInformation)
+                .Include( c => c.OrganizationDepartment)
+                .Include( m => m.User).ThenInclude( u => u!.ProfileInformation)
                 .ToListAsync(cancellationToken);
 
            //Sample Development

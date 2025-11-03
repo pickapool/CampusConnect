@@ -9,7 +9,7 @@
         <MudFileUpload Class="@($"{(IsView ? "hide-badge" : "")} d-flex justify-center file-upload")" T="IBrowserFile" Accept="*" @bind-File="selectedCoverPhoto" FilesChanged="UploadCover" Style="width: 100%;" Disabled="IsView">
             <ActivatorContent>
                 <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
-                    <MudImage Class="cover-photo rounded-lg" Elevation="1" Src="@Organizaton.CoverPicture" Height="150"></MudImage>
+                    <MudImage Class="cover-photo rounded-lg" Elevation="1" Src="@Organizaton?.CoverPicture" Height="150"></MudImage>
                 </MudBadge>
             </ActivatorContent>
         </MudFileUpload>
@@ -17,7 +17,7 @@
             <ActivatorContent>
                 <MudBadge BadgeClass="mt-n5 ml-n4 badge-edit" Icon="@Icons.Material.Filled.CameraAlt" Origin="Origin.BottomRight" Overlap Bordered>
                     <MudAvatar Size="Size.Large" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
-                        <MudImage Src="@Organizaton.ProfilePicture"></MudImage>
+                        <MudImage Src="@Organizaton?.ProfilePicture"></MudImage>
                     </MudAvatar>
                 </MudBadge>
             </ActivatorContent>
@@ -27,22 +27,26 @@
     <MudItem Class="flex-grow-1" xs="12">
         <MudStack Class="pa-2" Justify="Justify.Center" Spacing="2" Style="width: 100%;">
 
-            @* <MudStack Class="pl-3">
+            <MudStack Class="pl-3">
 
-                <MudText Typo="Typo.h6">@(string.IsNullOrEmpty(Profile.FullName) ? CurrentFullname : Profile.FullName)</MudText>
-                <small style="color: blue">@Profile.MyOrganization?.OrganizationName</small>
+                <MudText Typo="Typo.h6">@Organizaton?.OrganizationName</MudText>
+
+                @if(MyDepartment is not null)
+                {
+                    <small style="color: blue">@MyDepartment.OrganizationName</small>
+                }
 
             </MudStack>
             <MudDivider />
 
             <MudStack AlignItems="AlignItems.Center" Row>
-                <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small"></MudIcon>
-                <small>@(string.IsNullOrEmpty(Profile.Address) ? "Address not found" : Profile.Address)</small>
+                <MudIcon Icon="@Icons.Material.Filled.House" Size="Size.Small"></MudIcon>
+                <small>Tibiao, Antique</small>
             </MudStack>
             <MudStack AlignItems="AlignItems.Center" Row>
                 <MudIcon Icon="@Icons.Material.Filled.Warehouse" Size="Size.Small"></MudIcon>
-                <small>@(string.IsNullOrEmpty(Profile.Course) ? "Course not found" : Profile.Course)</small>
-            </MudStack> *@
+                <small>University of Antique Tario Lim Campus</small>
+            </MudStack>
 
         </MudStack>
     </MudItem>
@@ -54,8 +58,26 @@
 
     [Parameter] public bool IsView { get; set; } = false;
 
+    private List<MyOrganizationModel> OrganiztionList = new();
+    private MyOrganizationModel? MyDepartment = new();
     private IBrowserFile? selectedCoverPhoto;
     private IBrowserFile? selectedProfile;
+
+    protected override async  Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        MyDepartment = OrganiztionList.FirstOrDefault(x => x.MyOrganizationId == Organizaton?.OrganizationDepartment?.MyOrganizationId);
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        OrganiztionList = await _organizationService.GetAllOrganizationsAsync();
+
+    }
 
     private async Task UploadCover(IBrowserFile file)
     {
