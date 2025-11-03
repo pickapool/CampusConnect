@@ -17,10 +17,19 @@ namespace WebAPI.Commands.Users.Queries
 
         public async Task<Result<ProfileInfo>> Handle(ProfileGetByIdQuery request, CancellationToken cancellationToken)
         {
-            var profile = await GetDBContext().ProfileInformations.FirstOrDefaultAsync( p => p.ProfileInformationId == request.id);
+            var profile = await GetDBContext().ProfileInformations
+                .AsNoTracking()
+                .Include( c => c.MyOrganization)
+                .FirstOrDefaultAsync( p => p.ProfileInformationId == request.id);
 
             if(profile == null)
                 return Result.Failure<ProfileInfo>(new Error(StatusCodes.Status404NotFound, "Profile Not found."));
+
+            if (profile.MyOrganization is not null)
+            {
+                profile.MyOrganization.CoverPhoto = null;
+                profile.MyOrganization.Photo = null;
+            }
 
             return Result.Success(profile);
         }

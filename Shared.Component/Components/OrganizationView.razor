@@ -1,5 +1,6 @@
 ﻿@using Domain.Models
 @using Microsoft.AspNetCore.Components.Forms
+@using Service
 @using Service.Interfaces
 
 @inject IOrganizationService _organizationService
@@ -29,6 +30,7 @@
 
             <MudStack Class="pl-3">
 
+
                 <MudText Typo="Typo.h6">@Organizaton?.OrganizationName</MudText>
 
                 @if(MyDepartment is not null)
@@ -49,6 +51,25 @@
             </MudStack>
 
         </MudStack>
+
+        @if (AppStateService.CurrentUser?.Id == Organizaton?.User?.Id)
+        {
+            <MudStack AlignItems="AlignItems.Center" Row>
+                <MudChip T="string" OnClick="Follow" Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium">POST</MudChip>
+                <MudChip T="string" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Medium">Edit</MudChip>
+            </MudStack>
+        }
+        else 
+        {
+
+            <MudStack AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Row>
+                <MudChip T="string" OnClick="Follow" Icon="" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium">Follow</MudChip>
+                <MudChip T="string" Icon="" Variant="Variant.Filled" Color="Color.Default" Size="Size.Medium">Apply as Contributor</MudChip>
+            </MudStack>
+        }
+
+        <MudDivider/>
+
     </MudItem>
 
 </MudGrid>
@@ -57,6 +78,8 @@
     [Parameter] public MyOrganizationModel? Organizaton { get; set; }
 
     [Parameter] public bool IsView { get; set; } = false;
+
+    [Parameter] public AppStateService AppStateService { get; set; }
 
     private List<MyOrganizationModel> OrganiztionList = new();
     private MyOrganizationModel? MyDepartment = new();
@@ -113,6 +136,11 @@
                 StateHasChanged();
             }
         }
+    }
+
+    private async Task Follow()
+    {
+        
     }
 
 
