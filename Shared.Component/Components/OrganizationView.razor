@@ -30,7 +30,6 @@
 
             <MudStack Class="pl-3">
 
-
                 <MudText Typo="Typo.h6">@Organizaton?.OrganizationName</MudText>
 
                 @if(MyDepartment is not null)
@@ -52,7 +51,7 @@
 
         </MudStack>
 
-        @if (AppStateService.CurrentUser?.Id == Organizaton?.User?.Id)
+        @if (AppStateService?.CurrentUser?.Id == Organizaton?.User?.Id)
         {
             <MudStack AlignItems="AlignItems.Center" Row>
                 <MudChip T="string" OnClick="Follow" Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium">POST</MudChip>
@@ -79,7 +78,7 @@
 
     [Parameter] public bool IsView { get; set; } = false;
 
-    [Parameter] public AppStateService AppStateService { get; set; }
+    [Parameter] public AppStateService? AppStateService { get; set; }
 
     private List<MyOrganizationModel> OrganiztionList = new();
     private MyOrganizationModel? MyDepartment = new();
