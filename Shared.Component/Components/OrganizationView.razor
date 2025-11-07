@@ -54,7 +54,7 @@
         @if (AppStateService?.CurrentUser?.Id == Organizaton?.User?.Id)
         {
             <MudStack AlignItems="AlignItems.Center" Row>
-                <MudChip T="string" OnClick="Follow" Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium">POST</MudChip>
+                <MudChip T="string" OnClick="Post" Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium">POST</MudChip>
                 <MudChip T="string" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Medium">Edit</MudChip>
             </MudStack>
         }
@@ -75,10 +75,10 @@
 
 @code {
     [Parameter] public MyOrganizationModel? Organizaton { get; set; }
-
     [Parameter] public bool IsView { get; set; } = false;
-
     [Parameter] public AppStateService? AppStateService { get; set; }
+
+    [Inject] NavigationManager NavigationManager { get; set; } = null!;
 
     private List<MyOrganizationModel> OrganiztionList = new();
     private MyOrganizationModel? MyDepartment = new();
@@ -139,7 +139,12 @@
 
     private async Task Follow()
     {
-        
+
+    }
+
+    private async Task Post()
+    {
+         NavigationManager.NavigateTo($"/post/{Organizaton.MyOrganizationId}");
     }
 
 

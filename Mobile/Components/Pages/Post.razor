@@ -1,0 +1,135 @@
+﻿@page "/post/{OrganizationId}"
+
+<MudStack Class="pa-1" Spacing="1">
+    <div class="d-flex justify-space-between">
+        <MudIconButton OnClick="Back" Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small"></MudIconButton>
+        <MudButton OnClick="CreatePost" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Post</MudButton>
+    </div>
+    <MudTextField @bind-Value="NewsFeed.Message"
+                  Label="Caption"
+                  Lines="3"
+                  Margin="Margin.Dense"
+                  Variant="Variant.Outlined"
+                  ShrinkLabel />
+
+    <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                   @ref="@_fileUpload"
+                   OnFilesChanged="OnInputFileChanged"
+                   AppendMultipleFiles
+                   Accept="image/*"
+                   Hidden="@false"
+                   InputClass="file-upload-input"
+                   tabindex="-1">
+    </MudFileUpload>
+    <MudPaper Class="pa-2" Outlined="true" Style="min-height: 300px;">
+
+        <div class="image-preview-container">
+            @if (NewsFeed.Images is not null)
+            {
+                @foreach (var img in NewsFeed.Images)
+                {
+                    <div class="image-wrapper">
+                        <img src="@img.Image" class="preview-image" />
+                        <button type="button"
+                                class="close-button"
+                                @onclick="() => RemoveImage(img)">
+                            ✕
+                        </button>
+                    </div>
+                }
+            }
+        </div>
+    </MudPaper>
+</MudStack>
+
+@code {
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
+
+    [Parameter] public string OrganizationId { get; set; }
+
+    private NewsFeedModel NewsFeed = new();
+    private MudFileUpload<IReadOnlyList<IBrowserFile>>? _fileUpload;
+
+    private async void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+
+        if (NewsFeed.Images == null)
+            NewsFeed.Images = new List<NewsFeedImageModel>();
+
+        foreach (var file in files)
+        {
+            using var ms = new MemoryStream();
+            await file.OpenReadStream(209715200).CopyToAsync(ms);
+            var bytes = ms.ToArray();
+
+            if (bytes.Length == 0) continue;
+
+            var image = new NewsFeedImageModel
+            {
+                ImageData = bytes
+            };
+
+            NewsFeed.Images.Add(image);
+        }
+
+        StateHasChanged();
+    }
+
+    private void RemoveImage(NewsFeedImageModel img)
+    {
+        NewsFeed.Images?.Remove(img);
+    }
+    private void Back()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private async Task CreatePost()
+    {
+        NewsFeed.MyOrganizationId = Guid.Parse(OrganizationId);
+
+        await _newsFeedService.CreatePost(NewsFeed);
+
+        _snackBar.Add("Post created successfully!", Severity.Success);
+
+        _navigationManager.NavigateTo("/post");
+    }
+}
+
+<style>
+    .image-preview-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .image-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .preview-image {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .close-button {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(0,0,0,0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        line-height: 16px;
+    }
+</style>
