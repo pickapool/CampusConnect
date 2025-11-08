@@ -6,11 +6,12 @@
             @ProfileContent
         }
     </MudStack>
-    
+    @NewsFeedContent
 </MudStack>
 
 
 @code {
     [Parameter] public RenderFragment? ProfileContent { get; set; }
     [Parameter] public MyOrganizationModel? MyOrganization { get; set; }
+    [Parameter] public RenderFragment? NewsFeedContent { get; set; }
 }

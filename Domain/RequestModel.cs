@@ -11,5 +11,6 @@ namespace Domain
         public Enums.RequestType RequestType { get; set; } = Enums.RequestType.GET;
         public string? RequestUrl { get; set; }
         public object? Data { get; set; }
+
     }
 }

@@ -8,6 +8,9 @@
         <ProfileContent>
             <OrganizationView Organizaton="CurrentOrganization" AppStateService="_appStateService"></OrganizationView>
         </ProfileContent>
+        <NewsFeedContent>
+            <NewsFeedPosts OrganiationId="@CurrentOrganization?.MyOrganizationId" NewsFeedService="_newsFeedService"></NewsFeedPosts>
+        </NewsFeedContent>
     </NewsFeeds>
 </MudStack>
 @code {
@@ -15,6 +18,7 @@
     List<MyOrganizationModel> OrganizationList = new();
 
     private MyOrganizationModel? CurrentOrganization;
+    private List<NewsFeedModel> CurrentNewsFeeds = new();
 
     public async Task OnOrganizationClick(Guid gui)
     {

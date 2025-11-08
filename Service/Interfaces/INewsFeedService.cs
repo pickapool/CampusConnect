@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Service.Interfaces
     {
         Task CreatePost(NewsFeedModel newsFeed);
         Task<NewsFeedModel> GetPostById(Guid guid);
-        Task<List<NewsFeedModel>> GetNewsFeeds();
+        Task<List<NewsFeedModel>> GetNewsFeeds(PaginationRequestModel model);
         Task<List<NewsFeedModel>> GetNewsFeedById(Guid guid);
     }
 }

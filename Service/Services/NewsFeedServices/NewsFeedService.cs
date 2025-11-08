@@ -29,9 +29,10 @@ namespace Service.Services.NewsFeedServices
             _baseService = baseService;
             request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/post";
         }
-
+            
         public async Task CreatePost(NewsFeedModel model)
         {
+            request.RequestUrl = defaultRequestUrl;
             request.RequestType = Enums.RequestType.POST;
             request.Data = model.Wrap("newsfeed");
 
@@ -44,9 +45,13 @@ namespace Service.Services.NewsFeedServices
             throw new NotImplementedException();
         }
 
-        public Task<List<NewsFeedModel>> GetNewsFeeds()
+        public async Task<List<NewsFeedModel>> GetNewsFeeds(PaginationRequestModel model)
         {
-            throw new NotImplementedException();
+            request.RequestUrl = $"{defaultRequestUrl}/getall";
+            request.RequestType = Enums.RequestType.POST;
+            request.Data = model.Wrap("request");
+
+            return await _baseService.SendAsync<List<NewsFeedModel>>(request);
         }
 
         public Task<NewsFeedModel> GetPostById(Guid guid)

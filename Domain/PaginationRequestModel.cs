@@ -1,0 +1,8 @@
+﻿namespace Domain
+{
+    public class PaginationRequestModel
+    {
+        public int StartIndex { get; set; }
+        public int Count { get; set; }
+    }
+}

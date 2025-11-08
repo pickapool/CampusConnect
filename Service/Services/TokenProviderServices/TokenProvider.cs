@@ -19,7 +19,8 @@ namespace Service.Services.TokenProviderServices
 
         public async Task<TokenModel?> GetToken()
         {
-            return await _localStorageService.GetItemAsync<TokenModel>("token");
+            var token = await _localStorageService.GetItemAsync<TokenModel>("token");
+            return token;
         }
 
         public void SetToken(TokenModel token)

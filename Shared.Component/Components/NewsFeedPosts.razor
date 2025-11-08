@@ -1,0 +1,83 @@
+﻿@using Domain
+@using Domain.Models
+@using Service.Interfaces
+
+<MudDataGrid T="NewsFeedModel" VirtualizeServerData="GetPosts" Virtualize Filterable FixedHeader OverscanCount="10" ItemSize="52.68f">
+    <Columns>
+        <TemplateColumn>
+            <CellTemplate>
+                <MudStack Style="width: 100%;">
+                    <MudPaper Elevation="2" Class="pa-1">
+                        <!-- Header: User info -->
+                        <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                            <MudAvatar Size="Size.Small" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
+                                <MudImage Src="@context.Item.MyOrganization?.ProfilePicture"></MudImage>
+                            </MudAvatar>
+                        </div>
+                        <MudText Typo="Typo.body2" Class="mb-3">
+                            @context.Item.Message
+                        </MudText>
+
+                        
+                        <MudDivider Class="my-2" />
+                        <MudStack Justify="Justify.SpaceBetween">
+                            <MudButton StartIcon="@Icons.Material.Filled.ThumbUp"
+                                       Variant="Variant.Text"
+                                       Size="Size.Small"
+                                       Color="Color.Default">
+                                Like
+                            </MudButton>
+                            <MudButton StartIcon="@Icons.Material.Filled.Comment"
+                                       Variant="Variant.Text"
+                                       Size="Size.Small"
+                                       Color="Color.Default">
+                                Comment
+                            </MudButton>
+                        </MudStack>
+                    </MudPaper>
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+
+@code {
+    [Parameter] public Guid? OrganiationId { get; set; }
+    [Parameter] public INewsFeedService NewsFeedService { get; set; } = null!;
+
+    private async Task<GridData<NewsFeedModel>> GetPosts(GridStateVirtualize<NewsFeedModel> gridState, CancellationToken token)
+    {
+        try
+        {
+            var result = await NewsFeedService.GetNewsFeeds(new PaginationRequestModel
+            {
+                Count = 10,
+                StartIndex = gridState.StartIndex,
+            });
+
+            return new GridData<NewsFeedModel>
+            {
+                Items = result?? [],
+                TotalItems = result?.Count?? 0
+            };
+        }
+        catch (TaskCanceledException)
+        {
+            return new GridData<NewsFeedModel>
+            {
+                Items = [],
+                TotalItems = 0
+            };
+        }
+    }
+}
+
+<style>
+    .mud-table-cell {
+        padding: 4px !important;
+    }
+
+    .mud-table-cell:before {
+        padding: unset !important;
+    }
+</style>

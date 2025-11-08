@@ -11,5 +11,10 @@
 	    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
     </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\CamCon.Shared\CamCon.Shared.csproj" />
+    </ItemGroup>
 	
 </Project>

@@ -27,7 +27,6 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <Folder Include="Commands\Feeds\Queries\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
