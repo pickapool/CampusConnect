@@ -8,19 +8,26 @@
             <CellTemplate>
                 <MudStack Style="width: 100%;">
                     <MudPaper Elevation="2" Class="pa-1">
-                        <!-- Header: User info -->
-                        <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                            <MudAvatar Size="Size.Small" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
+                        <MudStack AlignItems="AlignItems.Center" Row>
+                            <MudAvatar Size="Size.Medium" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
                                 <MudImage Src="@context.Item.MyOrganization?.ProfilePicture"></MudImage>
                             </MudAvatar>
-                        </div>
+                            <MudStack Class="gap-0 pa-0" Spacing="0">
+                                <MudText Typo="Typo.caption"><b>@context.Item.MyOrganization?.OrganizationName</b></MudText>
+                                <small>@context.Item.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")</small>
+                            </MudStack>
+                        </MudStack>
                         <MudText Typo="Typo.body2" Class="mb-3">
                             @context.Item.Message
                         </MudText>
+                        @if (context.Item.Images != null && context.Item.Images.Any())                         
+                        { 
+                            <FeedImageGallery Images="@context.Item.Images" />                         
+                        }
 
-                        
+
                         <MudDivider Class="my-2" />
-                        <MudStack Justify="Justify.SpaceBetween">
+                        <MudStack Justify="Justify.SpaceBetween" Row>
                             <MudButton StartIcon="@Icons.Material.Filled.ThumbUp"
                                        Variant="Variant.Text"
                                        Size="Size.Small"

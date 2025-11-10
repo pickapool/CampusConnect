@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Mobile.Authentication;
 using MudBlazor.Services;
+using MudExtensions.Services;
 using Service;
 using Service.Interfaces;
 using Service.Notifiers;
@@ -45,6 +46,7 @@ namespace Mobile
             builder.Services.AddHttpClient();
             builder.Services.AddMudServices();
             builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddMudExtensions();
 
             builder.Services.AddScoped<IBaseService, BaseService>();
             builder.Services.AddScoped<IUserService, UserService>();

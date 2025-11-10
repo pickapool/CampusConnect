@@ -1,0 +1,233 @@
+﻿@* FeedImageGallery.razor *@
+@using MudBlazor
+@using Domain.Models
+@inherits MudComponentBase
+
+@if (Images != null && Images.Any())
+{
+    @if (Images.Count == 1)
+    {
+        <div class="feed-gallery single-image" @onclick="() => OpenGallery(0)">
+            <img src="@Images[0].Image" alt="Post image" />
+        </div>
+    }
+    else if (Images.Count == 2)
+    {
+        <div class="feed-gallery two-images">
+            <div class="image-item" @onclick="() => OpenGallery(0)">
+                <img src="@Images[0].Image" alt="Post image 1" />
+            </div>
+            <MudDivider />
+            <div class="image-item" @onclick="() => OpenGallery(1)">
+                <img src="@Images[1].Image" alt="Post image 2" />
+            </div>
+        </div>
+    }
+    else if (Images.Count >= 3)
+    {
+        <div class="feed-gallery three-plus-images">
+            <div class="left-column">
+                <div class="image-item" @onclick="() => OpenGallery(0)">
+                    <img src="@Images[0].Image" alt="Post image 1" />
+                </div>
+                <div class="image-item" @onclick="() => OpenGallery(1)">
+                    <img src="@Images[1].Image" alt="Post image 2" />
+                </div>
+            </div>
+            <div class="right-column" @onclick="() => OpenGallery(2)">
+                <img src="@Images[2].Image" alt="Post image 3" />
+                @if (Images.Count > 3)
+                {
+                    <div class="image-overlay">
+                        <MudText Typo="Typo.h4" Style="color: white; font-weight: bold;">
+                            +@(Images.Count - 3)
+                        </MudText>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+
+@if (_visible)
+{
+    <div class="mud-overlay" style="background-color: rgba(0, 0, 0, 0.8); z-index: 2000" @onclick="@(() => ChangeMenu(false))" @onclick:stopPropagation>
+        <MudContainer Class="relative pa-0" MaxWidth="MaxWidth.ExtraLarge" Style="background-color: rgba(20, 20, 20, 0.9); top: 0; bottom: 0; height: 100%;">
+            <div class="d-flex absolute mud-gallery-selected-toolbox gallery-toolbox-top">
+                <MudText Class="white-text pa-4">
+                    Image @(_currentIndex + 1) of @Images?.Count
+                </MudText>
+            </div>
+            <div class="d-flex align-center justify-center" style="background-color: rgba(var(--mud-palette-background-gray), 0.9); height: 100%; max-height: 100%; overflow: auto">
+                <MudImage Src="@_selectedSrc" Fluid="true" />
+            </div>
+            <div class="d-flex justify-center absolute mud-gallery-selected-toolbox gallery-toolbox-bottom">
+                <MudIconButton Class="white-text" Icon="@Icons.Material.Outlined.Download" />
+                <MudIconButton Class="white-text" Icon="@Icons.Material.Outlined.Share" />
+            </div>
+            <MudIconButton Class="absolute white-text" Size="Size.Large" Ripple="false" Icon="@Icons.Material.Outlined.ChevronLeft" Style="bottom: 0px; top: 0px; left: 4px;" OnClick="@(() => SetAdjacentImage(-1))" />
+            <MudIconButton Class="absolute white-text" Size="Size.Large" Ripple="false" Icon="@Icons.Material.Outlined.ChevronRight" Style="bottom: 0px; top: 0px; right: 4px;" OnClick="@(() => SetAdjacentImage(1))" />
+            <MudIconButton Class="absolute white-text" Ripple="false" Icon="@Icons.Material.Outlined.Close" Style="top: 4px; right: 0px;" OnClick="@(() => ChangeMenu(false))" />
+        </MudContainer>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public List<NewsFeedImageModel> Images { get; set; } = new();
+
+    private bool _visible = false;
+    private string _selectedSrc = string.Empty;
+    private int _currentIndex = 0;
+
+    private void OpenGallery(int startIndex)
+    {
+        _currentIndex = startIndex;
+        _selectedSrc = Images[_currentIndex].Image;
+        _visible = true;
+        StateHasChanged();
+    }
+
+    private void ChangeMenu(bool visible)
+    {
+        _visible = visible;
+        StateHasChanged();
+    }
+
+    private void SetAdjacentImage(int direction)
+    {
+        _currentIndex += direction;
+        if (_currentIndex < 0)
+            _currentIndex = Images.Count - 1;
+        else if (_currentIndex >= Images.Count)
+            _currentIndex = 0;
+
+        _selectedSrc = Images[_currentIndex].Image;
+        StateHasChanged();
+    }
+}
+
+<style>
+    .feed-gallery {
+        width: 100%;
+        cursor: pointer;
+        margin: 8px 0;
+    }
+
+        .feed-gallery.single-image {
+            max-height: 500px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+            .feed-gallery.single-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .feed-gallery.two-images {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+            .feed-gallery.two-images .image-item {
+                width: 100%;
+                height: 250px;
+                overflow: hidden;
+            }
+
+                .feed-gallery.two-images .image-item img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+        .feed-gallery.three-plus-images {
+            display: flex;
+            gap: 4px;
+            height: 400px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+            .feed-gallery.three-plus-images .left-column {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1;
+            }
+
+                .feed-gallery.three-plus-images .left-column .image-item {
+                    flex: 1;
+                    overflow: hidden;
+                }
+
+                    .feed-gallery.three-plus-images .left-column .image-item img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+            .feed-gallery.three-plus-images .right-column {
+                flex: 1;
+                position: relative;
+                overflow: hidden;
+            }
+
+                .feed-gallery.three-plus-images .right-column img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+            .feed-gallery.three-plus-images .image-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.6);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+        .feed-gallery .image-item {
+            transition: opacity 0.2s ease;
+        }
+
+            .feed-gallery .image-item:hover,
+            .feed-gallery.single-image:hover,
+            .feed-gallery.three-plus-images .right-column:hover {
+                opacity: 0.9;
+            }
+
+    .white-text {
+        color: white !important;
+    }
+
+    .mud-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mud-gallery-selected-toolbox {
+        z-index: 1;
+    }
+
+    .gallery-toolbox-top {
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .gallery-toolbox-bottom {
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+</style>
