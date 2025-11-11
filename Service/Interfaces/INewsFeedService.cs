@@ -12,7 +12,7 @@ namespace Service.Interfaces
     {
         Task CreatePost(NewsFeedModel newsFeed);
         Task<NewsFeedModel> GetPostById(Guid guid);
-        Task<List<NewsFeedModel>> GetNewsFeeds(PaginationRequestModel model);
+        Task<PaginationResponseModel> GetNewsFeeds(PaginationRequestModel model);
         Task<List<NewsFeedModel>> GetNewsFeedById(Guid guid);
     }
 }

@@ -2,7 +2,8 @@
 @using Domain.Models
 @using Service.Interfaces
 
-<MudDataGrid T="NewsFeedModel" VirtualizeServerData="GetPosts" Virtualize Filterable FixedHeader OverscanCount="10" ItemSize="52.68f">
+<MudDataGrid Class="mt-1" T="NewsFeedModel" VirtualizeServerData="GetPosts" Virtualize Filterable FixedHeader Height="calc(100vh - 120px)" OverscanCount="2" ItemSize="39f">
+
     <Columns>
         <TemplateColumn>
             <CellTemplate>
@@ -27,7 +28,7 @@
 
 
                         <MudDivider Class="my-2" />
-                        <MudStack Justify="Justify.SpaceBetween" Row>
+                        <MudStack Justify="Justify.SpaceAround" Row>
                             <MudButton StartIcon="@Icons.Material.Filled.ThumbUp"
                                        Variant="Variant.Text"
                                        Size="Size.Small"
@@ -35,6 +36,7 @@
                                 Like
                             </MudButton>
                             <MudButton StartIcon="@Icons.Material.Filled.Comment"
+                                       OnClick="()=> _openComments = !_openComments"
                                        Variant="Variant.Text"
                                        Size="Size.Small"
                                        Color="Color.Default">
@@ -46,11 +48,39 @@
             </CellTemplate>
         </TemplateColumn>
     </Columns>
+
+    <RowLoadingContent>
+        <td colspan="1" class="d-flex justify-center row-loading" style="height: 39px;">
+            <MudProgressCircular Size="Size.Small" Color="Color.Primary" Indeterminate></MudProgressCircular>
+        </td>
+    </RowLoadingContent>
+
 </MudDataGrid>
 
+<MudDrawer Class="comment-drawer" @bind-Open="@_openComments" Height="70vh" Anchor="@Anchor.Bottom" Elevation="1" Variant="@DrawerVariant.Temporary">
+   <MudStack AlignItems="AlignItems.Center">
+        <MudButton OnClick="() => _openComments = !_openComments" Class="comment-btn" Color="Color.Primary" Variant="Variant.Filled"></MudButton>
+   </MudStack>
+   <MudPaper Class="absolute comment-input px-2" Square Elevation="0">
+        <MudTextField @ref="commentRef" @bind-Value="_comment" Variant="Variant.Outlined" Margin="Margin.Dense" Placeholder="Type your comment here"></MudTextField>
+   </MudPaper>
+</MudDrawer>
+
+<MudOverlay @bind-Visible="_openComments" LockScroll></MudOverlay>
 @code {
     [Parameter] public Guid? OrganiationId { get; set; }
     [Parameter] public INewsFeedService NewsFeedService { get; set; } = null!;
+
+    private bool _openComments;
+    private string _comment = string.Empty;
+    private MudTextField<string>? commentRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        commentRef?.FocusAsync();
+    }
 
     private async Task<GridData<NewsFeedModel>> GetPosts(GridStateVirtualize<NewsFeedModel> gridState, CancellationToken token)
     {
@@ -58,13 +88,13 @@
         {
             var result = await NewsFeedService.GetNewsFeeds(new PaginationRequestModel
             {
-                Count = 10,
+                Count = gridState.Count,
                 StartIndex = gridState.StartIndex,
             });
 
             return new GridData<NewsFeedModel>
             {
-                Items = result?? [],
+                Items = result?.Records?? [],
                 TotalItems = result?.Count?? 0
             };
         }
@@ -87,4 +117,29 @@
     .mud-table-cell:before {
         padding: unset !important;
     }
+
+    .comment-drawer {
+        border-top-right-radius: 14px;
+        border-top-left-radius: 14px;
+        padding: 8px;
+    
+    }
+    .comment-btn {
+        padding: unset !important;
+        height: 6px !important;
+        width: 20%;
+    }
+
+    .comment-input {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        z-index: 20;
+    }
+
+    td.row-loading:nth-of-type(n+2),
+    td:has(td.row-loading:nth-of-type(n+2)) {
+        display: none !important;
+    }
+
 </style>

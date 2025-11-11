@@ -131,3 +131,6 @@ h1:focus {
 .hide-scrollbar::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
 }
+.overflow-x-hidden {
+    overflow-x: hidden;
+}

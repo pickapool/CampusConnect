@@ -45,13 +45,13 @@ namespace Service.Services.NewsFeedServices
             throw new NotImplementedException();
         }
 
-        public async Task<List<NewsFeedModel>> GetNewsFeeds(PaginationRequestModel model)
+        public async Task<PaginationResponseModel> GetNewsFeeds(PaginationRequestModel model)
         {
             request.RequestUrl = $"{defaultRequestUrl}/getall";
             request.RequestType = Enums.RequestType.POST;
             request.Data = model.Wrap("request");
 
-            return await _baseService.SendAsync<List<NewsFeedModel>>(request);
+            return await _baseService.SendAsync<PaginationResponseModel>(request);
         }
 
         public Task<NewsFeedModel> GetPostById(Guid guid)

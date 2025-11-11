@@ -1,30 +1,38 @@
 ﻿using CamCon.Domain;
-using CamCon.Domain.Enitity;
 using CamCon.Shared;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.ApplicationDBContextService;
 using WebAPI.Interfaces;
+using PaginationRequestModel = CamCon.Domain.PaginationRequestModel;
+using PaginationResponseModel = CamCon.Domain.PaginationResponseModel;
 
 namespace WebAPI.Commands.Feeds.Queries
 {
-    public record GetAllPostQuery(PaginationRequestModel request) : IRequest<Result<List<NewsFeedModel>>>;
+    public record GetAllPostQuery(PaginationRequestModel request) : IRequest<Result<PaginationResponseModel>>;
 
-    public class GetAllPostQueryHandler(AppDbContext context) : AppDatabaseBase(context), IRequestHandler<GetAllPostQuery, Result<List<NewsFeedModel>>>
+    public class GetAllPostQueryHandler(AppDbContext context) : AppDatabaseBase(context), IRequestHandler<GetAllPostQuery, Result<PaginationResponseModel>>
     {
-        public async Task<Result<List<NewsFeedModel>>> Handle(GetAllPostQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PaginationResponseModel>> Handle(GetAllPostQuery request, CancellationToken cancellationToken)
         {
 
-            if (request is null) return Result.Success(new List<NewsFeedModel>());
+            if (request is null) return Result.Success(new PaginationResponseModel());
 
-            var result = await GetDBContext().NewsFeeds
-                .Include( c => c.Images)
+            var list = GetDBContext().NewsFeeds.AsQueryable().AsNoTracking();
+
+            var result = await list.Include( c => c.Images)
                 .Include( o => o.MyOrganization)
+                .OrderByDescending( c => c.CreatedAt)
                 .Skip(request.request.StartIndex)
                 .Take(request.request.Count)
                 .ToListAsync(cancellationToken: cancellationToken);
 
-            return Result.Success(result);
+            return Result.Success(new PaginationResponseModel()
+            {
+                Count = list.Count(),
+                Records = result
+            });
         }
     }
 }
