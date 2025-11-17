@@ -17,7 +17,7 @@ namespace WebAPI.Commands.Likes.Commands
 
         public async Task<Result<LikeModel>> Handle(LikeUpdateCommand request, CancellationToken cancellationToken)
         {
-            var like = await GetDBContext().Likes.FirstOrDefaultAsync(l => l.UserId == request.Request.UserId, cancellationToken);
+            var like = await GetDBContext().Likes.FirstOrDefaultAsync(l => l.UserId == request.Request.UserId && l.NewsFeedId == request.Request.NewsFeedId, cancellationToken);
 
             if(like is null)
             {
@@ -36,7 +36,10 @@ namespace WebAPI.Commands.Likes.Commands
 
                     await GetDBContext().SaveChangesAsync(cancellationToken);
 
-                    return Result.Success(new LikeModel());
+                    return Result.Success(new LikeModel()
+                    {
+                        Emoji = request.Request.Emoji
+                    });
 
                 }
                 else
