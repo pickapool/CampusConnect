@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using CamCon.Shared;
+using Domain;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,7 @@ namespace Service.Interfaces
         Task<NewsFeedModel> GetPostById(Guid guid);
         Task<PaginationResponseModel> GetNewsFeeds(PaginationRequestModel model);
         Task<List<NewsFeedModel>> GetNewsFeedById(Guid guid);
+
+        Task<LikeModel> UpdateLike(LikeModel like);
     }
 }

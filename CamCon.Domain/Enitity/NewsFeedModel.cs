@@ -28,5 +28,8 @@ namespace CamCon.Domain.Enitity
 
         [ForeignKey("NewsFeedId")]
         public List<NewsFeedCommentModel>? Comments { get; set; }
+
+        [ForeignKey("NewsFeedId")]
+        public List<LikeModel>? Likes { get; set; }
     }
 }

@@ -33,5 +33,15 @@
             Approved,
             Rejected
         }
+
+        public enum LikeType
+        {
+            Like,
+            Heart,
+            Funny,
+            Wow,
+            Angry,
+            Cry
+        }
     }
 }

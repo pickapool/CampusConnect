@@ -21,7 +21,9 @@ namespace WebAPI.Commands.Feeds.Queries
 
             var list = GetDBContext().NewsFeeds.AsQueryable().AsNoTracking();
 
-            var result = await list.Include( c => c.Images)
+            var result = await list
+                .Include( c => c.Images)
+                .Include( o => o.Likes)
                 .Include( o => o.MyOrganization)
                 .OrderByDescending( c => c.CreatedAt)
                 .Skip(request.request.StartIndex)

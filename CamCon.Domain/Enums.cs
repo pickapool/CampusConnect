@@ -33,5 +33,15 @@ namespace CamCon.Domain
             Post
 
         }
+        public enum LikeType
+        {
+            Like,
+            Heart,
+            Funny,
+            Wow,
+            Angry,
+            Cry
+        }
+
     }
 }

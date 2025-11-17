@@ -58,5 +58,14 @@ namespace Service.Services.NewsFeedServices
         {
             throw new NotImplementedException();
         }
+
+        public async Task<LikeModel> UpdateLike(LikeModel model)
+        {
+            request.RequestUrl = $"{defaultRequestUrl}/like";
+            request.RequestType = Enums.RequestType.POST;
+            request.Data = model.Wrap("request");
+
+            return await _baseService.SendAsync<LikeModel>(request);
+        }
     }
 }

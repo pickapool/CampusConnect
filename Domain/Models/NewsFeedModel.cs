@@ -1,4 +1,6 @@
-﻿namespace Domain.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Models
 {
     public class NewsFeedModel
     {
@@ -15,5 +17,10 @@
         public List<NewsFeedImageModel>? Images { get; set; }
 
         public List<NewsFeedCommentModel>? Comments { get; set; }
+
+        public List<LikeModel>? Likes { get; set; }
+
+        [JsonIgnore]
+        public bool openEmoji { get; set; }
     }
 }
