@@ -9,6 +9,7 @@ using Service;
 using Service.Interfaces;
 using Service.Notifiers;
 using Service.Services.BaseService;
+using Service.Services.CommentServices;
 using Service.Services.DepartmentServices;
 using Service.Services.NewsFeedServices;
 using Service.Services.NotificationServices;
@@ -58,6 +59,7 @@ namespace Mobile
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<IFeedNotifier, FeedNotifier>();
             builder.Services.AddScoped<INewsFeedService, NewsFeedService>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
 
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();

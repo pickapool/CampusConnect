@@ -4,7 +4,7 @@
 @using Service.Interfaces
 @using Shared.Component.Extensions
 
-<MudDataGrid Class="mt-1" T="NewsFeedModel" VirtualizeServerData="GetPosts" Virtualize Filterable FixedHeader Height="calc(100vh - 120px)" OverscanCount="2" ItemSize="39f">
+<MudDataGrid Class="mt-1" T="NewsFeedModel" Items="_lisPost" Virtualize>
 
     <Columns>
         <TemplateColumn>
@@ -98,7 +98,7 @@
                                     </ChildContent>
                                 </MudMenu>
                             <MudButton StartIcon="@Icons.Material.Filled.Comment"
-                                       OnClick="()=> _openComments = !_openComments"
+                                       OnClick="()=> OpenComment(context.Item)"
                                        Variant="Variant.Text"
                                        Size="Size.Small"
                                        Color="Color.Default">
@@ -120,31 +120,82 @@
 </MudDataGrid>
 
 <MudDrawer Class="comment-drawer" @bind-Open="@_openComments" Height="70vh" Anchor="@Anchor.Bottom" Elevation="1" Variant="@DrawerVariant.Temporary">
-   <MudStack AlignItems="AlignItems.Center">
-        <MudButton OnClick="() => _openComments = !_openComments" Class="comment-btn" Color="Color.Primary" Variant="Variant.Filled"></MudButton>
-
+   <MudStack AlignItems="AlignItems.Center" Class="mb-3">
+        <MudButton OnClick="() => _openComments = !_openComments" Class="comment-btn" Color="Color.Primary" Variant="Variant.Filled"></MudButton> 
    </MudStack>
-   <MudPaper Class="absolute comment-input px-2" Square Elevation="0">
-        <MudTextField @ref="commentRef" @bind-Value="_comment" Variant="Variant.Outlined" Margin="Margin.Dense" Placeholder="Type your comment here"></MudTextField>
+    @foreach (var comment in listComments.Where( c => c.ParentCommentId is null))
+    {
+        <MudStack Spacing="0" StretchItems="StretchItems.All">
+            <CommentComponent Comment="comment" OnReplyClick="(e) => Reply(e.Item1, e.Item2)" AllComments="listComments"></CommentComponent>
+        </MudStack>
+    }
+       <MudPaper Class="sticky-bottom d-flex flex-column justiy-content-end comment-input px-2" Square Elevation="1">
+        <div style="position:relative;">
+            @if (!string.IsNullOrEmpty(replyTo))
+            {
+                <MudChip T="string" Color="Color.Primary"
+                         Variant="Variant.Filled"
+                         OnClose="ResetComment"
+                         Size="Size.Small"
+                         Style="position:absolute; left:0px; top:43%; transform:translateY(-50%); z-index:10;">
+                    Replying to @replyTo
+                </MudChip>
+            }
+
+            <MudTextField @ref="_commentRef"
+                          @bind-Value="_comment"
+                          Placeholder="Type your comment here"
+                          Margin="Margin.Dense"
+                          Variant="Variant.Outlined"
+                          Class="@(string.IsNullOrEmpty(replyTo) ? string.Empty : "chip-input-padding")"
+                          Clearable
+                          Lines="0"
+                          MaxLines="4" />
+        </div>
+        <MudStack AlignItems="AlignItems.End" Style="width: 100%">
+            <MudButton OnClick="AddComment" Size="Size.Small" Variant="Variant.Text">Send</MudButton>
+       </MudStack>
+        
    </MudPaper>
 </MudDrawer>
 
 <MudOverlay @bind-Visible="_openComments" LockScroll></MudOverlay>
 @code {
     [Inject] AppStateService appStateService { get; set; } = null!;
+    [Inject] ICommentService commentService { get; set; } = null!;
 
     [Parameter] public Guid? OrganiationId { get; set; }
     [Parameter] public INewsFeedService NewsFeedService { get; set; } = null!;
 
     private bool _openComments;
     private string _comment = string.Empty;
-    private MudTextField<string>? commentRef;
+    private MudTextField<string>? _commentRef;
+    private NewsFeedCommentModel _newsFeedCommentModel = new();
+    private Guid _newsFeedId;
+    private Guid? _commentParentId;
+    private List<NewsFeedCommentModel> listComments = new();
+    private List<NewsFeedModel> _lisPost = new();
+
+    private string replyTo = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
 
-        commentRef?.FocusAsync();
+        _commentRef?.FocusAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var result = await NewsFeedService.GetNewsFeeds(new PaginationRequestModel
+        {
+            Count = 100,
+            StartIndex = 0,
+        });
+
+        _lisPost = result.Records ?? [];
     }
 
     private async Task<GridData<NewsFeedModel>> GetPosts(GridStateVirtualize<NewsFeedModel> gridState, CancellationToken token)
@@ -209,6 +260,46 @@
 
         StateHasChanged();
     }
+
+    private async Task OpenComment(NewsFeedModel model)
+    {
+        _openComments = !_openComments;
+        _newsFeedId = model.NewsFeedId;
+
+        listComments = await commentService.GetCommentsByNewsFeedIdAsync(model.NewsFeedId);
+    }
+
+    private void Reply(Guid? parentGuid, string? replyto)
+    {
+        _commentParentId = parentGuid;
+
+        replyTo = replyto?? string.Empty;
+    }
+
+    private async Task AddComment()
+    {
+        if(string.IsNullOrWhiteSpace(_comment))
+            return;
+
+        _newsFeedCommentModel.Id = appStateService.CurrentUser.Id;
+        _newsFeedCommentModel.Message = _comment;
+        _newsFeedCommentModel.ParentCommentId = _commentParentId;
+        _newsFeedCommentModel.NewsFeedId = _newsFeedId;
+
+        var result = await commentService.AddCommentAsync(_newsFeedCommentModel);
+
+        //Reset
+        ResetComment();
+
+    }
+
+    private void ResetComment()
+    {
+        _comment = string.Empty;
+        _newsFeedCommentModel = new();
+        _commentParentId = null;
+        replyTo = string.Empty;
+    }
 }
 
 <style>
@@ -255,5 +346,29 @@
 
     .display-reaction:nth-of-type(n+2) {
         margin-left: -8px;
+    }
+
+    .chip-input-padding input {
+        padding-left: 150px !important; /* Adjust based on chip width */
+    }
+
+    .comment-input-wrapper {
+        flex-shrink: 0;
+        padding: 12px;
+        background-color: #fff;
+        border-top: 1px solid #e0e0e0;
+        position: relative;
+        z-index: 20;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .sticky-bottom {
+        position: sticky;
+        bottom: env(safe-area-inset-bottom, 0);
+        background: white;
+        z-index: 9999;
+        /* Optional: Add spacing when keyboard appears */
+        padding-bottom: env(safe-area-inset-bottom, 0);
     }
 </style>

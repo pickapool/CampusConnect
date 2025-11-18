@@ -1,0 +1,106 @@
+﻿@using CamCon.Shared.Extensions
+@using Domain.Models
+@using Service.Interfaces
+
+<MudPaper Elevation="0" Class="@(Comment.ParentCommentId is null ? "px - 2 py - 1" : "")">
+    <MudStack Row>
+        <MudAvatar Size="Size.Medium" Class="mt-1">
+            @if (_user?.ProfileInformation?.Photo is null)
+            {
+                <span>@(string.IsNullOrEmpty(_user?.ProfileInformation?.FullName) ? _user?.Name.GetInitials() : _user.ProfileInformation?.FullName.GetInitials())</span>
+            }
+            else
+            {
+                <MudImage Src="@_user.ProfileInformation?.Photo"></MudImage>
+            }
+        </MudAvatar>
+        <MudPaper Class="pa-2 comment-container" Elevation="0">
+            <MudStack Spacing="0">
+                <MudText Typo="Typo.caption">
+                    
+                        @if (_user is null)
+                        {
+                            <strong>...</strong>
+                        }
+                        else
+                        {
+                        <strong>
+                            @(string.IsNullOrEmpty(_user?.ProfileInformation?.FullName) ? _user?.Name : _user.ProfileInformation?.FullName)
+                        </strong>
+                        }
+                       
+                    </MudText>
+                <span style="font-size: 12px;">@Comment.Message</span>
+            </MudStack>
+            
+        </MudPaper>
+    </MudStack>
+    <MudStack Justify="Justify.FlexEnd" Row>
+        <MudButton Variant="Variant.Text" OnClick="Reply" Size="Size.Small">
+            <MudText Typo="Typo.caption">Reply</MudText>
+        </MudButton>
+    </MudStack>
+
+    @{
+        var replies = AllComments
+        .Where(c => c.ParentCommentId == Comment.NewsFeedCommentId)
+        .OrderByDescending(c => c.CreatedAt)
+        .ToList();
+    }
+
+    <MudStack Spacing="1" Class="nested-replies" StretchItems="StretchItems.All">
+        @foreach (var reply in replies)
+        {
+            <div class="reply-indent">
+                <CommentComponent Comment="reply"
+                                  AllComments="AllComments"
+                                  OnReplyClick="OnReplyClick">
+                </CommentComponent>
+            </div>
+        }
+    </MudStack>
+
+</MudPaper>
+
+@code {
+    [Inject] IUserService UserService { get; set; } = null!;
+
+    [Parameter] public NewsFeedCommentModel Comment { get; set; } = new();
+
+    [Parameter] public List<NewsFeedCommentModel> AllComments { get; set; } = new();
+
+    [Parameter] public EventCallback<(Guid, string?)> OnReplyClick { get; set; }
+
+    private ApplicationUserModel? _user;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _user = await UserService.GetUserById(Comment.Id!);
+    }
+
+    private async Task Reply()
+    {
+        await OnReplyClick.InvokeAsync((Comment.NewsFeedCommentId, _user?.ProfileInformation is null? _user?.Name : _user.ProfileInformation.FullName));
+    }
+}
+
+<style>
+    .comment-container {
+        background-color: #f1ebff;
+        width: 100%;
+        min-height: 70px;
+    }
+
+    .comment-container:hover {
+            background-color: #eeeff4;
+    }
+
+ 
+
+    .nested-replies {
+        margin-left: 24px;
+        padding-left: 12px;
+        border-left: 2px solid #e0e0e0;
+    }
+</style>
