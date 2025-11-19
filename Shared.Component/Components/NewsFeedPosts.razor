@@ -110,7 +110,7 @@
             </CellTemplate>
         </TemplateColumn>
     </Columns>
-
+        
     <RowLoadingContent>
         <td colspan="1" class="d-flex justify-center row-loading" style="height: 39px;">
             <MudProgressCircular Size="Size.Small" Color="Color.Primary" Indeterminate></MudProgressCircular>
@@ -129,7 +129,7 @@
             <CommentComponent Comment="comment" OnReplyClick="(e) => Reply(e.Item1, e.Item2)" AllComments="listComments"></CommentComponent>
         </MudStack>
     }
-       <MudPaper Class="sticky-bottom d-flex flex-column justiy-content-end comment-input px-2" Square Elevation="1">
+       <MudPaper Class="position-absolute d-flex flex-column justiy-content-end comment-input px-2" Square Elevation="1">
         <div style="position:relative;">
             @if (!string.IsNullOrEmpty(replyTo))
             {
