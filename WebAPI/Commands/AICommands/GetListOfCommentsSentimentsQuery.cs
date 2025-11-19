@@ -25,13 +25,11 @@ namespace WebAPI.Commands.AICommands
         {
             var comments = await GetDBContext().NewsFeedComments.ToListAsync(cancellationToken);
 
+            //AI for sentiment analysis simulation
             var sentimentsAI = await _geminiService.ModerateCommentsAsync(comments, request.Sentiments);
 
             var results = comments.Where(c => sentimentsAI.Any(s => s == c.NewsFeedCommentId)).ToList();
-
-            //AI for sentiment analysis simulation
-
-
+           
             return Result.Success(results);
         }
     }
