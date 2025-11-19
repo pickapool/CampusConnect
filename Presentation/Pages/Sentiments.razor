@@ -1,0 +1,22 @@
+﻿@page "/sentiments"
+@inject HttpClient Http
+
+<PageTitle>Sentiment</PageTitle>
+
+
+@foreach (var item in flagComments)
+{
+    <span> @item.Message</span>
+}
+
+@code {
+
+    private List<NewsFeedCommentModel> flagComments = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        flagComments = await _sentimentService.AnalyzeSentimentsAsync(["Puta"]);
+
+        StateHasChanged();
+    }
+}

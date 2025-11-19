@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System.Text;
 using WebAPI.ApplicationDBContextService;
 using WebAPI.NotifyHub;
+using WebAPI.Services.GeminiServices;
 using WebAPI.Services.NotificationService;
 using WebAPI.Services.TokenServices;
 
@@ -25,6 +26,20 @@ builder.Services.AddIdentity<ApplicationUserModel, IdentityRole>()
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddHttpClient<IGeminiService, GeminiService>()
+    .ConfigureHttpClient(client =>
+    {
+        client.Timeout = TimeSpan.FromMinutes(10);
+    })
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        var handler = new HttpClientHandler();
+        // WARNING: Only for development/testing!
+        handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+        return handler;
+    });
+
+builder.Services.AddScoped<IGeminiService, GeminiService>();
 
 builder.Services.AddAuthentication(options =>
 {
