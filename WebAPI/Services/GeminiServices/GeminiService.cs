@@ -45,7 +45,6 @@ namespace WebAPI.Services.GeminiServices
                 Do NOT return any explanations.
                 ";
 
-            // 4. Payload with correct schema (GUID = STRING)
             var payload = new
             {
                 contents = new[]
@@ -84,7 +83,6 @@ namespace WebAPI.Services.GeminiServices
 
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            // 5. Extract returned text
             using var jsonDoc = JsonDocument.Parse(responseBody);
 
             var textContent =
@@ -95,7 +93,6 @@ namespace WebAPI.Services.GeminiServices
                        .GetProperty("text")
                        .GetString();
 
-            // 6. Deserialize GUIDs
             var result = JsonSerializer.Deserialize<Dictionary<string, List<Guid>>>(textContent);
 
             return result["flaggedCommentIds"];
