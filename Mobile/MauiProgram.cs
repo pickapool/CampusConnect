@@ -44,7 +44,19 @@ namespace Mobile
     		builder.Logging.AddDebug();
 #endif
             
-            builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient<IBaseService, BaseService>()
+                .ConfigureHttpClient(client =>
+                {
+                    client.Timeout = TimeSpan.FromMinutes(5);
+                })
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    var handler = new HttpClientHandler();
+                    // WARNING: Only for development/testing!
+                    handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                    return handler;
+                });
+
             builder.Services.AddMudServices();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddMudExtensions();
