@@ -1,4 +1,5 @@
-﻿using CamCon.Shared.Extensions;
+﻿using CamCon.Shared;
+using CamCon.Shared.Extensions;
 using Domain;
 using Domain.Models;
 using Microsoft.Extensions.Configuration;
@@ -25,15 +26,37 @@ namespace Service.Services.SentimentServices
         {
             _configuration = configuration;
             _baseService = baseService;
-            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/ai";
+            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/sentiment";
         }
-        public async Task<List<NewsFeedCommentModel>> AnalyzeSentimentsAsync(List<string> badWords)
+        public async Task<Result> AddSentimentAsync(SentimentModel sentiment)
         {
             request.RequestUrl = defaultRequestUrl;
             request.RequestType = Enums.RequestType.POST;
-            request.Data = badWords.Wrap("sentiments");
+            request.Data = sentiment.Wrap("sentiment");
 
-            var response = await _baseService.SendAsync<List<NewsFeedCommentModel>>(request);
+            var response = await _baseService.SendAsync<Result>(request);
+
+            return response;
+        }
+
+        public async Task<Result> DeleteSentimentAsync(SentimentModel sentiment)
+        {
+            request.RequestUrl = defaultRequestUrl;
+            request.RequestType = Enums.RequestType.DELETE;
+            request.Data = sentiment.Wrap("sentiment");
+
+            var response = await _baseService.SendAsync<Result>(request);
+
+            return response;
+        }
+
+        public async Task<List<SentimentModel>> GetSentimentsAsync()
+        {
+            request.RequestUrl = defaultRequestUrl;
+            request.RequestType = Enums.RequestType.GET;
+            request.Data = null;
+
+            var response = await _baseService.SendAsync<List<SentimentModel>>(request);
 
             return response;
         }

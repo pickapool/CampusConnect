@@ -1,22 +1,95 @@
 ﻿@page "/sentiments"
-@inject HttpClient Http
 
 <PageTitle>Sentiment</PageTitle>
+<MudStack Class="position-relative" Spacing="1"  Style="height: calc(100vh - 120px); overflow-y: auto;">
+    <div>
+        <MudTextField @bind-Value="_sentiment" Variant="Variant.Outlined" Label="Sentiment" ShrinkLabel AdornmentIcon="@Icons.Material.Filled.Add"
+                      Adornment="Adornment.End" OnAdornmentClick="Enter" DebounceInterval="500"></MudTextField>
+    </div>
+    <MudStack Spacing="1" Row>
+        
+        @foreach (var sentiment in sentiments)
+        {
+            <MudChip T="string" Color="Color.Primary" Size="Size.Medium" Variant="Variant.Outlined" OnClose="() => RemoveSentiment(sentiment)">@sentiment.Name</MudChip>
+        }
+    </MudStack>
+
+    @foreach (var item in flagComments)
+    {
+        <CommentComponent Comment="item" />
+    }
+
+    @if (isLoading)
+    {
+        <LoaderComponent />
+    }
+
+</MudStack>
 
 
-@foreach (var item in flagComments)
-{
-    <span> @item.Message</span>
-}
 
 @code {
-
     private List<NewsFeedCommentModel> flagComments = new();
+
+    private string _sentiment = string.Empty;
+
+    private bool isLoading = true;
+
+    List<SentimentModel> sentiments = new();
 
     protected override async Task OnInitializedAsync()
     {
-        flagComments = await _sentimentService.AnalyzeSentimentsAsync(["Puta"]);
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        isLoading = true;
+
+        StateHasChanged();
+
+        await Task.Delay(100);
+
+        _sentiment = string.Empty;
+
+        sentiments = await _sentimentService.GetSentimentsAsync();
+
+        flagComments = await _geminiService.AnalyzeSentimentsAsync(sentiments.Select(c => c.Name).ToList());
+
+        isLoading = false;
 
         StateHasChanged();
     }
+
+    public async Task Enter()
+    {
+        if (string.IsNullOrEmpty(_sentiment.Trim())) return;
+
+      
+        var results = await _sentimentService.AddSentimentAsync(new SentimentModel() { Name  = _sentiment } );
+
+        if (results.IsSuccess)
+        {
+            await Load();
+        } else
+        {
+            _snackBar.Add("Failed to add sentiment.", Severity.Error);
+        }
+        
+    }
+
+    private async Task RemoveSentiment(SentimentModel sentiment)
+    {
+        var results = await _sentimentService.DeleteSentimentAsync(sentiment);
+
+        if (results.IsSuccess)
+        {
+            await Load();
+        }
+        else
+        {
+            _snackBar.Add(results.Error.Description, Severity.Error);
+        }
+    }
+
 }

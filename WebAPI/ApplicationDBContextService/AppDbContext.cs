@@ -21,6 +21,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
     public DbSet<OrganizationDepartmentModel> OrganizationDepartments { get; set; }
     public DbSet<LikeModel> Likes { get; set; }
 
+    public DbSet<SentimentModel> Sentiments { get; set; }
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
 
@@ -56,5 +58,6 @@ public class AppDbContext : IdentityDbContext<ApplicationUserModel>
         builder.Entity<PageRequestImageModel>().ToTable("PageRequestImages");
         builder.Entity<OrganizationDepartmentModel>().ToTable("OrganizationDepartments");
         builder.Entity<LikeModel>().ToTable("Likes");
+        builder.Entity<SentimentModel>().ToTable("Sentiments");
     }
 }

@@ -38,6 +38,7 @@ builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPageRequestService, PageRequestService>();
+builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ISentimentService, SentimentService>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();

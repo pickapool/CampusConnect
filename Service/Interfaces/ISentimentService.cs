@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using CamCon.Shared;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace Service.Interfaces
 {
     public interface ISentimentService
     {
-        Task<List<NewsFeedCommentModel>> AnalyzeSentimentsAsync(List<string> badWords);    
+        Task<Result> AddSentimentAsync(SentimentModel sentiment);
+
+        Task<List<SentimentModel>> GetSentimentsAsync();
+
+        Task<Result> DeleteSentimentAsync(SentimentModel sentiment);
     }
 }
