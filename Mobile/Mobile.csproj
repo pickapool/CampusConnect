@@ -40,10 +40,23 @@
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+        <AndroidSigningKeyStore>myapp.keystore</AndroidSigningKeyStore>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
       <RunAOTCompilation>False</RunAOTCompilation>
+      <AndroidKeyStore>False</AndroidKeyStore>
+      <AndroidSigningKeyAlias>myapp</AndroidSigningKeyAlias>
+      <AndroidSigningStorePass>keystore!</AndroidSigningStorePass>
+      <AndroidSigningKeyPass>myappkey</AndroidSigningKeyPass>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
+      <AndroidPackageFormat>apk</AndroidPackageFormat>
+      <AndroidKeyStore>False</AndroidKeyStore>
+      <AndroidSigningKeyAlias>myapp</AndroidSigningKeyAlias>
+      <AndroidSigningStorePass>keystore!</AndroidSigningStorePass>
+      <AndroidSigningKeyPass>myappkey</AndroidSigningKeyPass>
     </PropertyGroup>
 
     <ItemGroup>

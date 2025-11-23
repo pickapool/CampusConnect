@@ -129,34 +129,36 @@
             <CommentComponent Comment="comment" OnReplyClick="(e) => Reply(e.Item1, e.Item2)" AllComments="listComments"></CommentComponent>
         </MudStack>
     }
+    @if(_openComments) {
        <MudPaper Class="position-absolute d-flex flex-column justiy-content-end comment-input px-2" Square Elevation="1">
-        <div style="position:relative;">
-            @if (!string.IsNullOrEmpty(replyTo))
-            {
-                <MudChip T="string" Color="Color.Primary"
-                         Variant="Variant.Filled"
-                         OnClose="ResetComment"
-                         Size="Size.Small"
-                         Style="position:absolute; left:0px; top:43%; transform:translateY(-50%); z-index:10;">
-                    Replying to @replyTo
-                </MudChip>
-            }
+            <div style="position:relative;">
+                @if (!string.IsNullOrEmpty(replyTo))
+                {
+                    <MudChip T="string" Color="Color.Primary"
+                             Variant="Variant.Filled"
+                             OnClose="ResetComment"
+                             Size="Size.Small"
+                             Style="position:absolute; left:0px; top:43%; transform:translateY(-50%); z-index:10;">
+                        Replying to @replyTo
+                    </MudChip>
+                }
 
-            <MudTextField @ref="_commentRef"
-                          @bind-Value="_comment"
-                          Placeholder="Type your comment here"
-                          Margin="Margin.Dense"
-                          Variant="Variant.Outlined"
-                          Class="@(string.IsNullOrEmpty(replyTo) ? string.Empty : "chip-input-padding")"
-                          Clearable
-                          Lines="0"
-                          MaxLines="4" />
-        </div>
-        <MudStack AlignItems="AlignItems.End" Style="width: 100%">
-            <MudButton OnClick="AddComment" Size="Size.Small" Variant="Variant.Text">Send</MudButton>
-       </MudStack>
+                <MudTextField @ref="_commentRef"
+                              @bind-Value="_comment"
+                              Placeholder="Type your comment here"
+                              Margin="Margin.Dense"
+                              Variant="Variant.Outlined"
+                              Class="@(string.IsNullOrEmpty(replyTo) ? string.Empty : "chip-input-padding")"
+                              Clearable
+                              Lines="0"
+                              MaxLines="4" />
+            </div>
+            <MudStack AlignItems="AlignItems.End" Style="width: 100%">
+                <MudButton OnClick="AddComment" Size="Size.Small" Variant="Variant.Text">Send</MudButton>
+           </MudStack>
         
-   </MudPaper>
+       </MudPaper>
+   }
 </MudDrawer>
 
 <MudOverlay @bind-Visible="_openComments" LockScroll></MudOverlay>
