@@ -9,7 +9,7 @@
             <OrganizationView Organizaton="CurrentOrganization" AppStateService="_appStateService"></OrganizationView>
         </ProfileContent>
         <NewsFeedContent>
-            <NewsFeedPosts OrganiationId="@CurrentOrganization?.MyOrganizationId" NewsFeedService="_newsFeedService"></NewsFeedPosts>
+            <NewsFeedPosts @ref="PostComponentRef" OrganiationId="@CurrentOrganization?.MyOrganizationId" NewsFeedService="_newsFeedService"></NewsFeedPosts>
         </NewsFeedContent>
     </NewsFeeds>
 </MudStack>
@@ -19,16 +19,20 @@
 
     private MyOrganizationModel? CurrentOrganization;
     private List<NewsFeedModel> CurrentNewsFeeds = new();
+    private NewsFeedPosts PostComponentRef = null!;
 
     public async Task OnOrganizationClick(Guid gui)
     {
         if(gui.Equals(new Guid()))
         {
             CurrentOrganization = null;
+            PostComponentRef.filterPostsByOrganization(null, true);
         } 
         else
         {
             CurrentOrganization = OrganizationList.FirstOrDefault(x => x.MyOrganizationId == gui);
+            PostComponentRef.filterPostsByOrganization(CurrentOrganization?.MyOrganizationId);
+
         }
 
         await InvokeAsync(StateHasChanged);

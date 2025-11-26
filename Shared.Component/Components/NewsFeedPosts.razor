@@ -4,7 +4,7 @@
 @using Service.Interfaces
 @using Shared.Component.Extensions
 
-<MudDataGrid Class="mt-1" T="NewsFeedModel" Items="_lisPost" Virtualize>
+<MudDataGrid Class="mt-1" T="NewsFeedModel" Items="filterPost" Virtualize>
 
     <Columns>
         <TemplateColumn>
@@ -177,6 +177,7 @@
     private Guid? _commentParentId;
     private List<NewsFeedCommentModel> listComments = new();
     private List<NewsFeedModel> _lisPost = new();
+    private List<NewsFeedModel> filterPost = new();
 
     private string replyTo = string.Empty;
 
@@ -197,7 +198,16 @@
             StartIndex = 0,
         });
 
-        _lisPost = result.Records ?? [];
+        filterPost = _lisPost = result.Records ?? [];
+    }
+
+    public void filterPostsByOrganization(Guid? organizationId, bool? loadAll = false)
+    {
+        if(loadAll?? false)
+            filterPost = _lisPost;
+        else
+            filterPost = _lisPost.Where(p => p.MyOrganization?.MyOrganizationId == organizationId).ToList();
+
     }
 
     private async Task<GridData<NewsFeedModel>> GetPosts(GridStateVirtualize<NewsFeedModel> gridState, CancellationToken token)
@@ -289,6 +299,8 @@
         _newsFeedCommentModel.NewsFeedId = _newsFeedId;
 
         var result = await commentService.AddCommentAsync(_newsFeedCommentModel);
+
+        listComments.Add(result);
 
         //Reset
         ResetComment();

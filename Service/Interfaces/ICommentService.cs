@@ -11,5 +11,8 @@ namespace Service.Interfaces
     {
         Task<NewsFeedCommentModel> AddCommentAsync(NewsFeedCommentModel comment);
         Task<List<NewsFeedCommentModel>> GetCommentsByNewsFeedIdAsync(Guid newsFeedId);
+        Task<NewsFeedCommentModel> DeleteComment(Guid guid);
+        Task<NewsFeedCommentModel> FlaggedComment(Guid guid);
+
     }
 }

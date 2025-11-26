@@ -30,5 +30,9 @@ namespace CamCon.Domain.Enitity
         public Guid NewsFeedId { get; set; }
         //Replied Comments if null root
         public Guid? ParentCommentId { get; set; }
+
+        public bool IsDeleted { get; set; }
+
+        public bool IsFlagged { get; set; }
     }
 }

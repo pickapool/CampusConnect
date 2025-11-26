@@ -17,5 +17,9 @@
         public Guid NewsFeedId { get; set; }
 
         public Guid? ParentCommentId { get; set; }
+
+        public bool IsDeleted { get; set; }
+
+        public bool IsFlagged { get; set; }
     }
 }

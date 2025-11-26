@@ -40,6 +40,25 @@ namespace Service.Services.CommentServices
             return await _baseService.SendAsync<NewsFeedCommentModel>(request);
         }
 
+        public async Task<NewsFeedCommentModel> DeleteComment(Guid guid)
+        {
+            request.RequestType = Enums.RequestType.DELETE;
+            request.Data = null;
+            request.RequestUrl = $"{defaultRequestUrl}/{guid}";
+
+            return await _baseService.SendAsync<NewsFeedCommentModel>(request);
+        }
+
+        public async Task<NewsFeedCommentModel> FlaggedComment(Guid guid)
+        {
+            request.RequestType = Enums.RequestType.DELETE;
+            request.Data = null;
+            request.RequestUrl = $"{defaultRequestUrl}/flagged/{guid}";
+
+            return await _baseService.SendAsync<NewsFeedCommentModel>(request);
+
+        }
+
         public async Task<List<NewsFeedCommentModel>> GetCommentsByNewsFeedIdAsync(Guid newsFeedId)
         {
             request.RequestType = Enums.RequestType.GET;

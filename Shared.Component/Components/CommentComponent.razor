@@ -1,5 +1,6 @@
 ﻿@using CamCon.Shared.Extensions
 @using Domain.Models
+@using Service
 @using Service.Interfaces
 
 <MudPaper Elevation="0" Class="@(Comment.ParentCommentId is null ? "px - 2 py - 1" : "")">
@@ -30,15 +31,45 @@
                         }
                        
                     </MudText>
-                <span style="font-size: 12px;">@Comment.Message</span>
+                @if (Comment.IsFlagged || Comment.IsDeleted)
+                {
+                    @if(Comment.IsFlagged)
+                    {
+                        <span style="font-size: 12px; color: red;">@Comment has been flagged.</span>
+                    }
+                    @if(Comment.IsDeleted)
+                    {
+                        <span style="font-size: 12px;color: red;">Comment has been deleted.</span>
+                    }
+                } else {
+                    <span style="font-size: 12px;">@Comment.Message</span>
+                }
             </MudStack>
             
         </MudPaper>
     </MudStack>
-    <MudStack Justify="Justify.FlexEnd" Row>
-        <MudButton Variant="Variant.Text" OnClick="Reply" Size="Size.Small">
-            <MudText Typo="Typo.caption">Reply</MudText>
-        </MudButton>
+    <MudStack Justify="Justify.FlexEnd" Spacing="0" Row>
+        @if (!Comment.IsFlagged && !Comment.IsDeleted)
+        {
+            @if (AppStateService.CurrentUser.UserName == "admin")
+            {
+                <MudButton Variant="Variant.Text" OnClick="() => Flagged(Comment.NewsFeedCommentId)" Size="Size.Small">
+                    <MudText Typo="Typo.caption">Delete</MudText>
+                </MudButton>
+            }
+            @if (Comment.Id == AppStateService.CurrentUser.Id)
+            {
+                <MudButton Variant="Variant.Text" OnClick="() => Delete(Comment.NewsFeedCommentId)" Size="Size.Small">
+                    <MudText Typo="Typo.caption">Delete</MudText>
+                </MudButton>
+            }
+            <MudButton Variant="Variant.Text" OnClick="Reply" Size="Size.Small">
+                <MudText Typo="Typo.caption">Reply</MudText>
+            </MudButton>
+        } else
+        {
+            <div style="height: 30px;"></div>
+        }
     </MudStack>
 
     @{
@@ -64,6 +95,8 @@
 
 @code {
     [Inject] IUserService UserService { get; set; } = null!;
+    [Inject] AppStateService AppStateService { get; set; } = null!;
+    [Inject] ICommentService CommentService { get; set; } = null!;
 
     [Parameter] public NewsFeedCommentModel Comment { get; set; } = new();
 
@@ -82,6 +115,16 @@
     private async Task Reply()
     {
         await OnReplyClick.InvokeAsync((Comment.NewsFeedCommentId, _user?.ProfileInformation is null? _user?.Name : _user.ProfileInformation.FullName));
+    }
+
+    private async Task Delete(Guid guid)
+    {
+        Comment = await CommentService.DeleteComment(guid);
+    }
+
+    private async Task Flagged(Guid guid)
+    {
+        Comment = await CommentService.FlaggedComment(guid);
     }
 }
 
