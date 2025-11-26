@@ -25,6 +25,7 @@ namespace WebAPI.Commands.AICommands
         {
             var comments = await GetDBContext().NewsFeedComments.ToListAsync(cancellationToken);
 
+            comments = comments.Where(c => !c.IsFlagged && !c.IsDeleted).ToList();
             //AI for sentiment analysis simulation
             var sentimentsAI = await _geminiService.ModerateCommentsAsync(comments, request.Sentiments);
 

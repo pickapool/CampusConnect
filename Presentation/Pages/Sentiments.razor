@@ -16,7 +16,7 @@
 
     @foreach (var item in flagComments)
     {
-        <CommentComponent Comment="item" />
+        <CommentComponent Comment="item" IsAdmin/>
     }
 
     @if (isLoading)

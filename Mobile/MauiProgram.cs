@@ -61,6 +61,11 @@ namespace Mobile
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddMudExtensions();
 
+            builder.Services.AddScoped<HubNotificationService>();
+            builder.Services.AddScoped<AppStateService>();
+            builder.Services.AddScoped<LayoutNotifierService>();
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
+
             builder.Services.AddScoped<IBaseService, BaseService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
@@ -76,10 +81,7 @@ namespace Mobile
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();
 
-            builder.Services.AddScoped<HubNotificationService>();
-            builder.Services.AddScoped<AppStateService>();
-            builder.Services.AddScoped<LayoutNotifierService>();
-            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
+           
 
             AddHttpCerficate();
 

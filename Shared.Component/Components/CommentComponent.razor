@@ -49,15 +49,16 @@
         </MudPaper>
     </MudStack>
     <MudStack Justify="Justify.FlexEnd" Spacing="0" Row>
+
         @if (!Comment.IsFlagged && !Comment.IsDeleted)
         {
-            @if (AppStateService.CurrentUser.UserName == "admin")
+            @if (IsAdmin)
             {
                 <MudButton Variant="Variant.Text" OnClick="() => Flagged(Comment.NewsFeedCommentId)" Size="Size.Small">
-                    <MudText Typo="Typo.caption">Delete</MudText>
+                    <MudText Typo="Typo.caption">Flag</MudText>
                 </MudButton>
             }
-            @if (Comment.Id == AppStateService.CurrentUser.Id)
+            @if (Comment.Id == AppStateService.CurrentUser?.Id)
             {
                 <MudButton Variant="Variant.Text" OnClick="() => Delete(Comment.NewsFeedCommentId)" Size="Size.Small">
                     <MudText Typo="Typo.caption">Delete</MudText>
@@ -85,7 +86,8 @@
             <div class="reply-indent">
                 <CommentComponent Comment="reply"
                                   AllComments="AllComments"
-                                  OnReplyClick="OnReplyClick">
+                                  OnReplyClick="OnReplyClick"
+                                  IsAdmin=@IsAdmin>
                 </CommentComponent>
             </div>
         }
@@ -95,8 +97,10 @@
 
 @code {
     [Inject] IUserService UserService { get; set; } = null!;
-    [Inject] AppStateService AppStateService { get; set; } = null!;
+
     [Inject] ICommentService CommentService { get; set; } = null!;
+
+    [Inject] AppStateService AppStateService { get; set; } = null!;
 
     [Parameter] public NewsFeedCommentModel Comment { get; set; } = new();
 
@@ -104,12 +108,15 @@
 
     [Parameter] public EventCallback<(Guid, string?)> OnReplyClick { get; set; }
 
-    private ApplicationUserModel? _user;
+    [Parameter] public bool IsAdmin { get; set; } = false;
 
+    private ApplicationUserModel? _user;
 
     protected override async Task OnInitializedAsync()
     {
         _user = await UserService.GetUserById(Comment.Id!);
+
+        StateHasChanged();
     }
 
     private async Task Reply()

@@ -6,9 +6,11 @@ using MudBlazor.Extensions;
 using MudBlazor.Services;
 using Presentation;
 using Presentation.Authentication;
+using Service;
 using Service.Interfaces;
 using Service.Notifiers;
 using Service.Services.BaseService;
+using Service.Services.CommentServices;
 using Service.Services.DepartmentServices;
 using Service.Services.NotificationServices;
 using Service.Services.OrganizationServices;
@@ -31,6 +33,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddSingleton<HubNotificationService>();
 builder.Services.AddSingleton<LayoutNotifierService>();
+builder.Services.AddSingleton<AppStateService>();
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
@@ -40,6 +43,8 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPageRequestService, PageRequestService>();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ISentimentService, SentimentService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
 

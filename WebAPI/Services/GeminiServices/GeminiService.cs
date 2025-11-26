@@ -8,7 +8,7 @@ namespace WebAPI.Services.GeminiServices
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
-        private const string GeminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+        private const string GeminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent";
         private readonly IConfiguration _configuration;
         public GeminiService(HttpClient httpClient, IConfiguration configuration)
         {
