@@ -60,6 +60,7 @@ namespace Mobile
             builder.Services.AddMudServices();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddMudExtensions();
+            builder.Services.AddMemoryCache();
 
             builder.Services.AddScoped<HubNotificationService>();
             builder.Services.AddScoped<AppStateService>();

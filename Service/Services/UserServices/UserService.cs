@@ -2,7 +2,9 @@
 using CamCon.Shared.Extensions;
 using Domain;
 using Domain.Models;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Service.Cache;
 using Service.Interfaces;
 
 namespace Service.Services.UserServices
@@ -17,11 +19,14 @@ namespace Service.Services.UserServices
 
         private RequestModel request = new();
 
-        public UserService(IConfiguration configuration, IBaseService baseService)
+        private IMemoryCache _memoryCache;
+
+        public UserService(IConfiguration configuration, IBaseService baseService, IMemoryCache memoryCache)
         {
             _configuration = configuration;
             _baseService = baseService;
-            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/auth"; ;
+            request.RequestUrl = defaultRequestUrl = $"{_configuration["BaseAPI:Url"]}/api/auth";
+            _memoryCache = memoryCache;
         }
 
         public async Task<TokenModel> Authenticate(LoginModel model)
@@ -59,20 +64,36 @@ namespace Service.Services.UserServices
 
         public async Task<ApplicationUserModel> GetUserById(string id)
         {
+            return await GetUserFromCacheOrAPI(id);
+        }
+
+        private async ValueTask<ApplicationUserModel> GetUserFromCacheOrAPI(string id)
+        {
+            var cacheKey = CacheKeys.UserKey.ByUserId(id);
+
+            var result = _memoryCache.Get<ApplicationUserModel>(cacheKey.Key);
+
+            if (result is not null)
+                return result;
+
             try
             {
                 request.RequestUrl = $"{defaultRequestUrl}/{id}";
                 request.RequestType = Enums.RequestType.GET;
                 request.Data = null;
 
-                var response = await _baseService.SendAsync<ApplicationUserModel>(request);
+                result = await _baseService.SendAsync<ApplicationUserModel>(request);
 
-                return response;
+                _memoryCache.Set(cacheKey.Key, result, cacheKey.Duration);
+
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
                 throw new Exception(ex.Message);
             }
+
+            return result;
         }
     }
 }

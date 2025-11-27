@@ -306,6 +306,8 @@
 
         var result = await commentService.AddCommentAsync(_newsFeedCommentModel);
 
+        result.User = await UserService.GetUserById(result.Id);
+
         listComments.Add(result);
 
         //Reset
