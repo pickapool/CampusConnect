@@ -1,123 +1,128 @@
 ﻿@using Domain
 @using Domain.Models
+@using Humanizer
+@using Microsoft.JSInterop
 @using Service
 @using Service.Interfaces
 @using Shared.Component.Extensions
 
-<MudDataGrid Class="mt-1" T="NewsFeedModel" Items="filterPost" Virtualize>
+@inject IJSRuntime JSRuntime
 
-    <Columns>
-        <TemplateColumn>
-            <CellTemplate>
-                <MudStack Style="width: 100%;">
-                    <MudPaper Elevation="2" Class="pa-1">
-                        <MudStack AlignItems="AlignItems.Center" Row>
-                            <MudAvatar Size="Size.Medium" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
-                                <MudImage Src="@context.Item.MyOrganization?.ProfilePicture"></MudImage>
-                            </MudAvatar>
-                            <MudStack Class="gap-0 pa-0" Spacing="0">
-                                <MudText Typo="Typo.caption"><b>@context.Item.MyOrganization?.OrganizationName</b></MudText>
-                                <small>@context.Item.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")</small>
-                            </MudStack>
-                        </MudStack>
-                        <MudStack>
+<MudStack Class="mt-2" Style="width: 100%;">
+    @foreach(var context in filterPost)
+    {
 
-                            <MudText Typo="Typo.body2" Class="mb-3">
-                                @context.Item.Message
-                            </MudText>
+        <MudPaper Elevation="2" Class="pa-1">
+            <MudStack AlignItems="AlignItems.Center" Row>
+                <MudAvatar Size="Size.Medium" Class="profile position-relative" Variant="Variant.Filled" Style="border : 1px solid #d3d3d3;">
+                    <MudImage Src="@context.MyOrganization?.ProfilePicture"></MudImage>
+                </MudAvatar>
+                <MudStack Class="gap-0 pa-0" Spacing="0">
+                    <MudText Typo="Typo.caption"><b>@context.MyOrganization?.OrganizationName</b></MudText>
+                    <small>@context.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")</small>
+                </MudStack>
+            </MudStack>
+            <MudStack>
 
-                            @if (context.Item.Images != null && context.Item.Images.Any())                         
-                            { 
-                                <FeedImageGallery Images="@context.Item.Images" />                         
+                <MudText Typo="Typo.body2" Class="mb-3">
+                    @context.Message
+                </MudText>
+
+                @if (context.Images != null && context.Images.Any())
+                {
+                    <FeedImageGallery Images="@context.Images" />
+                }
+
+                <MudStack Justify="Justify.SpaceBetween" Row>
+                    <div>
+                        @if (context.Likes is not null)
+                        {
+
+                            var reactions = context.Likes;
+
+                            foreach (var item in reactions.DistinctBy(c => c.LikeType).Take(3) ?? [])
+                            {
+                                <span class="display-reaction">@item.LikeType.ToEmoji()</span>
                             }
 
-                            <MudStack Justify="Justify.SpaceBetween" Row>
-                                <div>
-                                    @if (context.Item.Likes is not null) {
-                                   
-                                        var reactions = context.Item.Likes;
+                            <span style="font-size: 14px;">  @(reactions.Count == 0 ? "" : reactions.Count)</span>
+                        }
+                    </div>
+                    <div>
+                        @if (context.Comments is not null)
+                        {
+                            <spanstyle style="font-size: 14px;">@context.Comments.Count Comments</spanstyle>
 
-                                        foreach(var item in reactions.DistinctBy(c => c.LikeType).Take(3)?? [])
-                                        {
-                                            <span class="display-reaction">@item.LikeType.ToEmoji()</span>
-                                        }
+                        }
 
-                                        <span style="font-size: 14px;">  @(reactions.Count == 0 ? "" : reactions.Count)</span>
-                                    }
-                                </div>
-                                <div>
-                                    @if(context.Item.Comments is not null)
-                                    {
-                                        <spanstyle style="font-size: 14px;">@context.Item.Comments.Count Comments</spanstyle>
-                                        
-                                    }
-                                    
-                                </div>
-                            </MudStack>
-                        </MudStack>
+                    </div>
+                </MudStack>
+            </MudStack>
 
-                        <MudDivider Class="my-2" />
-                        <MudStack Justify="Justify.SpaceAround" Row>
-                            <MudMenu @bind-Open="context.Item.openEmoji" AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter">
-                                    <ActivatorContent>
-                                    
-                                    @if(context.Item.Likes is not null )
-                                    {
-                                        @if(context.Item.Likes.Any(l => l.UserId == appStateService.CurrentUser.Id))
-                                        {
-                                            <MudButton StartIcon="@Icons.Material.Filled.ThumbUp"
-                                                       Variant="Variant.Text"
-                                                       Size="Size.Small"
-                                                       Color="Color.Primary">Like</MudButton>
-                                        }
-                                        else
-                                        {
-                                                <MudButton StartIcon="@Icons.Material.Filled.ThumbUp"
-                                                           Variant="Variant.Text"
-                                                           Size="Size.Small"
-                                                           Color="Color.Default">Like</MudButton>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <MudButton StartIcon="@Icons.Material.Filled.ThumbUp"
-                                                   Variant="Variant.Text"
-                                                   Size="Size.Small"
-                                                   Color="Color.Default">Like</MudButton>
-                                    }
-                                    </ActivatorContent>
-                                    <ChildContent>
-                                        <MudStack Class="pa-2" Row>
-                                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Like, context.Item)">👍</span>
-                                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Heart, context.Item)">❤️</span>
-                                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Funny, context.Item)">😆</span>
-                                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Wow, context.Item)">😮</span>
-                                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Cry, context.Item)">😢</span>
-                                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Angry, context.Item)">😠</span>
-                                        </MudStack>
-                                    </ChildContent>
-                                </MudMenu>
-                            <MudButton StartIcon="@Icons.Material.Filled.Comment"
-                                       OnClick="()=> OpenComment(context.Item)"
+            <MudDivider Class="my-2" />
+            <MudStack Justify="Justify.SpaceAround" Row>
+                <MudMenu @bind-Open="context.openEmoji" AnchorOrigin="Origin.TopCenter" TransformOrigin="Origin.BottomCenter">
+                    <ActivatorContent>
+
+                        @if (context.Likes is not null)
+                        {
+                            @if (context.Likes.Any(l => l.UserId == appStateService.CurrentUser.Id))
+                            {
+                                <MudButton StartIcon="@Icons.Material.Filled.ThumbUp"
+                                           Variant="Variant.Text"
+                                           Size="Size.Small"
+                                           Color="Color.Primary">Like</MudButton>
+                            }
+                            else
+                            {
+                                <MudButton StartIcon="@Icons.Material.Filled.ThumbUp"
+                                           Variant="Variant.Text"
+                                           Size="Size.Small"
+                                           Color="Color.Default">Like</MudButton>
+                            }
+                        }
+                        else
+                        {
+                            <MudButton StartIcon="@Icons.Material.Filled.ThumbUp"
                                        Variant="Variant.Text"
                                        Size="Size.Small"
-                                       Color="Color.Default">
-                                Comment
-                            </MudButton>
+                                       Color="Color.Default">Like</MudButton>
+                        }
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudStack Class="pa-2" Row>
+                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Like, context)">👍</span>
+                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Heart, context)">❤️</span>
+                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Funny, context)">😆</span>
+                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Wow, context)">😮</span>
+                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Cry, context)">😢</span>
+                            <span class="reaction" @onclick="() => HandleLike(Enums.LikeType.Angry, context)">😠</span>
                         </MudStack>
-                    </MudPaper>
-                </MudStack>
-            </CellTemplate>
-        </TemplateColumn>
-    </Columns>
-        
-    <RowLoadingContent>
-        <td colspan="1" class="d-flex justify-center row-loading" style="height: 39px;">
-            <MudProgressCircular Size="Size.Small" Color="Color.Primary" Indeterminate></MudProgressCircular>
-        </td>
-    </RowLoadingContent>
+                    </ChildContent>
+                </MudMenu>
+                <MudButton StartIcon="@Icons.Material.Filled.Comment"
+                           OnClick="()=> OpenComment(context)"
+                           Variant="Variant.Text"
+                           Size="Size.Small"
+                           Color="Color.Default">
+                    Comment
+                </MudButton>
+            </MudStack>
+        </MudPaper>
+   
+    }
 
-</MudDataGrid>
+    <div class="d-flex justify-center align-items-center" id="post-loader" style="height: 40px;">
+        @if (isLoadingMore)
+        {
+            <MudProgressCircular id="post-loader" Size="Size.Small" Color="Color.Primary" Indeterminate></MudProgressCircular>
+        }
+    </div>
+
+</MudStack>
+
+
+
 
 <MudDrawer Class="comment-drawer" @bind-Open="@_openComments" Height="70vh" Anchor="@Anchor.Bottom" Elevation="1" Variant="@DrawerVariant.Temporary">
    <MudStack AlignItems="AlignItems.Center" Class="mb-3">
@@ -139,7 +144,7 @@
                              OnClose="ResetComment"
                              Size="Size.Small"
                              Style="position:absolute; left:0px; top:43%; transform:translateY(-50%); z-index:10;">
-                        Replying to @replyTo
+                        Replying to @replyTo.Truncate(6)
                     </MudChip>
                 }
 
@@ -170,6 +175,7 @@
     [Parameter] public Guid? OrganiationId { get; set; }
     [Parameter] public INewsFeedService NewsFeedService { get; set; } = null!;
 
+    private MudDataGrid<NewsFeedModel>? _dataGrid;
     private bool _openComments;
     private string _comment = string.Empty;
     private MudTextField<string>? _commentRef;
@@ -177,64 +183,72 @@
     private Guid _newsFeedId;
     private Guid? _commentParentId;
     private List<NewsFeedCommentModel> listComments = new();
-    private List<NewsFeedModel> _lisPost = new();
+    private List<NewsFeedModel> _listPost = new();
     private List<NewsFeedModel> filterPost = new();
+    private bool isInViewPort = false;
+
+    private int PageNumber = 0;
 
     private string replyTo = string.Empty;
+
+    private bool isLoadingMore = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMorePosts();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
 
+        if (firstRender)
+        {
+            await JSRuntime.InvokeAsync<object>("setupIntersectionObserver", "post-loader", DotNetObjectReference.Create(this));
+        }
+
         _commentRef?.FocusAsync();
     }
 
-    protected override async Task OnInitializedAsync()
+    [JSInvokable]
+    public async Task OnElementVisible()
     {
-        await base.OnInitializedAsync();
+        await LoadMorePosts();
+    }
+
+    private async Task LoadMorePosts()
+    {
+        if (isLoadingMore)
+            return;
+
+        isLoadingMore = true;
+
+        StateHasChanged();
 
         var result = await NewsFeedService.GetNewsFeeds(new PaginationRequestModel
         {
-            Count = 100,
-            StartIndex = 0,
+            Count = 3,
+            StartIndex = _listPost.Count,
         });
 
-        filterPost = _lisPost = result.Records ?? [];
+        _listPost.AddRange(result?.Records ?? []);
+
+        filterPost = [.._listPost];
+
+        isLoadingMore = false;
+
+        _dataGrid?.ReloadServerData();
+
+        await InvokeAsync(StateHasChanged);
     }
 
     public void filterPostsByOrganization(Guid? organizationId, bool? loadAll = false)
     {
         if(loadAll?? false)
-            filterPost = _lisPost;
+            filterPost = _listPost;
         else
-            filterPost = _lisPost.Where(p => p.MyOrganization?.MyOrganizationId == organizationId).ToList();
+            filterPost = _listPost.Where(p => p.MyOrganization?.MyOrganizationId == organizationId).ToList();
 
-    }
-
-    private async Task<GridData<NewsFeedModel>> GetPosts(GridStateVirtualize<NewsFeedModel> gridState, CancellationToken token)
-    {
-        try
-        {
-            var result = await NewsFeedService.GetNewsFeeds(new PaginationRequestModel
-            {
-                Count = gridState.Count,
-                StartIndex = gridState.StartIndex,
-            });
-
-            return new GridData<NewsFeedModel>
-            {
-                Items = result?.Records?? [],
-                TotalItems = result?.Count?? 0
-            };
-        }
-        catch (TaskCanceledException)
-        {
-            return new GridData<NewsFeedModel>
-            {
-                Items = [],
-                TotalItems = 0
-            };
-        }
     }
 
     private async Task HandleLike(Enums.LikeType likeType, NewsFeedModel model)
@@ -255,7 +269,7 @@
 
             model.openEmoji = false;
 
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
 
             return;
         }
@@ -271,7 +285,7 @@
 
         model.openEmoji = false;
 
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task OpenComment(NewsFeedModel model)
