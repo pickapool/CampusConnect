@@ -126,7 +126,7 @@
     @foreach (var comment in listComments.Where( c => c.ParentCommentId is null))
     {
         <MudStack Spacing="0" StretchItems="StretchItems.All">
-            <CommentComponent Comment="comment" OnReplyClick="(e) => Reply(e.Item1, e.Item2)" AllComments="listComments"></CommentComponent>
+            <CommentComponent @key="comment.NewsFeedCommentId" User="comment.User" Comment="comment" OnReplyClick="(e) => Reply(e.Item1, e.Item2)" AllComments="listComments"></CommentComponent>
         </MudStack>
     }
     @if(_openComments) {
@@ -165,6 +165,7 @@
 @code {
     [Inject] AppStateService appStateService { get; set; } = null!;
     [Inject] ICommentService commentService { get; set; } = null!;
+    [Inject] IUserService UserService { get; set; } = null!;
 
     [Parameter] public Guid? OrganiationId { get; set; }
     [Parameter] public INewsFeedService NewsFeedService { get; set; } = null!;
@@ -279,6 +280,11 @@
         _newsFeedId = model.NewsFeedId;
 
         listComments = await commentService.GetCommentsByNewsFeedIdAsync(model.NewsFeedId);
+
+        foreach (var comment in listComments)
+        {
+            comment.User = await UserService.GetUserById(comment.Id);
+        }
     }
 
     private void Reply(Guid? parentGuid, string? replyto)

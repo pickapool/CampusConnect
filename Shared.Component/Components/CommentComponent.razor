@@ -2,31 +2,32 @@
 @using Domain.Models
 @using Service
 @using Service.Interfaces
+@using System.Text.Json
 
 <MudPaper Elevation="0" Class="@(Comment.ParentCommentId is null ? "px - 2 py - 1" : "")">
     <MudStack Row>
         <MudAvatar Size="Size.Medium" Class="mt-1">
-            @if (_user?.ProfileInformation?.Photo is null)
+            @if (User?.ProfileInformation?.Photo is null)
             {
-                <span>@(string.IsNullOrEmpty(_user?.ProfileInformation?.FullName) ? _user?.Name.GetInitials() : _user.ProfileInformation?.FullName.GetInitials())</span>
+                <span>@(string.IsNullOrEmpty(User?.ProfileInformation?.FullName) ? User?.Name.GetInitials() : User.ProfileInformation?.FullName.GetInitials())</span>
             }
             else
             {
-                <MudImage Src="@_user.ProfileInformation?.Photo"></MudImage>
+                <MudImage Src="@User.ProfileInformation?.Photo"></MudImage>
             }
         </MudAvatar>
         <MudPaper Class="pa-2 comment-container" Elevation="0">
             <MudStack Spacing="0">
                 <MudText Typo="Typo.caption">
                     
-                        @if (_user is null)
+                        @if (User is null)
                         {
                             <strong>...</strong>
                         }
                         else
                         {
                         <strong>
-                            @(string.IsNullOrEmpty(_user?.ProfileInformation?.FullName) ? _user?.Name : _user.ProfileInformation?.FullName)
+                            @(string.IsNullOrEmpty(User?.ProfileInformation?.FullName) ? User?.Name : User.ProfileInformation?.FullName)
                         </strong>
                         }
                        
@@ -78,13 +79,17 @@
         .Where(c => c.ParentCommentId == Comment.NewsFeedCommentId)
         .OrderByDescending(c => c.CreatedAt)
         .ToList();
+
     }
+
 
     <MudStack Spacing="1" Class="nested-replies" StretchItems="StretchItems.All">
         @foreach (var reply in replies)
         {
             <div class="reply-indent">
-                <CommentComponent Comment="reply"
+                <CommentComponent @key="reply.NewsFeedCommentId"
+                                  User="reply.User"
+                                  Comment="reply"
                                   AllComments="AllComments"
                                   OnReplyClick="OnReplyClick"
                                   IsAdmin=@IsAdmin>
@@ -110,18 +115,15 @@
 
     [Parameter] public bool IsAdmin { get; set; } = false;
 
-    private ApplicationUserModel? _user;
+    [Parameter] public ApplicationUserModel? User { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        _user = await UserService.GetUserById(Comment.Id!);
+    private string? _previousCommentId;
 
-        StateHasChanged();
-    }
+    private string? _loadedUserId;
 
     private async Task Reply()
     {
-        await OnReplyClick.InvokeAsync((Comment.NewsFeedCommentId, _user?.ProfileInformation is null? _user?.Name : _user.ProfileInformation.FullName));
+        await OnReplyClick.InvokeAsync((Comment.NewsFeedCommentId, User?.ProfileInformation is null? User?.Name : User.ProfileInformation.FullName));
     }
 
     private async Task Delete(Guid guid)
