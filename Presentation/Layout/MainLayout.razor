@@ -7,11 +7,7 @@
 
 <MudThemeProvider />
 <MudPopoverProvider />
-
-@* Needed for dialogs *@
 <MudDialogProvider />
-
-@* Needed for snackbars *@
 <MudSnackbarProvider />
 
 <AuthorizeView>
@@ -54,9 +50,7 @@
                 </MudNavMenu>
             </MudDrawer>
             <MudMainContent>
-                <MudContainer>
-                    @Body
-                </MudContainer>
+                @Body
             </MudMainContent>
         </MudLayout>    
     </Authorized>
@@ -68,77 +62,57 @@
         </PreLoaderComponent>
     </NotAuthorized>
 </AuthorizeView>
+
 @code {
     private bool _open = false;
-
     private List<NotifyModel> NotificationList = [];
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-
         var user = authState.User;
 
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
             await _hubNotificationService.StartAdminNotificationConnection();
-
             NotificationList = await _notificationService.GetAll();
-
         }
-
         _layoutNotifierService.OnAdminNotificationReceived += GetNotification;
     }
 
     private async Task LoginCallback()
     {
         NotificationList = await _notificationService.GetAll();
-
+        StateHasChanged();
     }
 
     private async Task GetNotification(Guid id)
     {
         var notification = await _notificationService.GetByIdAsync(id);
-
         if (notification is not null)
         {
             NotificationList.Insert(0, notification);
-
             StateHasChanged();
         }
     }
 
-    private void ToggleDrawer()
-    {
-        _open = !_open;
-    }
+    private void ToggleDrawer() => _open = !_open;
 
     private async Task Logout()
     {
         await _localStorage.RemoveItemAsync("token");
-
         ((CustomAuthenticationState)_authenticationStateProvider).NotifyUserLogout();
-
         await _hubNotificationService.StopConnectionAsyncAdmin();
-
         _navigationManager.NavigateTo("/", true);
     }
 
-        private async Task OpenRequestDialog(AdminPageRequestModel request, Guid notificationId)
-        {
-            var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = true, CloseButton = true };
-
-            var parameters = new DialogParameters()
-            {
-                {"Model", request},
-                {"NotificationId", notificationId}
-            };
-
-        var dialog = await _dialogService.ShowExAsync<RequestAdminDialog>(string.Empty, parameters, options);
-
-        }
+    private async Task OpenRequestDialog(AdminPageRequestModel request, Guid notificationId)
+    {
+        var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = true, CloseButton = true };
+        var parameters = new DialogParameters() { {"Model", request}, {"NotificationId", notificationId} };
+        await _dialogService.ShowExAsync<RequestAdminDialog>(string.Empty, parameters, options);
+    }
 }
 
 <style>

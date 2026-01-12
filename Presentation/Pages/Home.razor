@@ -1,29 +1,75 @@
 ﻿@page "/"
-
 @using Presentation.Shared.Dialogs
 
-<PageTitle>CamCon | Dashboard</PageTitle>
+<PageTitle>Dashboard | CampusConnect</PageTitle>
 
-<MudGrid Class="px-16">
-    <MudItem xs="4">    
-        <ActionComponent Title="Create Organization Page" Description="Create Organization Page" OnClick="OpenOrg" IsCreate></ActionComponent>
-    </MudItem>
-    <MudItem xs="4">
-        <ActionComponent Title="View Newsfeed" Description="World" OnClick="(s) => Navigate(s, true)"></ActionComponent>
-    </MudItem>
-    <MudItem xs="4">
-        <ActionComponent Title="Monitor and Manage" Description="Sentiments" Redirect="Sentiments" OnClick="(s) => Navigate(s, true)"></ActionComponent>
-    </MudItem>
-    <MudItem xs="4">
-        <ActionComponent Title="Department/ Organization" Description="World" Redirect="organizations" OnClick="(s) => Navigate(s, true)"></ActionComponent>
-    </MudItem>
-    <MudItem xs="4">
-        <ActionComponent Title="Page Request Admin" Description="World" OnClick="(s) => Navigate(s, true)"></ActionComponent>
-    </MudItem>
-    <MudItem xs="4">
-        <ActionComponent Title="Users" Description="World" Redirect="users" OnClick="(s) => Navigate(s, true)"></ActionComponent>
-    </MudItem>
-</MudGrid>
+<style>
+    .dashboard-wrapper {
+        background-color: #FBFBFE;
+        min-height: 100vh;
+        padding: 40px 60px;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .header-section {
+        margin-bottom: 48px;
+        border-left: 4px solid #3F51B5;
+        padding-left: 24px;
+    }
+
+    .main-title {
+        font-weight: 800;
+        font-size: 3rem;
+        background: linear-gradient(135deg, #3F51B5 0%, #9C27B0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1.5px;
+        line-height: 1.1;
+    }
+
+    .sub-title {
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: #6C757D;
+        margin-top: 4px;
+        letter-spacing: 0.5px;
+    }
+
+    .grid-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+</style>
+
+<div class="dashboard-wrapper">
+    <div class="header-section">
+        <div class="main-title">CampusConnect</div>
+        <div class="sub-title">Admin Dashboard</div>
+    </div>
+
+    <div class="grid-container">
+        <MudGrid Spacing="6">
+            <MudItem xs="12" sm="6" md="4">    
+                <ActionComponent Title="Organizations" Description="Manage departments, student groups, and institutional hierarchy." OnClick="OpenOrg" IsCreate></ActionComponent>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <ActionComponent Title="Live Newsfeed" Description="Monitor real-time activity and broadcast global announcements." OnClick="(s) => Navigate(s, true)"></ActionComponent>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <ActionComponent Title="Sentiment Lab" Description="Advanced AI-driven analytics of community mood and feedback." Redirect="Sentiments" OnClick="(s) => Navigate(s, true)"></ActionComponent>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <ActionComponent Title="Infrastructure" Description="Configure system-wide settings for departments and organizations." Redirect="organizations" OnClick="(s) => Navigate(s, true)"></ActionComponent>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <ActionComponent Title="Access Control" Description="Review and authorize administrative requests and page permissions." OnClick="(s) => Navigate(s, true)"></ActionComponent>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <ActionComponent Title="User Management" Description="Complete directory control, moderation, and account auditing." Redirect="users" OnClick="(s) => Navigate(s, true)"></ActionComponent>
+            </MudItem>
+        </MudGrid>
+    </div>
+</div>
 
 @code {
 
