@@ -23,12 +23,14 @@ namespace WebAPI.Services.GeminiServices
         {
             var dictionary = comments.ToDictionary(c => c.NewsFeedCommentId, c => c.Message);
 
+            if (dictionary.Count <= 0) return new();
+
             var prompt = $@"
                 You are an intelligent content moderation assistant.
                 Your task is to identify which comments from the provided JSON list 
                 contain any of the words from the ""wordsToFlag"" list.
                 The matching must be:
-                - not case-insensitive
+                - case-insensitive
                 - whole word only
 
                 List of comments:
@@ -53,8 +55,16 @@ namespace WebAPI.Services.GeminiServices
             {
                 contents = new[]
                 {
-            new { parts = new[] { new { text = prompt } } }
-        },
+                    new { 
+                        parts = new[]
+                        { 
+                            new 
+                            { 
+                                text = prompt
+                            } 
+                        }
+                    }
+                },
                 generationConfig = new
                 {
                     response_mime_type = "application/json",
@@ -82,8 +92,14 @@ namespace WebAPI.Services.GeminiServices
                 "application/json"
             );
 
-            var response = await _httpClient.PostAsync(requestUri, content);
-            response.EnsureSuccessStatusCode();
+            var response = await _httpClient.PostAsync($"{GeminiApiUrl}?key={_apiKey}", 
+                new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json"));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Gemini API Fail: {error}");
+            }
 
             var responseBody = await response.Content.ReadAsStringAsync();
 
