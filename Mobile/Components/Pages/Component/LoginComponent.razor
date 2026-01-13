@@ -1,50 +1,164 @@
 ﻿
-<MudStack Class="pa-2" Justify="Justify.Center">
-    <MudTextField 
+<style>
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-container {
+        background-color: #F5F0F9;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 1.5rem;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        border-radius: 28px;
+        padding: 2.5rem 2rem;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 15px 35px rgba(103, 58, 183, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .brand-title {
+        background: linear-gradient(135deg, #3F51B5 0%, #9C27B0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        font-size: 2.5rem;
+        letter-spacing: -1.5px;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .brand-subtitle {
+        color: #7E57C2;
+        font-size: 0.95rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        font-weight: 500;
+        opacity: 0.7;
+    }
+
+    .modern-input {
+        border-radius: 16px !important;
+        background-color: #F8F7FA !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .modern-input:focus-within {
+        transform: translateY(-2px);
+        background-color: #FFFFFF !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .modern-input fieldset {
+        border: none !important;
+    }
+
+    .primary-gradient-button {
+        background: linear-gradient(135deg, #3F51B5 0%, #9C27B0 100%) !important;
+        border-radius: 16px !important;
+        padding: 16px !important;
+        color: white !important;
+        font-weight: 600 !important;
+        text-transform: none !important;
+        letter-spacing: 0.5px !important;
+        box-shadow: 0 8px 20px rgba(156, 39, 176, 0.25) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .primary-gradient-button:active {
+        transform: scale(0.97);
+    }
+
+    .guest-button {
+        color: #9E9E9E !important;
+        text-transform: none !important;
+        font-weight: 500 !important;
+        font-size: 0.85rem !important;
+        margin-top: 1rem !important;
+    }
+
+    .register-link {
+        color: #3F51B5 !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+    }
+</style>
+
+<div class="login-container">
+    <div class="brand-title">CampusConnect</div>
+    <div class="brand-subtitle">Elevate your campus experience.</div>
+
+    <div class="glass-card">
+        <MudStack Spacing="4">
+            <MudTextField 
                 @onkeydown="HandleKeyDown" 
                 @bind-Value="username"  
                 Variant="Variant.Outlined" 
                 Adornment="Adornment.End" 
-                Margin="Margin.Dense"
-                Label="Username"
-                ShrinkLabel
-                AdornmentIcon="@Icons.Material.Filled.Lock" />
+                AdornmentIcon="@Icons.Material.Filled.Email"
+                Label="Email"
+                Class="modern-input"
+                FullWidth="true" />
 
-    <MudTextField 
+            <MudTextField 
                 @onkeydown="HandleKeyDown" 
                 @bind-Value="password" 
                 Variant="Variant.Outlined"
                 InputType="@PasswordInput" 
                 Adornment="Adornment.End" 
                 AdornmentIcon="@PasswordInputIcon" 
-                Margin="Margin.Dense"
                 Label="Password"
-                ShrinkLabel
                 OnAdornmentClick="ShowPassword" 
-                AdornmentAriaLabel="Show Password" />
+                Class="modern-input"
+                FullWidth="true" />
 
-    <MudButton 
-            Class="color-main"
-            Variant="Variant.Filled" 
-            Size="Size.Large" 
-            OnClick="Login"
-            Color="Color.Primary">
-                <div class="d-flex flex-row gap-2">
-                    @if (isLoading)
-                    {
-                            <MudProgressCircular Class="align-self-start" Size="Size.Small" style="color: white;" Indeterminate></MudProgressCircular>
-                            <span>Signing in...</span>
-                    }
-                    else
-                    {
-                            <span>Sign in</span>
-                    }
-                </div>
+            <MudButton 
+                Class="primary-gradient-button mt-4"
+                Variant="Variant.Filled" 
+                Size="Size.Large" 
+                OnClick="Login"
+                FullWidth="true">
+                @if (isLoading)
+                {
+                    <MudProgressCircular Size="Size.Small" Color="Color.Inherit" Indeterminate="true" Class="mr-2" />
+                    <span>Processing...</span>
+                }
+                else
+                {
+                    <span>Sign In</span>
+                }
             </MudButton>
 
-    <MudLink Class="text-center"Typo="Typo.caption" OnClick="RegisterClick">Don't have an account? <br />Register here.</MudLink>
+            <MudButton 
+                Variant="Variant.Text" 
+                Class="guest-button"
+                Disabled="true"
+                FullWidth="true">
+                Continue as Guest
+            </MudButton>
+        </MudStack>
+    </div>
 
-</MudStack>
+    <MudText Typo="Typo.body2" Class="mt-8 text-center" Style="color: #757575;">
+        New to the community? 
+        <MudLink OnClick="RegisterClick" Class="register-link ml-1">Create account</MudLink>
+    </MudText>
+</div>
 
 @code {
     [Parameter] public EventCallback OnRegisterClick { get; set; }

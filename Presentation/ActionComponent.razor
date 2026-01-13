@@ -1,12 +1,60 @@
-﻿<MudPaper Class="d-flex flex-column gap-1 pa-2" Elevation="1">
-    <MudText Class="pa-2" Typo="Typo.h6">@Title</MudText>
-    <MudDivider/>
-    <MudText Class="ma-1 action-description" Typo="Typo.caption">@Description</MudText>
-   <MudDivider/>
-   <MudStack AlignItems="AlignItems.End">
-        <MudButton OnClick="Procceed" Variant="Variant.Filled" Color="Color.Primary">@(IsCreate ? "Create" : "Procceed")</MudButton>
-   </MudStack>
-</MudPaper>
+﻿<style>
+    .sleek-card {
+        background: white !important;
+        border-radius: 20px !important;
+        padding: 32px !important;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border: 1px solid #F0F2F5 !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02) !important;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .sleek-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06) !important;
+        border-color: #E2E8F0 !important;
+    }
+
+    .card-title {
+        font-weight: 700 !important;
+        font-size: 1.25rem !important;
+        color: #1A1C1E;
+        margin-bottom: 12px;
+    }
+
+    .card-description {
+        color: #64748B;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 32px;
+        flex-grow: 1;
+    }
+
+    .card-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3F51B5;
+    }
+</style>
+
+<div class="sleek-card" @onclick="Procceed">
+    @if (IsCreate)
+    {
+        <div class="card-badge" style="background: #10B981;"></div>
+    }
+    
+    <div class="card-title">@Title</div>
+    <div class="card-description">@Description</div>
+</div>
 
 @code {
     [Parameter] public string Title { get; set; } = string.Empty;

@@ -23,7 +23,7 @@
                 Variant="Variant.Outlined" 
                 ShrinkLabel 
                 SearchFunc="SearchUser"
-                ToStringFunc="@((s) => s.Name)">
+                ToStringFunc="@((s) => s?.Name)">
             </MudAutocomplete>
         </MudStack>
     </DialogContent>
