@@ -28,7 +28,7 @@ namespace WebAPI.Services.GeminiServices
                 Your task is to identify which comments from the provided JSON list 
                 contain any of the words from the ""wordsToFlag"" list.
                 The matching must be:
-                - case-insensitive
+                - not case-insensitive
                 - whole word only
 
                 List of comments:
@@ -36,6 +36,10 @@ namespace WebAPI.Services.GeminiServices
 
                 Words to flag:
                 {string.Join(", ", badWords)}
+
+                Additional flag:
+                - profanity
+                - bad words
 
                 Return ONLY this JSON structure:
                 {{
