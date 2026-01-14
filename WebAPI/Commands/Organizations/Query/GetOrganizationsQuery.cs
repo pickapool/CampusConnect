@@ -18,12 +18,43 @@ namespace WebAPI.Commands.Organizations.Query
         public async Task<Result<List<MyOrganizationModel>>> Handle(GetOrganizationsQuery request, CancellationToken cancellationToken)
         {
             var organizations = await GetDBContext().MyOrganizations
-                .Include( c => c.OrganizationDepartment)
-                .Include( m => m.User).ThenInclude( u => u!.ProfileInformation)
+                .AsNoTracking()
+                .Select(o => new MyOrganizationModel
+                {
+                    MyOrganizationId = o.MyOrganizationId,
+                    OrganizationName = o.OrganizationName,
+                    Description = o.Description,
+                    OrganizationType = o.OrganizationType,
+                    Id = o.Id,
+                    User = o.User == null ? null : new ApplicationUserModel
+                    {
+                        Id = o.User.Id,
+                        UserName = o.User.UserName,
+                        Name = o.User.Name,
+                        ProfileInformationId = o.User.ProfileInformationId,
+                        IsWebCreated = o.User.IsWebCreated,
+                        ProfileInformation = o.User.ProfileInformation == null ? null : new ProfileInfo
+                        {
+                            ProfileInformationId = o.User.ProfileInformation.ProfileInformationId,
+                            IsAdmin = o.User.ProfileInformation.IsAdmin,
+                            ProfilePicture = o.User.ProfileInformation.ProfilePicture,
+                            CoverPicture = o.User.ProfileInformation.CoverPicture,
+                            FullName = o.User.ProfileInformation.FullName,
+                            Address = o.User.ProfileInformation.Address,
+                            Course = o.User.ProfileInformation.Course,
+                            MyOrganization = null
+                        }
+                    },
+                    OrganizationDepartmentId = o.OrganizationDepartmentId,
+                    OrganizationDepartment = o.OrganizationDepartment == null ? null : new OrganizationDepartmentModel
+                    {
+                        OrganizationDepartmentId = o.OrganizationDepartment.OrganizationDepartmentId,
+                        MyOrganizationId = o.OrganizationDepartment.MyOrganizationId
+                    },
+                    Photo = o.Photo,
+                    CoverPhoto = o.CoverPhoto
+                })
                 .ToListAsync(cancellationToken);
-
-           //Sample Development
-           // await mediator.Publish(new UserNotificationEvent(new Guid("8E83D189-CE65-4515-C353-08DE0E3B9093"), "7b6df5ff-f5c8-40ab-bd28-89ea52dcd3df"), cancellationToken);
 
             return Result.Success(organizations);
         }
